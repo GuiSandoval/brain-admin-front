@@ -1,10 +1,10 @@
 import * as S from './styles';
 
 
-export default function Home() {
+export default function LoginPage() {
   return (
     <S.Container>
-      <h1>Olá mundo</h1>
+      <h1>Login</h1>
     </S.Container>
   );
 }
