@@ -7,16 +7,17 @@ import { alunoApi } from "@/api/integration";
 export default function LoginPage() {
   const [data, setData] = useState<any>(null);
 
+  const formatDocument = (e: any) => e.document;
   async function loadUsers() {
-    console.log('teste')
+    console.log("teste");
 
     const response = await alunoApi.getAlunos();
-    console.log('response', response)
+    console.log("response", response);
   }
 
   useEffect(() => {
-    loadUsers()
-  }, [])
+    loadUsers();
+  }, []);
 
   return (
     <S.Container>
