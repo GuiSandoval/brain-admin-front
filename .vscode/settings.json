@@ -1,0 +1,5 @@
+{
+  "eslint.enable": true,
+  "sonarlint.disableTelemetry": true,
+  "sonarlint.disableRuleDescriptionDocumentation": true
+}
