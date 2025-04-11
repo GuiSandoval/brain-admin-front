@@ -1,10 +1,11 @@
 import { httpClient } from "@/services/api";
 import { IAlunoAPI } from "../base";
+import { AlunoResponse } from "@/api/models/response";
 
 const BASE_ROUTE = "aluno";
 
 export class AlunoApi extends IAlunoAPI {
-  getAlunos(): Promise<any> {
+  getAlunos(): Promise<AlunoResponse[]> {
     return httpClient.get(`${BASE_ROUTE}`);
   }
 }

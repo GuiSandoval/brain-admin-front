@@ -1,6 +1,12 @@
 export interface HttpClient {
-  get<T>(url: string, params?: Record<string, any>): Promise<T>;
-  post<T>(url: string, data?: Record<string, any>): Promise<T>;
-  put<T>(url: string, data?: Record<string, any>): Promise<T>;
-  delete<T>(url: string, params?: Record<string, any>): Promise<T>;
+  get<TResponse, TParams = Record<string, unknown>>(
+    url: string,
+    params?: TParams,
+  ): Promise<TResponse>;
+  post<TRequest, TResponse>(url: string, data?: TRequest): Promise<TResponse>;
+  put<TRequest, TResponse>(url: string, data?: TRequest): Promise<TResponse>;
+  delete<TResponse, TParams = Record<string, unknown>>(
+    url: string,
+    params?: TParams,
+  ): Promise<TResponse>;
 }

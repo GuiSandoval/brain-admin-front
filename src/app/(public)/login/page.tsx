@@ -1,13 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import * as S from "./styles";
 import { alunoApi } from "@/api/integration";
 
 export default function LoginPage() {
-  const [data, setData] = useState<any>(null);
-
-  const formatDocument = (e: any) => e.document;
   async function loadUsers() {
     console.log("teste");
 

@@ -12,23 +12,29 @@ export class AxiosHttpClient implements HttpClient {
     });
   }
 
-  async get<T>(url: string, params?: any): Promise<T> {
-    const response = await this.client.get<T>(url, { params });
+  async get<TResponse, TParams = Record<string, unknown>>(
+    url: string,
+    params?: TParams,
+  ): Promise<TResponse> {
+    const response = await this.client.get<TResponse>(url, { params });
     return response.data;
   }
 
-  async post<T>(url: string, data?: any): Promise<T> {
-    const response = await this.client.post<T>(url, data);
+  async post<TRequest, TResponse>(url: string, data?: TRequest): Promise<TResponse> {
+    const response = await this.client.post<TResponse>(url, data);
     return response.data;
   }
 
-  async put<T>(url: string, data?: any): Promise<T> {
-    const response = await this.client.put<T>(url, data);
+  async put<TRequest, TResponse>(url: string, data?: TRequest): Promise<TResponse> {
+    const response = await this.client.put<TResponse>(url, data);
     return response.data;
   }
 
-  async delete<T>(url: string): Promise<T> {
-    const response = await this.client.delete<T>(url);
+  async delete<TResponse, TParams = Record<string, unknown>>(
+    url: string,
+    params?: TParams,
+  ): Promise<TResponse> {
+    const response = await this.client.delete<TResponse>(url, { params });
     return response.data;
   }
 }
