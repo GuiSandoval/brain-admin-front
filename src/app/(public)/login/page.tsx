@@ -1,6 +1,6 @@
 "use client";
 
-import { CircularProgress } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { useEffect } from "react";
 import * as S from "./styles";
 
@@ -18,6 +18,8 @@ export default function LoginPage() {
 
   return (
     <S.Container>
+      <Button variant="text">Text</Button>
+      <Button variant="contained">Contained</Button>
       <CircularProgress />
       <h1>Login</h1>
     </S.Container>

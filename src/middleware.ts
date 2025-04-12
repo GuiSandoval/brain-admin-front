@@ -3,6 +3,7 @@ import { MiddlewareConfig, NextRequest, NextResponse } from "next/server";
 const publicRoutes = [
   { path: "/login", whenAuthenticated: "redirect" },
   { path: "/register", whenAuthenticated: "redirect" },
+  { path: "/teste-ssr", whenAuthenticated: "redirect" },
   { path: "/princing", whenAuthenticated: "next" },
 ] as const;
 
@@ -23,11 +24,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  if (
-    authToken &&
-    publicRoute &&
-    publicRoute.whenAuthenticated === "redirect"
-  ) {
+  if (authToken && publicRoute && publicRoute.whenAuthenticated === "redirect") {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/";
     return NextResponse.redirect(redirectUrl);
