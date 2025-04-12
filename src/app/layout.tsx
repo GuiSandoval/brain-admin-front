@@ -1,8 +1,9 @@
+import CustomProviderTheme from "@/styles/Providers";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import CssBaseline from "@mui/material/CssBaseline";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import StyledComponentsRegistry from "../../lib/registry";
-import CssBaseline from "@mui/material/CssBaseline";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import { ThemeProvider } from "next-themes";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,14 +26,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <AppRouterCacheProvider>
-          <StyledComponentsRegistry>
-            <CssBaseline />
-            {children}
-          </StyledComponentsRegistry>
-        </AppRouterCacheProvider>
+        <ThemeProvider>
+          <AppRouterCacheProvider>
+            <CustomProviderTheme>
+              <CssBaseline />
+              {children}
+            </CustomProviderTheme>
+          </AppRouterCacheProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

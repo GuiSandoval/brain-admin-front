@@ -1,5 +1,9 @@
 // app/components/Posts.tsx
 import React from "react";
+import * as S from "./styles";
+import Link from "next/link";
+import { Button } from "@mui/material";
+import SwitchTheme from "@/components/switchTheme/switchTheme";
 
 // Definindo o tipo para os dados
 type Post = {
@@ -15,7 +19,12 @@ const Posts = async () => {
 
   // Retornando a lista de posts
   return (
-    <div>
+    <S.Container>
+      <SwitchTheme />
+
+      <Link href="/login">
+        <Button variant="contained">Teste Login</Button>
+      </Link>
       <h1>Posts</h1>
       <ul>
         {posts.map((post) => (
@@ -25,7 +34,7 @@ const Posts = async () => {
           </li>
         ))}
       </ul>
-    </div>
+    </S.Container>
   );
 };
 
