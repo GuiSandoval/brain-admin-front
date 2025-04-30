@@ -1,8 +1,8 @@
-
+import * as S from "./styles";
 export default function Dashboard() {
   return (
-    <div>
+    <S.Container>
       <h1>Dashboard</h1>
-    </div>
+    </S.Container>
   );
 }

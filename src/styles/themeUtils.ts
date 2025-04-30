@@ -28,7 +28,7 @@ export const generateCSSVariables = (variables: DefaultTheme) => css`
 
 export function cssVarColor(color: keyof CSSVarColor): string {
   const listCssVariables = createCSSVariables(lightTheme);
-  console.log("listCssVariables", listCssVariables);
+
   const findNameVariable = Object.entries(listCssVariables).find(
     ([key]) => key === `--colors-${color}`,
   );

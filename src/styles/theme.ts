@@ -2,11 +2,12 @@ import { DefaultTheme } from "styled-components";
 
 export const lightTheme: DefaultTheme = {
   colors: {
-    background: "#FFFFFF",
-    text: "#000000",
-    primary: "#4F46E5",
-    secondary: "#06B6D4",
-    accent: "#F59E0B",
+    background: "#F9FAFB",
+    text: "#1F2937",
+    primary: "#3B82F6",
+    secondary: "#6366F1",
+    accent: "#10B981",
+    headerMenu: "#3B82F6",
   },
   fonts: {
     body: "'Inter', sans-serif",
@@ -16,11 +17,12 @@ export const lightTheme: DefaultTheme = {
 
 export const darkTheme: DefaultTheme = {
   colors: {
-    background: "#111827",
-    text: "#FFFFFF",
-    primary: "#818CF8",
-    secondary: "#67E8F9",
-    accent: "#FBBF24",
+    background: "#282828",
+    text: "#F9FAFB",
+    primary: "#60A5FA",
+    secondary: "#A78BFA",
+    accent: "#34D399",
+    headerMenu: "#0F172A",
   },
   fonts: {
     body: "'Inter', sans-serif",
