@@ -7,8 +7,7 @@ const publicRoutes = [
   { path: "/princing", whenAuthenticated: "next" },
 ] as const;
 
-// TODO: Descomentar essa linha quando o login estiver implementado
-// const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/login";
+const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/login";
 
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
@@ -19,12 +18,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // TODO: Descomentar essa linha quando o login estiver implementado
-  // if (!authToken && !publicRoute) {
-  //   const redirectUrl = request.nextUrl.clone();
-  //   redirectUrl.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE;
-  //   return NextResponse.redirect(redirectUrl);
-  // }
+  if (!authToken && !publicRoute) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE;
+    return NextResponse.redirect(redirectUrl);
+  }
 
   if (authToken && publicRoute && publicRoute.whenAuthenticated === "redirect") {
     const redirectUrl = request.nextUrl.clone();

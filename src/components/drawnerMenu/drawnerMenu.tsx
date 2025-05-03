@@ -15,9 +15,13 @@ import Toolbar from "@mui/material/Toolbar";
 import * as React from "react";
 import * as S from "./styles";
 import { useTheme } from "next-themes";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 export default function DrawnerMenu() {
   const { setTheme } = useTheme();
+  const router = useRouter();
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [open, setOpen] = React.useState(false);
 
@@ -35,6 +39,10 @@ export default function DrawnerMenu() {
   };
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
+  };
+  const handleLogout = () => {
+    Cookies.remove("token");
+    router.push("/login");
   };
 
   const DrawerList = (
@@ -102,7 +110,7 @@ export default function DrawnerMenu() {
               <MenuItem onClick={() => handleChangeTheme("light")}>Tema 1</MenuItem>
               <MenuItem onClick={() => handleChangeTheme("dark")}>Tema 2</MenuItem>
               <MenuItem onClick={handleClose}>Perfil</MenuItem>
-              <MenuItem onClick={handleClose}>Sair</MenuItem>
+              <MenuItem onClick={() => handleLogout()}>Sair</MenuItem>
               <MenuItem></MenuItem>
             </Menu>
           </S.Container>

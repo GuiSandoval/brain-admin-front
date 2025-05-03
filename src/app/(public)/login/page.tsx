@@ -1,34 +1,53 @@
 "use client";
-
-import { Button, CircularProgress } from "@mui/material";
-import { useEffect } from "react";
+import { Button, TextField, Typography, Paper } from "@mui/material";
 import * as S from "./styles";
-import Link from "next/link";
-import SwitchTheme from "@/components/switchTheme/switchTheme";
+import { useEffect } from "react";
+import { useTheme } from "next-themes";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  async function loadUsers() {
-    console.log("teste");
-
-    // const response = await alunoApi.getAlunos();
-    // console.log("response", response);
-  }
+  const { setTheme } = useTheme();
+  const router = useRouter();
 
   useEffect(() => {
-    loadUsers();
-  }, []);
+    setTheme("light");
+  }, [setTheme]);
+
+  function onSubmitLogin() {
+    const randomToken = Math.random().toString(36).substring(2);
+    Cookies.set("token", randomToken, { expires: 7 });
+    router.push("/");
+  }
 
   return (
-    <S.Container>
-      <SwitchTheme />
-      <Button variant="text">Text</Button>
-      <Button variant="contained">Contained</Button>
-      <CircularProgress />
-      <h1>Login</h1>
+    <S.LoginWrapper>
+      <Paper elevation={6}>
+        <S.FormBox>
+          <Typography variant="h5" component="h1" gutterBottom>
+            Brain
+          </Typography>
 
-      <Link href="/teste-ssr">
-        <Button variant="contained">Teste SSR</Button>
-      </Link>
-    </S.Container>
+          <TextField fullWidth label="Email" type="email" margin="normal" variant="outlined" />
+          <TextField
+            fullWidth
+            label="Password"
+            type="password"
+            margin="normal"
+            variant="outlined"
+          />
+
+          <Button
+            onClick={onSubmitLogin}
+            variant="contained"
+            fullWidth
+            size="large"
+            sx={{ mt: 2, borderRadius: "8px" }}
+          >
+            Login
+          </Button>
+        </S.FormBox>
+      </Paper>
+    </S.LoginWrapper>
   );
 }
