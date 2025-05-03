@@ -24,6 +24,10 @@ const GlobalStyle = createGlobalStyle`
     ${generateCSSVariables(lightTheme)}
   }
 
+  .app{
+    height: 100%;
+    background-color: var(--colors-background);
+  }
   [data-theme="dark"] { 
     ${generateCSSVariables(darkTheme)}
   }

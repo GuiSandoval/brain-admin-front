@@ -32,7 +32,7 @@ export default function RootLayout({
           <AppRouterCacheProvider>
             <CustomProviderTheme>
               <CssBaseline />
-              {children}
+              <div className="app">{children}</div>
             </CustomProviderTheme>
           </AppRouterCacheProvider>
         </ThemeProvider>

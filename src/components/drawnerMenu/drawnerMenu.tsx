@@ -46,7 +46,7 @@ export default function DrawnerMenu() {
   };
 
   const DrawerList = (
-    <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
+    <S.BrainBox sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <List>
         {["Orientador", "Professor", "Aluno"].map((text, index) => (
           <ListItem key={text} disablePadding>
@@ -57,17 +57,11 @@ export default function DrawnerMenu() {
           </ListItem>
         ))}
       </List>
-    </Box>
+    </S.BrainBox>
   );
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      {/* <FormGroup>
-        <FormControlLabel
-          control={<Switch checked={auth} onChange={handleChange} aria-label="login switch" />}
-          label={auth ? "Logout" : "Login"}
-        />
-      </FormGroup> */}
       <S.BrainAppBar position="static">
         <Toolbar>
           <IconButton
@@ -109,7 +103,7 @@ export default function DrawnerMenu() {
             >
               <MenuItem onClick={() => handleChangeTheme("light")}>Tema 1</MenuItem>
               <MenuItem onClick={() => handleChangeTheme("dark")}>Tema 2</MenuItem>
-              <MenuItem onClick={handleClose}>Perfil</MenuItem>
+              {/* <MenuItem onClick={handleClose}>Perfil</MenuItem> */}
               <MenuItem onClick={() => handleLogout()}>Sair</MenuItem>
               <MenuItem></MenuItem>
             </Menu>
