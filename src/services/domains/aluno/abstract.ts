@@ -1,4 +1,4 @@
-import { AlunoResponse } from "../models/response/alunoResponse";
+import { AlunoResponse } from "./response";
 
 export abstract class IAlunoAPI {
   abstract getAlunos(): Promise<AlunoResponse[]>;

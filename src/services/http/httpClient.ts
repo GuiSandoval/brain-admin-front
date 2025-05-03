@@ -1,12 +1,6 @@
-export interface HttpClient {
-  get<TResponse, TParams = Record<string, unknown>>(
-    url: string,
-    params?: TParams,
-  ): Promise<TResponse>;
-  post<TRequest, TResponse>(url: string, data?: TRequest): Promise<TResponse>;
-  put<TRequest, TResponse>(url: string, data?: TRequest): Promise<TResponse>;
-  delete<TResponse, TParams = Record<string, unknown>>(
-    url: string,
-    params?: TParams,
-  ): Promise<TResponse>;
-}
+import { AxiosHttpClient } from "./axiosHttpClient";
+import { HttpClient } from "./httpClient.d";
+
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
+
+export const httpClient: HttpClient = new AxiosHttpClient(BASE_URL);

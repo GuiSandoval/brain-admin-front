@@ -1,6 +1,3 @@
-import { HttpClient } from "./http/httpClient";
-import { AxiosHttpClient } from "./http/axiosHttpClient";
+import { AlunoApi } from "./domains/aluno";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
-
-export const httpClient: HttpClient = new AxiosHttpClient(BASE_URL);
+export const alunoApi = new AlunoApi();

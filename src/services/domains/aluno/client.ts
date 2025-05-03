@@ -1,6 +1,6 @@
-import { httpClient } from "@/services/api";
-import { IAlunoAPI } from "../base";
-import { AlunoResponse } from "@/services/models/response";
+import { httpClient } from "@/services/http";
+import { IAlunoAPI } from "./abstract";
+import { AlunoResponse } from "./response";
 
 const BASE_ROUTE = "aluno";
 

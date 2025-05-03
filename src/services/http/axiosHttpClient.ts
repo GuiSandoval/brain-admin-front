@@ -1,4 +1,3 @@
-// services/axiosHttpClient.ts
 import axios, { AxiosInstance } from "axios";
 import { HttpClient } from "./httpClient";
 
