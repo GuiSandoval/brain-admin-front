@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { HttpClient } from "./httpClient";
+import { HttpClient } from "./httpClient.d";
 
 export class AxiosHttpClient implements HttpClient {
   private readonly client: AxiosInstance;
