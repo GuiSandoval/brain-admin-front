@@ -1,23 +1,35 @@
 import { cssVarColor } from "@/styles";
-import { AppBar, Box } from "@mui/material";
+import Link from "next/link";
 import styled from "styled-components";
 
 export const Container = styled.div`
   margin-left: auto;
 `;
 
-export const BrainAppBar = styled(AppBar)`
-  &&& {
-    background: ${cssVarColor("headerMenu")};
-  }
+const BaseLink = styled(Link)`
+  text-decoration: none;
+  color: ${cssVarColor("text")};
 `;
 
-export const BrainBox = styled(Box)`
-  &&& {
-    background: ${cssVarColor("background")};
+export const LinkLogo = styled(BaseLink)`
+  text-decoration: none;
+  color: ${cssVarColor("text")};
+`;
+export const ItemMenu = styled(BaseLink)`
+  display: flex;
+  color: black;
 
-    .MuiSvgIcon-root {
+  &&& {
+    .MuiButtonBase-root {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
       color: ${cssVarColor("text")};
+      text-transform: none;
+
+      &:hover {
+
+      }
     }
   }
 `;
