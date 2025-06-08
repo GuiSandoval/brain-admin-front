@@ -1,10 +1,9 @@
 "use client";
 import { RoutesConstants } from '@/constants/routesConstants';
-import {
-  Adb as AdbIcon,
-  AutoStories as BookIcon,
-  CalendarToday as CalendarIcon
-} from '@mui/icons-material/';
+import AdbIcon from '@mui/icons-material/Adb';
+import BookIcon from '@mui/icons-material/AutoStories';
+import CalendarIcon from '@mui/icons-material/CalendarToday';
+
 import MenuIcon from "@mui/icons-material/Menu";
 import { AppBar, Avatar, Button, Container, Tooltip, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
