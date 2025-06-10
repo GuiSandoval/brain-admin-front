@@ -3,8 +3,10 @@ import { RoutesConstants } from '@/constants/routesConstants';
 import AdbIcon from '@mui/icons-material/Adb';
 import BookIcon from '@mui/icons-material/AutoStories';
 import CalendarIcon from '@mui/icons-material/CalendarToday';
-
+import Cookies from "js-cookie";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useRouter } from 'next/navigation';
+
 import { AppBar, Avatar, Button, Container, Tooltip, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -31,9 +33,11 @@ const pages = [
     router: RoutesConstants.BOLETIM
   },
 ]
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Account', 'Dashboard'];
 
 export default function DrawnerMenu() {
+  const router = useRouter();
+  
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -50,6 +54,11 @@ export default function DrawnerMenu() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleLogout = () => {
+    Cookies.remove("token");
+    router.push("/login");
   };
 
   return (
@@ -174,6 +183,10 @@ export default function DrawnerMenu() {
                 <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
               </MenuItem>
             ))}
+            
+            <MenuItem onClick={handleLogout}>
+              <Typography sx={{ textAlign: 'center' }}>Logout</Typography>
+            </MenuItem>
           </Menu>
         </Box>
       </Toolbar>
