@@ -11,6 +11,8 @@ declare module "styled-components" {
       secondary: string;
       accent: string;
       headerMenu: string;
+      border: string;
+      backgroundHover: string;
     };
     fonts: {
       body: string;
