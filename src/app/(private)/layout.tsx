@@ -9,7 +9,7 @@ export default function PrivateLayout({
   return (
     <S.Container>
       <DrawnerMenu />
-      {children}
+      <S.Content>{children}</S.Content>
     </S.Container>
   );
 }

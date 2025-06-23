@@ -4,6 +4,7 @@ export const lightTheme: DefaultTheme = {
   colors: {
     background: "#F9FAFB",
     text: "#1F2937",
+    textSecondary: "#4B5563",
     primary: "#3B82F6",
     secondary: "#6366F1",
     accent: "#10B981",
@@ -19,6 +20,7 @@ export const darkTheme: DefaultTheme = {
   colors: {
     background: "#282828",
     text: "#F9FAFB",
+    textSecondary: "#D1D5DB",
     primary: "#60A5FA",
     secondary: "#A78BFA",
     accent: "#34D399",
