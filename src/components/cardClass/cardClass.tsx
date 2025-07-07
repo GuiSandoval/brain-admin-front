@@ -8,22 +8,13 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 interface ICardClassProps {
   title: string;
   image?: string;
-  startHour: string;
-  endHour: string;
   classroom: string;
+  hour: string;
   campus: string;
   quantityStudents: number;
 }
 
-function CardClass({
-  campus,
-  classroom,
-  endHour,
-  image,
-  quantityStudents,
-  startHour,
-  title,
-}: ICardClassProps) {
+function CardClass({ campus, classroom, image, quantityStudents, hour, title }: ICardClassProps) {
   const showAreaImage = !isNullUndefined(image);
 
   return (
@@ -37,7 +28,7 @@ function CardClass({
         <S.AreaTitle>{title}</S.AreaTitle>
         <S.AreaHours>
           <AccessTimeIcon fontSize="small" />
-          {startHour} - {endHour}
+          {hour}
         </S.AreaHours>
         <S.AreaClassroom>
           <LocationOnIcon fontSize="small" />
