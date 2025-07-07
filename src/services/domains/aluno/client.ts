@@ -5,6 +5,7 @@ const BASE_ROUTE = "aluno";
 
 export class AlunoApi {
   getAlunos(): Promise<AlunoResponse[]> {
+    console.log("aqui");
     return httpClient.get(`${BASE_ROUTE}`);
   }
 }

@@ -1,4 +1,3 @@
-// TODO: verificar se é essa tipagem mesmo
 export interface AlunoResponse {
   id: number;
   nome: string;
