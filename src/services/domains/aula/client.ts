@@ -6,13 +6,7 @@ const BASE_ROUTE = "aula";
 
 export class AulaApi {
   getAula(): Promise<IBrainResult<AulaResponse>> {
-    return httpClient.get(`${BASE_ROUTE}`, {
-      headers: {
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        Pragma: "no-cache",
-        Expires: "0",
-      },
-    });
+    return httpClient.get(`${BASE_ROUTE}`);
   }
   putAula(): Promise<void> {
     return httpClient.put(`${BASE_ROUTE}`);

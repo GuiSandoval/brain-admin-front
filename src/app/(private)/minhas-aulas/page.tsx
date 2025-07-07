@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import LayoutColumns from "@/components/layoutColumns/layoutColumns";
 import PageTitle from "@/components/pageTitle/pageTitle";
 import { generateTitlePage } from "@/utils/utils";
