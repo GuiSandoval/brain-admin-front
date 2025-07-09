@@ -13,11 +13,10 @@ function LayoutColumns({
 }: PropsWithChildren<ILayoutColumnsProps>) {
   const childrenArray = React.Children.toArray(children);
 
-   if (childrenArray.length !== 2) {
+  if (childrenArray.length !== 2) {
     console.warn("LayoutColumns espera exatamente 2 elementos filhos.");
   }
 
-  
   return (
     <S.Container>
       <S.Column size={sizeLeft}>{childrenArray[0]}</S.Column>

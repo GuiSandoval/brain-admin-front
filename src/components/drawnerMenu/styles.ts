@@ -28,7 +28,6 @@ export const ItemMenu = styled(BaseLink)`
       text-transform: none;
 
       &:hover {
-
       }
     }
   }
