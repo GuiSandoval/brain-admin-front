@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { ToastContainer } from "react-toastify";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +34,10 @@ export default function RootLayout({
           <AppRouterCacheProvider>
             <CustomProviderTheme>
               <CssBaseline />
-              <div className="app">{children}</div>
+              <div className="app">
+                {children}
+                <ToastContainer />
+              </div>
             </CustomProviderTheme>
           </AppRouterCacheProvider>
         </ThemeProvider>
