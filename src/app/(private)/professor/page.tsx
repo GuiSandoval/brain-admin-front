@@ -4,16 +4,16 @@ import PageTitle from "@/components/pageTitle/pageTitle";
 import { useAuth } from "@/hooks/useAuth";
 import { Container, Typography } from "@mui/material";
 
-export default function AlunoPage() {
+export default function ProfessorPage() {
   const { user } = useAuth();
 
   return (
-    <ProtectedRoute allowedRoles={["ESTUDANTE"]}>
+    <ProtectedRoute allowedRoles={["PROFESSOR"]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        <PageTitle title="Dashboard do Estudante" />
+        <PageTitle title="Dashboard do Professor" />
 
         <Typography variant="h4" component="h1" gutterBottom>
-          Bem-vindo, {user?.email}!
+          Bem-vindo, Professor {user?.email}!
         </Typography>
       </Container>
     </ProtectedRoute>

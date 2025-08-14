@@ -1,9 +1,15 @@
 "use client";
 import { RoutesConstants } from "@/constants/routesConstants";
+import { useAuth } from "@/hooks/useAuth";
+import { UserRole } from "@/utils/auth";
 import AdbIcon from "@mui/icons-material/Adb";
 import BookIcon from "@mui/icons-material/AutoStories";
 import CalendarIcon from "@mui/icons-material/CalendarToday";
-import Cookies from "js-cookie";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import GroupIcon from "@mui/icons-material/Group";
+import PersonIcon from "@mui/icons-material/Person";
+import SettingsIcon from "@mui/icons-material/Settings";
+import AssessmentIcon from "@mui/icons-material/Assessment";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useRouter } from "next/navigation";
 
@@ -16,34 +22,95 @@ import Toolbar from "@mui/material/Toolbar";
 import * as React from "react";
 import * as S from "./styles";
 
-const pages = [
+const menusByRole: Record<
+  UserRole,
+  Array<{ text: string; icon: React.JSX.Element; router: string }>
+> = {
+  ESTUDANTE: [
+    {
+      text: "Dashboard",
+      icon: <DashboardIcon fontSize="small" />,
+      router: "/aluno",
+    },
+    {
+      text: "Minhas aulas",
+      icon: <BookIcon fontSize="small" />,
+      router: RoutesConstants.MINHAS_AULAS,
+    },
+    {
+      text: "Calendário",
+      icon: <CalendarIcon fontSize="small" />,
+      router: RoutesConstants.CALENDARIO,
+    },
+    {
+      text: "Boletim",
+      icon: <BookIcon fontSize="small" />,
+      router: RoutesConstants.BOLETIM,
+    },
+  ],
+  PROFESSOR: [
+    {
+      text: "Dashboard",
+      icon: <DashboardIcon fontSize="small" />,
+      router: "/professor",
+    },
+    {
+      text: "Turmas",
+      icon: <GroupIcon fontSize="small" />,
+      router: "/turmas",
+    },
+    {
+      text: "Calendário",
+      icon: <CalendarIcon fontSize="small" />,
+      router: RoutesConstants.CALENDARIO,
+    },
+  ],
+  ADMIN: [
+    {
+      text: "Dashboard",
+      icon: <DashboardIcon fontSize="small" />,
+      router: "/admin",
+    },
+    {
+      text: "Usuários",
+      icon: <GroupIcon fontSize="small" />,
+      router: "/usuarios",
+    },
+    {
+      text: "Relatórios",
+      icon: <AssessmentIcon fontSize="small" />,
+      router: "/relatorios",
+    },
+    {
+      text: "Configurações",
+      icon: <SettingsIcon fontSize="small" />,
+      router: "/configuracoes",
+    },
+  ],
+};
+
+const settings = [
   {
-    text: "Minhas aulas",
-    icon: <BookIcon fontSize="small" />,
-    router: RoutesConstants.MINHAS_AULAS,
-  },
-  {
-    text: "Calendário",
-    icon: <CalendarIcon fontSize="small" />,
-    router: RoutesConstants.CALENDARIO,
-  },
-  {
-    text: "Boletim",
-    icon: <BookIcon fontSize="small" />,
-    router: RoutesConstants.BOLETIM,
+    text: "Perfil",
+    icon: <PersonIcon fontSize="small" />,
+    router: "/perfil",
   },
 ];
-const settings = ["Profile", "Account", "Dashboard"];
 
 export default function DrawnerMenu() {
   const router = useRouter();
+  const { user, signOut } = useAuth();
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
+  // Obtém o menu baseado no role do usuário
+  const pages = user ? menusByRole[user.role] || [] : [];
+
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -57,9 +124,23 @@ export default function DrawnerMenu() {
   };
 
   const handleLogout = () => {
-    Cookies.remove("token");
-    router.push("/login");
+    signOut();
   };
+
+  const handleNavigateToSetting = (route: string) => {
+    router.push(route);
+    handleCloseUserMenu();
+  };
+
+  const handleNavigateToPage = (route: string) => {
+    router.push(route);
+    handleCloseNavMenu();
+  };
+
+  // Se não há usuário logado, não exibe o menu
+  if (!user) {
+    return null;
+  }
 
   return (
     <AppBar
@@ -83,7 +164,7 @@ export default function DrawnerMenu() {
                 textDecoration: "none",
               }}
             >
-              EduManage
+              Brain
             </Typography>
           </S.LinkLogo>
 
@@ -115,8 +196,11 @@ export default function DrawnerMenu() {
               sx={{ display: { xs: "block", md: "none" } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page.text} onClick={handleCloseNavMenu}>
-                  <Typography color="black" sx={{ textAlign: "center" }}>
+                <MenuItem key={page.text} onClick={() => handleNavigateToPage(page.router)}>
+                  <Typography
+                    color="black"
+                    sx={{ textAlign: "center", display: "flex", alignItems: "center", gap: 1 }}
+                  >
                     {page.icon}
                     {page.text}
                   </Typography>
@@ -139,22 +223,34 @@ export default function DrawnerMenu() {
               textDecoration: "none",
             }}
           >
-            LOGO
+            Brain
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <S.ItemMenu key={page.text} href={page.router}>
-                <Button onClick={handleCloseNavMenu}>
+                <Button
+                  onClick={() => handleNavigateToPage(page.router)}
+                  sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                >
                   {page.icon}
                   {page.text}
                 </Button>
               </S.ItemMenu>
             ))}
           </Box>
+
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mr: 2 }}>
+            <Typography variant="body2" color="text.secondary">
+              {user.email} ({user.role})
+            </Typography>
+          </Box>
+
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt={user.email} src="/static/images/avatar/2.jpg">
+                  {user.email.charAt(0).toUpperCase()}
+                </Avatar>
               </IconButton>
             </Tooltip>
             <Menu
@@ -174,8 +270,16 @@ export default function DrawnerMenu() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: "center" }}>{setting}</Typography>
+                <MenuItem
+                  key={setting.text}
+                  onClick={() => handleNavigateToSetting(setting.router)}
+                >
+                  <Typography
+                    sx={{ textAlign: "center", display: "flex", alignItems: "center", gap: 1 }}
+                  >
+                    {setting.icon}
+                    {setting.text}
+                  </Typography>
                 </MenuItem>
               ))}
 

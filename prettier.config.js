@@ -3,6 +3,7 @@ module.exports = {
   singleQuote: false, // Usar aspas simples
   trailingComma: "all", // Sempre adicionar vírgula no final de objetos/arrays
   tabWidth: 2, // Tamanho da tabulação: 2 espaços
+  useTabs: false, // Usar espaços em vez de tabs
   printWidth: 100, // Quebrar linha se passar de 100 caracteres
   bracketSpacing: true, // Espaço entre chaves { exemplo }
   arrowParens: "always", // Sempre colocar parênteses em arrow functions (ex: (x) => x)

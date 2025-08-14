@@ -1,4 +1,5 @@
 import CustomProviderTheme from "@/styles/Providers";
+import { AuthProvider } from "@/hooks/useAuth";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import CssBaseline from "@mui/material/CssBaseline";
 import type { Metadata } from "next";
@@ -33,11 +34,13 @@ export default function RootLayout({
         <ThemeProvider>
           <AppRouterCacheProvider>
             <CustomProviderTheme>
-              <CssBaseline />
-              <div className="app">
-                {children}
-                <ToastContainer />
-              </div>
+              <AuthProvider>
+                <CssBaseline />
+                <div className="app">
+                  {children}
+                  <ToastContainer />
+                </div>
+              </AuthProvider>
             </CustomProviderTheme>
           </AppRouterCacheProvider>
         </ThemeProvider>

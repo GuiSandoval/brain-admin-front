@@ -4,13 +4,11 @@ import * as S from "./styles";
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
 import { loginApi } from "@/services/api";
 import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const { setTheme } = useTheme();
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,20 +19,57 @@ export default function LoginPage() {
 
   async function onSubmitLogin() {
     try {
-      console.log("teste");
-
       setIsLoading(true);
       const response = await loginApi.login({
         email,
         senha: password,
       });
-      console.log("teste", response);
-      if (!response) throw new Error("Credenciais inválidas");
+
+      if (!response || !response.tokenAcesso || !response.refreshToken) {
+        throw new Error("Credenciais inválidas");
+      }
+
       Cookies.set("token", response.tokenAcesso);
-      router.push("/");
-      toast.success("Login realizado com sucesso!");
+      Cookies.set("refreshToken", response.refreshToken);
+
+      try {
+        const base64Url = response.tokenAcesso.split(".")[1];
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split("")
+            .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+            .join(""),
+        );
+
+        const payload = JSON.parse(jsonPayload);
+        const role = payload.role.replace(/[\[\]]/g, ""); // Remove os colchetes
+
+        let redirectPath = "/";
+        switch (role) {
+          case "ESTUDANTE":
+            redirectPath = "/aluno";
+            break;
+          case "PROFESSOR":
+            redirectPath = "/professor";
+            break;
+          case "ADMIN":
+            redirectPath = "/admin";
+            break;
+        }
+
+        toast.success("Login realizado com sucesso!");
+
+        window.location.href = redirectPath;
+      } catch (decodeError) {
+        console.error("Erro ao decodificar token:", decodeError);
+        toast.success("Login realizado com sucesso!");
+        window.location.href = "/";
+      }
     } catch (error) {
-      const messageError = error instanceof Error ? error.message : "Erro desconhecido";
+      console.error("Erro ao realizar login:", error);
+      const messageError = "Credenciais inválidas";
+      // const messageError = error instanceof Error ? error.message : "Erro desconhecido";
       toast.error(messageError);
     } finally {
       setIsLoading(false);

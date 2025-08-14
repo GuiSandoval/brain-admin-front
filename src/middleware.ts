@@ -1,5 +1,15 @@
 import { MiddlewareConfig, NextRequest, NextResponse } from "next/server";
 
+type UserRole = "ESTUDANTE" | "PROFESSOR" | "ADMIN";
+
+interface JWTPayload {
+  iss: string;
+  sub: string;
+  id: number;
+  role: string;
+  exp: number;
+}
+
 const publicRoutes = [
   { path: "/login", whenAuthenticated: "redirect" },
   { path: "/register", whenAuthenticated: "redirect" },
@@ -8,6 +18,59 @@ const publicRoutes = [
 ] as const;
 
 const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/login";
+
+// Define as rotas permitidas para cada role
+const ROLE_ROUTES: Record<UserRole, string[]> = {
+  ESTUDANTE: ["/", "/aluno", "/boletim", "/calendario", "/minhas-aulas", "/perfil"],
+  PROFESSOR: ["/", "/professor", "/turmas", "/calendario", "/perfil"],
+  ADMIN: ["/", "/admin", "/usuarios", "/relatorios", "/configuracoes", "/perfil"],
+};
+
+function decodeToken(token: string): { role: UserRole; exp: number } | null {
+  try {
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join(""),
+    );
+
+    const payload: JWTPayload = JSON.parse(jsonPayload);
+    const role = payload.role.replace(/[\[\]]/g, "") as UserRole;
+
+    return {
+      role,
+      exp: payload.exp,
+    };
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return null;
+  }
+}
+
+function canAccessRoute(userRole: UserRole, route: string): boolean {
+  const allowedRoutes = ROLE_ROUTES[userRole];
+
+  if (allowedRoutes.includes(route)) return true;
+  return allowedRoutes.some(
+    (allowedRoute) => route.startsWith(allowedRoute + "/") || route === allowedRoute,
+  );
+}
+
+function getDefaultRoute(userRole: UserRole): string {
+  switch (userRole) {
+    case "ESTUDANTE":
+      return "/aluno";
+    case "PROFESSOR":
+      return "/professor";
+    case "ADMIN":
+      return "/admin";
+    default:
+      return "/";
+  }
+}
 
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
@@ -25,12 +88,53 @@ export function middleware(request: NextRequest) {
   }
 
   if (authToken && publicRoute && publicRoute.whenAuthenticated === "redirect") {
+    // Decodifica o token para obter o role
+    const tokenData = decodeToken(authToken.value);
+    if (tokenData) {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = getDefaultRoute(tokenData.role);
+      return NextResponse.redirect(redirectUrl);
+    }
+
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/";
     return NextResponse.redirect(redirectUrl);
   }
 
   if (authToken && !publicRoute) {
+    // Verifica se o token é válido
+    const tokenData = decodeToken(authToken.value);
+
+    if (!tokenData) {
+      // Token inválido, redireciona para login
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE;
+      const response = NextResponse.redirect(redirectUrl);
+      response.cookies.delete("token");
+      response.cookies.delete("refreshToken");
+      return response;
+    }
+
+    // Verifica se o token não expirou
+    const currentTime = Math.floor(Date.now() / 1000);
+    if (tokenData.exp <= currentTime) {
+      // Token expirado, redireciona para login
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE;
+      const response = NextResponse.redirect(redirectUrl);
+      response.cookies.delete("token");
+      response.cookies.delete("refreshToken");
+      return response;
+    }
+
+    // Verifica se o usuário tem permissão para acessar a rota
+    if (!canAccessRoute(tokenData.role, path)) {
+      // Redireciona para a rota padrão do role apenas se não tiver permissão
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = getDefaultRoute(tokenData.role);
+      return NextResponse.redirect(redirectUrl);
+    }
+
     return NextResponse.next();
   }
 

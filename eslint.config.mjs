@@ -17,7 +17,7 @@ const eslintConfig = [
       semi: ["error", "always"], // Sempre usar ponto e vírgula
       quotes: ["error", "double"], // Usar aspas duplas (singleQuote: false)
       "comma-dangle": ["error", "always-multiline"], // Vírgula no final (trailingComma: 'all')
-      indent: ["error", 2], // Indentação de 2 espaços (tabWidth: 2)
+      // indent: ["error", 2], // Indentação de 2 espaços (tabWidth: 2)
       "object-curly-spacing": ["error", "always"], // Espaço entre chaves (bracketSpacing: true)
       "arrow-parens": ["error", "always"], // Sempre parênteses em arrow functions (arrowParens: 'always')
       "eol-last": ["error", "always"], // Quebra de linha no final do arquivo (endOfLine: 'lf')
