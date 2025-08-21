@@ -3,9 +3,9 @@ import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import LayoutColumns from "@/components/layoutColumns/layoutColumns";
 import PageTitle from "@/components/pageTitle/pageTitle";
 import SectionMinhasAulas from "@/components/sectionMinhasAulas/sectionMinhasAulas";
+import SectionPlanejamento from "@/components/sectionPlanejamento/sectionPlanejamento";
 import { useAuth } from "@/hooks/useAuth";
 import { Container, Typography } from "@mui/material";
-import * as S from "./styles";
 
 export default function ProfessorPage() {
   const { user } = useAuth();
@@ -20,11 +20,7 @@ export default function ProfessorPage() {
         </Typography>
         <LayoutColumns sizeLeft="70%" sizeRight="30%">
           <SectionMinhasAulas />
-          <S.AreaAssignments>
-            <PageTitle title="Assignments" description="Recent assign and theis status" />
-            {/* Here you can add components or content related to assignments */}
-            {/* Example: <CardAssignment /> */}
-          </S.AreaAssignments>
+          <SectionPlanejamento />
         </LayoutColumns>
       </Container>
     </ProtectedRoute>
