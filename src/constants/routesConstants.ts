@@ -4,4 +4,5 @@ export const RoutesConstants = {
   CALENDARIO: "/calendario",
   BOLETIM: "/boletim",
   PERFIL: "/perfil",
+  AVALIACOES: "/avaliacoes",
 } as const;

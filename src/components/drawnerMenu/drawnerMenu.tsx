@@ -28,7 +28,7 @@ const menusByRole: Record<
 > = {
   ESTUDANTE: [
     {
-      text: "Dashboard",
+      text: "Home",
       icon: <DashboardIcon fontSize="small" />,
       router: "/aluno",
     },
@@ -50,7 +50,7 @@ const menusByRole: Record<
   ],
   PROFESSOR: [
     {
-      text: "Dashboard",
+      text: "Home ",
       icon: <DashboardIcon fontSize="small" />,
       router: "/professor",
     },
@@ -60,6 +60,11 @@ const menusByRole: Record<
       router: "/turmas",
     },
     {
+      text: "Avaliações e tarefas",
+      icon: <AssessmentIcon fontSize="small" />,
+      router: "/avaliacoes",
+    },
+    {
       text: "Calendário",
       icon: <CalendarIcon fontSize="small" />,
       router: RoutesConstants.CALENDARIO,
@@ -67,7 +72,7 @@ const menusByRole: Record<
   ],
   ADMIN: [
     {
-      text: "Dashboard",
+      text: "Home",
       icon: <DashboardIcon fontSize="small" />,
       router: "/admin",
     },
@@ -228,10 +233,7 @@ export default function DrawnerMenu() {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <S.ItemMenu key={page.text} href={page.router}>
-                <Button
-                  onClick={() => handleNavigateToPage(page.router)}
-                  sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                >
+                <Button sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   {page.icon}
                   {page.text}
                 </Button>
