@@ -12,13 +12,22 @@ interface ICardClassProps {
   hour: string;
   campus: string;
   quantityStudents: number;
+  onClick?: () => void;
 }
 
-function CardClass({ campus, classroom, image, quantityStudents, hour, title }: ICardClassProps) {
+function CardClass({
+  campus,
+  classroom,
+  image,
+  quantityStudents,
+  hour,
+  title,
+  onClick,
+}: ICardClassProps) {
   const showAreaImage = !isNullUndefined(image);
 
   return (
-    <S.Container>
+    <S.Container onClick={onClick} style={{ cursor: onClick ? "pointer" : "default" }}>
       {showAreaImage && (
         <S.AreaImage>
           <Image src={image} alt="Placeholder" width={75} height={75} />

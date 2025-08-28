@@ -87,8 +87,8 @@ export function hasPermission(userRole: UserRole, requiredRoles: UserRole[]): bo
  */
 export const ROLE_ROUTES: Record<UserRole, string[]> = {
   ESTUDANTE: ["/", "/aluno", "/boletim", "/calendario", "/minhas-aulas", "/perfil"],
-  PROFESSOR: ["/", "/professor", "/turmas", "/calendario", "/perfil"],
-  ADMIN: ["/", "/admin", "/usuarios", "/relatorios", "/configuracoes", "/perfil"],
+  PROFESSOR: ["/", "/professor", "/turmas", "/calendario", "/perfil", "/aulas"],
+  ADMIN: ["/", "/admin", "/usuarios", "/relatorios", "/configuracoes", "/perfil", "/aulas"],
 };
 
 /**
@@ -111,14 +111,14 @@ export function canAccessRoute(userRole: UserRole, route: string): boolean {
  */
 export function getDefaultRoute(userRole: UserRole): string {
   switch (userRole) {
-  case "ESTUDANTE":
-    return "/aluno";
-  case "PROFESSOR":
-    return "/professor";
-  case "ADMIN":
-    return "/admin";
-  default:
-    return "/";
+    case "ESTUDANTE":
+      return "/aluno";
+    case "PROFESSOR":
+      return "/professor";
+    case "ADMIN":
+      return "/admin";
+    default:
+      return "/";
   }
 }
 

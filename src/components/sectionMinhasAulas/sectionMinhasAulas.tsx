@@ -2,10 +2,17 @@
 
 import CardClass from "@/components/cardClass/cardClass";
 import { useAulas } from "@/hooks/useAulas";
+import { useRouter } from "next/navigation";
 import * as S from "./styles";
 
 export default function SectionMinhasAulas() {
   const { aulas, loading, error, refetch, isFetching } = useAulas();
+  const router = useRouter();
+
+  const handleAulaClick = (aulaIndex: number) => {
+    // Por enquanto vamos usar o index como ID, mas idealmente seria o ID real da aula
+    router.push(`/aulas/aula/${aulaIndex + 1}`);
+  };
 
   if (loading) {
     return (
@@ -66,6 +73,7 @@ export default function SectionMinhasAulas() {
           classroom={aula.turma}
           campus={""}
           quantityStudents={0}
+          onClick={() => handleAulaClick(index)}
         />
       ))}
     </S.Container>
