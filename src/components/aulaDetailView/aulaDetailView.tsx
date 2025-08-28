@@ -49,15 +49,8 @@ const AulaDetailView: React.FC<AulaDetailViewProps> = ({ type, data }) => {
     const presencaData = data as AlunoPresenca[];
 
     return (
-      <Box>
-        <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
-          <Button variant="contained" size="small">
-            📋 Presença
-          </Button>
-          <Typography variant="h6">Nome</Typography>
-        </Stack>
-
-        <TableContainer component={Paper}>
+      <Box sx={{ paddingTop: 0 }}>
+        <TableContainer component={Paper} sx={{ p: 0 }}>
           <Table>
             <TableHead>
               <TableRow sx={{ bgcolor: "grey.50" }}>
@@ -95,7 +88,7 @@ const AulaDetailView: React.FC<AulaDetailViewProps> = ({ type, data }) => {
           <Typography variant="h6" gutterBottom>
             Conteúdo do dia
           </Typography>
-          <Paper sx={{ p: 3, bgcolor: "grey.50" }}>
+          <Paper sx={{ bgcolor: "grey.50" }}>
             <Typography variant="body1" color="text.secondary">
               It is a long established fact that a reader will be distracted
             </Typography>
@@ -115,7 +108,7 @@ const AulaDetailView: React.FC<AulaDetailViewProps> = ({ type, data }) => {
 
           <Stack spacing={3}>
             {tarefasData.map((tarefa) => (
-              <Paper key={tarefa.id} sx={{ p: 3, border: "1px solid", borderColor: "grey.200" }}>
+              <Paper key={tarefa.id} sx={{ border: "1px solid", borderColor: "grey.200" }}>
                 <Typography variant="h6" gutterBottom>
                   {tarefa.titulo}
                 </Typography>
@@ -192,7 +185,7 @@ const AulaDetailView: React.FC<AulaDetailViewProps> = ({ type, data }) => {
 
           <Stack spacing={3}>
             {registrosData.map((registro) => (
-              <Paper key={registro.id} sx={{ p: 3, border: "1px solid", borderColor: "grey.200" }}>
+              <Paper key={registro.id} sx={{ border: "1px solid", borderColor: "grey.200" }}>
                 <Box
                   sx={{
                     display: "flex",

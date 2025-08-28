@@ -1,27 +1,22 @@
 "use client";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
+import AulaDetailView from "@/components/aulaDetailView";
+import LayoutColumns from "@/components/layoutColumns/layoutColumns";
 import PageTitle from "@/components/pageTitle/pageTitle";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
-  Container,
-  Typography,
   Box,
   Card,
   CardContent,
-  Chip,
+  Container,
   IconButton,
-  Tabs,
-  Tab,
   Stack,
+  Tab,
+  Tabs,
+  Typography,
 } from "@mui/material";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import { useParams } from "next/navigation";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import GroupIcon from "@mui/icons-material/Group";
-import LayoutColumns from "@/components/layoutColumns/layoutColumns";
-import { useRouter } from "next/navigation";
-import AulaDetailView from "@/components/aulaDetailView";
 import { mockAulaDetail } from "../../../../../mocks/aulaDetail";
 
 interface TabPanelProps {
@@ -79,90 +74,6 @@ export default function AulaDetailPage() {
         </Box>
 
         <PageTitle title={aula.titulo} />
-
-        {/* Header da Aula */}
-        <Card sx={{ mb: 3 }}>
-          <CardContent>
-            <Box sx={{ display: "flex", alignItems: "flex-start", gap: 3 }}>
-              <Box
-                sx={{
-                  width: 80,
-                  height: 80,
-                  bgcolor: "grey.200",
-                  borderRadius: 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Typography variant="h6" color="text.secondary">
-                  📚
-                </Typography>
-              </Box>
-
-              <Box sx={{ flex: 1 }}>
-                <Typography variant="h4" component="h1" gutterBottom>
-                  {aula.titulo}
-                </Typography>
-
-                <Stack direction="row" spacing={3} sx={{ mb: 2 }}>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <AccessTimeIcon fontSize="small" color="action" />
-                    <Typography variant="body2" color="text.secondary">
-                      {aula.horario}
-                    </Typography>
-                  </Box>
-
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <LocationOnIcon fontSize="small" color="action" />
-                    <Typography variant="body2" color="text.secondary">
-                      {aula.sala}
-                    </Typography>
-                  </Box>
-
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <GroupIcon fontSize="small" color="action" />
-                    <Typography variant="body2" color="text.secondary">
-                      {aula.numeroEstudantes} estudantes
-                    </Typography>
-                  </Box>
-                </Stack>
-
-                <Typography variant="body1" color="text.secondary" paragraph>
-                  Resumo da aula e suas entregas
-                </Typography>
-
-                <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
-                  <Chip
-                    label={`Alunos presentes: ${aula.alunosPresentes}/${aula.numeroEstudantes}`}
-                    color="success"
-                    variant="outlined"
-                    size="small"
-                  />
-                  <Chip
-                    label={`Novas Tarefas: ${aula.novasTarefas}`}
-                    color="primary"
-                    variant="outlined"
-                    size="small"
-                  />
-                  <Chip
-                    label={`Registros disciplinares: ${aula.registrosDisciplinares}`}
-                    color="warning"
-                    variant="outlined"
-                    size="small"
-                  />
-                  <Chip
-                    label={`Tarefas para hoje: ${aula.tarefasParaHoje}`}
-                    color="info"
-                    variant="outlined"
-                    size="small"
-                  />
-                </Stack>
-              </Box>
-            </Box>
-          </CardContent>
-        </Card>
-
         {/* Tabs */}
         <LayoutColumns sizeLeft="70%" sizeRight="30%">
           <Box>
