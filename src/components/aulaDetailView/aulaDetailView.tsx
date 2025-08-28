@@ -179,34 +179,48 @@ const AulaDetailView: React.FC<AulaDetailViewProps> = ({ type, data }) => {
 
     return (
       <Box>
-        <Typography variant="h6" gutterBottom>
-          Registros Disciplinares
-        </Typography>
+        {/* Registros do dia */}
+        <Box sx={{ mb: 4 }}>
+          <Box
+            sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}
+          >
+            <Typography variant="h6">Registros do dia</Typography>
+            <Button variant="contained" color="primary" size="small">
+              + SALVAR
+            </Button>
+          </Box>
 
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow sx={{ bgcolor: "grey.50" }}>
-                <TableCell>Aluno</TableCell>
-                <TableCell>Tipo</TableCell>
-                <TableCell>Descrição</TableCell>
-                <TableCell>Data</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {registrosData.map((registro) => (
-                <TableRow key={registro.id}>
-                  <TableCell>{registro.aluno}</TableCell>
-                  <TableCell>
-                    <Chip label={registro.tipo} color="warning" size="small" />
-                  </TableCell>
-                  <TableCell>{registro.descricao}</TableCell>
-                  <TableCell>{registro.data}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+          <Stack spacing={3}>
+            {registrosData.map((registro) => (
+              <Paper key={registro.id} sx={{ p: 3, border: "1px solid", borderColor: "grey.200" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "flex-start",
+                    mb: 2,
+                  }}
+                >
+                  <Typography variant="h6" gutterBottom>
+                    {registro.aluno}
+                  </Typography>
+                  <Chip
+                    label={registro.tipo}
+                    color="secondary"
+                    size="small"
+                    sx={{ bgcolor: "grey.200", color: "text.primary" }}
+                  />
+                </Box>
+
+                <Typography variant="body2" color="text.secondary">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </Typography>
+              </Paper>
+            ))}
+          </Stack>
+        </Box>
       </Box>
     );
   }

@@ -100,16 +100,26 @@ export const mockAulaDetail = {
   registros: [
     {
       id: "1",
-      aluno: "João Silva Santos",
-      tipo: "Advertência",
-      descricao: "Conversas durante a explicação",
+      aluno: "Nome do Aluno",
+      tipo: "Conversa",
+      descricao:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
       data: "14/01/25",
     },
     {
       id: "2",
-      aluno: "Maria Oliveira Costa",
-      tipo: "Elogio",
-      descricao: "Excelente participação na aula",
+      aluno: "Nome do Aluno",
+      tipo: "Conversa",
+      descricao:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      data: "14/01/25",
+    },
+    {
+      id: "3",
+      aluno: "Nome do Aluno",
+      tipo: "Conversa",
+      descricao:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
       data: "14/01/25",
     },
   ],
