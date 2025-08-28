@@ -10,6 +10,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AssessmentIcon from "@mui/icons-material/Assessment";
+import AnnouncementIcon from "@mui/icons-material/Announcement";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useRouter } from "next/navigation";
 
@@ -65,6 +66,11 @@ const menusByRole: Record<
       router: "/avaliacoes",
     },
     {
+      text: "Comunicados",
+      icon: <AnnouncementIcon fontSize="small" />,
+      router: "/comunicados",
+    },
+    {
       text: "Calendário",
       icon: <CalendarIcon fontSize="small" />,
       router: RoutesConstants.CALENDARIO,
@@ -85,6 +91,11 @@ const menusByRole: Record<
       text: "Relatórios",
       icon: <AssessmentIcon fontSize="small" />,
       router: "/relatorios",
+    },
+    {
+      text: "Comunicados",
+      icon: <AnnouncementIcon fontSize="small" />,
+      router: "/comunicados",
     },
     {
       text: "Configurações",
