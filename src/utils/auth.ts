@@ -87,8 +87,25 @@ export function hasPermission(userRole: UserRole, requiredRoles: UserRole[]): bo
  */
 export const ROLE_ROUTES: Record<UserRole, string[]> = {
   ESTUDANTE: ["/", "/aluno", "/boletim", "/calendario", "/minhas-aulas", "/perfil"],
-  PROFESSOR: ["/", "/professor", "/turmas", "/calendario", "/perfil", "/aulas"],
-  ADMIN: ["/", "/admin", "/usuarios", "/relatorios", "/configuracoes", "/perfil", "/aulas"],
+  PROFESSOR: [
+    "/",
+    "/professor",
+    "/minhas-aulas",
+    "/calendario",
+    "/perfil",
+    "/aulas",
+    "/minhas-aulas",
+  ],
+  ADMIN: [
+    "/",
+    "/admin",
+    "/usuarios",
+    "/relatorios",
+    "/configuracoes",
+    "/perfil",
+    "/aulas",
+    "/minhas-aulas",
+  ],
 };
 
 /**

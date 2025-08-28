@@ -22,8 +22,26 @@ const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/login";
 // Define as rotas permitidas para cada role
 const ROLE_ROUTES: Record<UserRole, string[]> = {
   ESTUDANTE: ["/", "/aluno", "/boletim", "/calendario", "/minhas-aulas", "/perfil"],
-  PROFESSOR: ["/", "/professor", "/turmas", "/avaliacoes", "/calendario", "/perfil", "/aulas"],
-  ADMIN: ["/", "/admin", "/usuarios", "/relatorios", "/configuracoes", "/perfil", "/aulas"],
+  PROFESSOR: [
+    "/",
+    "/professor",
+    "/minhas-aulas",
+    "/avaliacoes",
+    "/calendario",
+    "/perfil",
+    "/aulas",
+    "/minhas-aulas",
+  ],
+  ADMIN: [
+    "/",
+    "/admin",
+    "/usuarios",
+    "/relatorios",
+    "/configuracoes",
+    "/perfil",
+    "/aulas",
+    "/minhas-aulas",
+  ],
 };
 
 function decodeToken(token: string): { role: UserRole; exp: number } | null {

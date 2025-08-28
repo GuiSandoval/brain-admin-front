@@ -57,7 +57,7 @@ const menusByRole: Record<
     {
       text: "Turmas",
       icon: <GroupIcon fontSize="small" />,
-      router: "/turmas",
+      router: "/minhas-aulas",
     },
     {
       text: "Avaliações e tarefas",
