@@ -86,21 +86,14 @@ export const mockAulaDetail = {
       id: "1",
       titulo: "Tarefa 1",
       descricao:
-        "It is a long established fact that a reader will be distracted by the readable content of a page when...",
+        "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content...",
       dataEnvio: "14/01/25",
     },
     {
       id: "2",
       titulo: "Tarefa 2",
       descricao:
-        "It is a long established fact that a reader will be distracted by the readable content of a page when...",
-      dataEnvio: "14/01/25",
-    },
-    {
-      id: "3",
-      titulo: "Tarefa 3",
-      descricao:
-        "It is a long established fact that a reader will be distracted by the readable content of a page when...",
+        "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content...",
       dataEnvio: "14/01/25",
     },
   ],

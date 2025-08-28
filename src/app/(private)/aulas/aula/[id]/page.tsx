@@ -19,6 +19,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import GroupIcon from "@mui/icons-material/Group";
+import LayoutColumns from "@/components/layoutColumns/layoutColumns";
 import { useRouter } from "next/navigation";
 import AulaDetailView from "@/components/aulaDetailView";
 import { mockAulaDetail } from "../../../../../mocks/aulaDetail";
@@ -163,26 +164,104 @@ export default function AulaDetailPage() {
         </Card>
 
         {/* Tabs */}
-        <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
-          <Tabs value={activeTab} onChange={handleTabChange}>
-            <Tab label="⭐ Lista de Presença" />
-            <Tab label="⭐ Conteúdo e Tarefas" />
-            <Tab label="⭐ Registros Disciplinares" />
-          </Tabs>
-        </Box>
+        <LayoutColumns sizeLeft="70%" sizeRight="30%">
+          <Box>
+            <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
+              <Tabs value={activeTab} onChange={handleTabChange}>
+                <Tab label="⭐ Lista de Presença" />
+                <Tab label="⭐ Conteúdo e Tarefas" />
+                <Tab label="⭐ Registros Disciplinares" />
+              </Tabs>
+            </Box>
 
-        {/* Tab Panels */}
-        <TabPanel value={activeTab} index={0}>
-          <AulaDetailView type="presenca" data={aula.presenca} />
-        </TabPanel>
+            {/* Tab Panels */}
+            <TabPanel value={activeTab} index={0}>
+              <AulaDetailView type="presenca" data={aula.presenca} />
+            </TabPanel>
 
-        <TabPanel value={activeTab} index={1}>
-          <AulaDetailView type="tarefas" data={aula.tarefas} />
-        </TabPanel>
+            <TabPanel value={activeTab} index={1}>
+              <AulaDetailView type="tarefas" data={aula.tarefas} />
+            </TabPanel>
 
-        <TabPanel value={activeTab} index={2}>
-          <AulaDetailView type="registros" data={aula.registros} />
-        </TabPanel>
+            <TabPanel value={activeTab} index={2}>
+              <AulaDetailView type="registros" data={aula.registros} />
+            </TabPanel>
+          </Box>
+
+          {/* Visão geral - Seção lateral */}
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              Visão geral
+            </Typography>
+            <Typography variant="body2" color="text.secondary" gutterBottom>
+              Resumo da aula e suas entregas
+            </Typography>
+
+            <Card sx={{ mt: 2 }}>
+              <CardContent>
+                <Stack spacing={2}>
+                  <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                    <Typography variant="body2" color="text.secondary">
+                      Alunos presentes
+                    </Typography>
+                    <Typography variant="body2" fontWeight="bold">
+                      {aula.alunosPresentes}/{aula.numeroEstudantes}
+                    </Typography>
+                  </Box>
+
+                  <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                    <Typography variant="body2" color="text.secondary">
+                      Novas Tarefas
+                    </Typography>
+                    <Typography variant="body2" fontWeight="bold">
+                      {aula.novasTarefas}
+                    </Typography>
+                  </Box>
+
+                  <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                    <Typography variant="body2" color="text.secondary">
+                      Registros disciplinares
+                    </Typography>
+                    <Typography variant="body2" fontWeight="bold">
+                      {aula.registrosDisciplinares}
+                    </Typography>
+                  </Box>
+
+                  <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                    <Typography variant="body2" color="text.secondary">
+                      Tarefas para hoje
+                    </Typography>
+                    <Typography variant="body2" fontWeight="bold">
+                      {aula.tarefasParaHoje}
+                    </Typography>
+                  </Box>
+                </Stack>
+              </CardContent>
+            </Card>
+
+            {/* Cards de tarefas na lateral */}
+            <Box sx={{ mt: 3 }}>
+              {aula.tarefas.slice(0, 3).map((tarefa, index) => (
+                <Card key={tarefa.id} sx={{ mb: 2 }}>
+                  <CardContent sx={{ p: 2 }}>
+                    <Typography variant="subtitle2" gutterBottom>
+                      Tarefa {index + 1}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" paragraph>
+                      It is a long established fact that a reader will be distracted by the readable
+                      content of a page when...
+                    </Typography>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <Typography variant="caption" color="text.secondary">
+                        🕒 Envio: {tarefa.dataEnvio}
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </Card>
+              ))}
+            </Box>
+          </Box>
+        </LayoutColumns>
       </Container>
     </ProtectedRoute>
   );
