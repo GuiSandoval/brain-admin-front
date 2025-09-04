@@ -12,5 +12,9 @@ export const QUERY_KEYS = {
     details: () => [...QUERY_KEYS.aulas.all, "detail"] as const,
     detail: (id: string | number) => [...QUERY_KEYS.aulas.details(), id] as const,
   },
+  tarefas: {
+    all: ["tarefas"] as const,
+    lists: () => [...QUERY_KEYS.tarefas.all, "list"] as const,
+  },
   // Outros recursos podem ser adicionados aqui futuramente
 } as const;

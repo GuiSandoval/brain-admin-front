@@ -19,6 +19,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { mockAulaDetail } from "../../../../../mocks/aulaDetail";
 import ListaPresenca from "@/components/aulaDetailView/listaPresenca/listaPresenca";
+import ConteudosTarefas from "@/components/aulaDetailView/conteudosTarefas/conteudosTarefas";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -90,7 +91,7 @@ export default function AulaDetailPage() {
               <ListaPresenca idAula={aulaId} />
             </TabPanel>
             <TabPanel value={activeTab} index={1}>
-              <AulaDetailView type="tarefas" data={aula.tarefas} />
+              <ConteudosTarefas />
             </TabPanel>
             <TabPanel value={activeTab} index={2}>
               <AulaDetailView type="registros" data={aula.registros} />
