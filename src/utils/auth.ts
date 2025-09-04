@@ -147,5 +147,37 @@ export function getDefaultRoute(userRole: UserRole): string {
 export function logout(): void {
   Cookies.remove("token");
   Cookies.remove("refreshToken");
+  // Remove também do localStorage
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("access_token");
+  }
   window.location.href = "/login";
+}
+
+/**
+ * Salva o token de acesso no localStorage
+ */
+export function setAccessToken(token: string): void {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("access_token", token);
+  }
+}
+
+/**
+ * Obtém o token de acesso do localStorage
+ */
+export function getAccessToken(): string | null {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("access_token");
+  }
+  return null;
+}
+
+/**
+ * Remove o token de acesso do localStorage
+ */
+export function removeAccessToken(): void {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("access_token");
+  }
 }

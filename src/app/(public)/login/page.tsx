@@ -6,6 +6,7 @@ import { useTheme } from "next-themes";
 import Cookies from "js-cookie";
 import { loginApi } from "@/services/api";
 import { toast } from "react-toastify";
+import { setAccessToken } from "@/utils/auth";
 
 export default function LoginPage() {
   const { setTheme } = useTheme();
@@ -31,6 +32,9 @@ export default function LoginPage() {
 
       Cookies.set("token", response.tokenAcesso);
       Cookies.set("refreshToken", response.refreshToken);
+
+      // Salva também no localStorage para as requisições automáticas
+      setAccessToken(response.tokenAcesso);
 
       try {
         const base64Url = response.tokenAcesso.split(".")[1];

@@ -9,6 +9,23 @@ export class AxiosHttpClient implements HttpClient {
       baseURL,
       ...config,
     });
+
+    // Interceptor para adicionar automaticamente o Bearer token em todas as requisições
+    this.client.interceptors.request.use(
+      (config) => {
+        // Verifica se existe token no localStorage
+        if (typeof window !== "undefined") {
+          const token = localStorage.getItem("access_token");
+          if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+          }
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      },
+    );
   }
 
   async get<TResponse, TParams = Record<string, unknown>>(

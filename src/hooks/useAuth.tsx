@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, createContext, useContext, ReactNode } from "react";
-import { getCurrentUser, UserData, logout } from "@/utils/auth";
+import { getCurrentUser, UserData, logout, getAccessToken, setAccessToken } from "@/utils/auth";
+import Cookies from "js-cookie";
 
 interface AuthContextData {
   user: UserData | null;
@@ -23,6 +24,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const updateUser = () => {
     const userData = getCurrentUser();
     setUser(userData);
+
+    // Sincroniza token do cookie com localStorage se necessário
+    if (userData) {
+      const cookieToken = Cookies.get("token");
+      const localStorageToken = getAccessToken();
+
+      if (cookieToken && cookieToken !== localStorageToken) {
+        setAccessToken(cookieToken);
+      }
+    }
   };
 
   useEffect(() => {
