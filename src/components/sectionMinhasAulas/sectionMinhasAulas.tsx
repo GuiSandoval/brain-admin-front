@@ -24,8 +24,8 @@ export default function SectionMinhasAulas() {
     data: formatDateForAPI(selectedDate),
   });
 
-  const handleAulaClick = (aulaIndex: number) => {
-    router.push(`/aulas/aula/${aulaIndex + 1}`);
+  const handleAulaClick = (aulaId: number) => {
+    router.push(`/aulas/aula/${aulaId}`);
   };
 
   const handleDateChange = (date: Date) => {
@@ -88,7 +88,7 @@ export default function SectionMinhasAulas() {
           classroom={`${aula.sala} ${aula.turma}`}
           campus={aula.unidade}
           quantityStudents={aula.quantidadeAlunos}
-          onClick={() => handleAulaClick(index)}
+          onClick={() => handleAulaClick(aula.aulaId)}
         />
       ))}
     </S.Container>

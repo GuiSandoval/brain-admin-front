@@ -1,5 +1,5 @@
 import { httpClient } from "@/services/http";
-import { AulaResponse } from "./response";
+import { AulaAlunoResponse, AulaResponse } from "./response";
 import { IBrainResult } from "@/services/commoResponse";
 
 const BASE_ROUTE = "aula";
@@ -13,5 +13,8 @@ export class AulaApi {
   }
   postAula(): Promise<void> {
     return httpClient.post(`${BASE_ROUTE}`);
+  }
+  listaAlunosByIdAula(idAula: string): Promise<AulaAlunoResponse[]> {
+    return httpClient.get(`${BASE_ROUTE}/${idAula}/alunos`);
   }
 }

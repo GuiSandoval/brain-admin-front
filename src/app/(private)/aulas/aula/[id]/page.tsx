@@ -87,7 +87,7 @@ export default function AulaDetailPage() {
 
             {/* Tab Panels */}
             <TabPanel value={activeTab} index={0}>
-              <AulaDetailView type="presenca" data={aula.presenca} />
+              <AulaDetailView type="presenca" idAula={aulaId} />
             </TabPanel>
 
             <TabPanel value={activeTab} index={1}>

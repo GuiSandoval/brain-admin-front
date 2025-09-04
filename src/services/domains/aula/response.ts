@@ -4,3 +4,10 @@ export interface AulaResponse {
   disciplina: string;
   horario: string;
 }
+
+export interface AulaAlunoResponse {
+  id: string;
+  nome: string;
+  registros: number;
+  faltas: number;
+}

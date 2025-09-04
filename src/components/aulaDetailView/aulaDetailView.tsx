@@ -1,20 +1,7 @@
 "use client";
+import { Box, Button, Chip, Paper, Stack, Typography } from "@mui/material";
 import React from "react";
-import {
-  Box,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Checkbox,
-  Chip,
-  Button,
-  Stack,
-} from "@mui/material";
+import ListaPresenca from "./listaPresenca/listaPresenca";
 
 interface AlunoPresenca {
   id: string;
@@ -41,42 +28,12 @@ interface RegistroDisciplinar {
 
 interface AulaDetailViewProps {
   type: "presenca" | "tarefas" | "registros";
-  data: AlunoPresenca[] | Tarefa[] | RegistroDisciplinar[];
+  data?: AlunoPresenca[] | Tarefa[] | RegistroDisciplinar[];
+  idAula?: string;
 }
 
-const AulaDetailView: React.FC<AulaDetailViewProps> = ({ type, data }) => {
-  if (type === "presenca") {
-    const presencaData = data as AlunoPresenca[];
-
-    return (
-      <Box sx={{ paddingTop: 0 }}>
-        <TableContainer component={Paper} sx={{ p: 0 }}>
-          <Table>
-            <TableHead>
-              <TableRow sx={{ bgcolor: "grey.50" }}>
-                <TableCell>Presença</TableCell>
-                <TableCell>Nome</TableCell>
-                <TableCell align="center">Registros no bim.</TableCell>
-                <TableCell align="center">Faltas</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {presencaData.map((aluno) => (
-                <TableRow key={aluno.id}>
-                  <TableCell>
-                    <Checkbox checked={aluno.presente} />
-                  </TableCell>
-                  <TableCell>{aluno.nome}</TableCell>
-                  <TableCell align="center">{aluno.registrosNoBim}</TableCell>
-                  <TableCell align="center">{aluno.faltas}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
-    );
-  }
+const AulaDetailView: React.FC<AulaDetailViewProps> = ({ type, data, idAula }) => {
+  if (type === "presenca") return <ListaPresenca idAula={idAula} />;
 
   if (type === "tarefas") {
     const tarefasData = data as Tarefa[];
