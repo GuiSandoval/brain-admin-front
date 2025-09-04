@@ -13,8 +13,11 @@ export class AxiosHttpClient implements HttpClient {
     // Interceptor para adicionar automaticamente o Bearer token em todas as requisições
     this.client.interceptors.request.use(
       (config) => {
-        // Verifica se existe token no localStorage
-        if (typeof window !== "undefined") {
+        // Não adicionar token para rotas de login
+        const isLoginRoute = config.url?.includes("login");
+
+        // Verifica se existe token no localStorage e não é uma rota de login
+        if (typeof window !== "undefined" && !isLoginRoute) {
           const token = localStorage.getItem("access_token");
           if (token) {
             config.headers.Authorization = `Bearer ${token}`;
