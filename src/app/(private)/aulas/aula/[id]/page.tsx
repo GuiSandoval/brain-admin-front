@@ -1,25 +1,16 @@
 "use client";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import AulaDetailView from "@/components/aulaDetailView";
+import ConteudosTarefas from "@/components/aulaDetailView/conteudosTarefas/conteudosTarefas";
+import ListaPresenca from "@/components/aulaDetailView/listaPresenca/listaPresenca";
 import LayoutColumns from "@/components/layoutColumns/layoutColumns";
 import PageTitle from "@/components/pageTitle/pageTitle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import {
-  Box,
-  Card,
-  CardContent,
-  Container,
-  IconButton,
-  Stack,
-  Tab,
-  Tabs,
-  Typography,
-} from "@mui/material";
+import { Box, Container, IconButton, Tab, Tabs, Typography } from "@mui/material";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { mockAulaDetail } from "../../../../../mocks/aulaDetail";
-import ListaPresenca from "@/components/aulaDetailView/listaPresenca/listaPresenca";
-import ConteudosTarefas from "@/components/aulaDetailView/conteudosTarefas/conteudosTarefas";
+import SectionVisaoGeral from "./sectionVisaoGeral/sectionVisaoGeral";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -99,78 +90,7 @@ export default function AulaDetailPage() {
           </Box>
 
           {/* Visão geral - Seção lateral */}
-          <Box>
-            <Typography variant="h6" gutterBottom>
-              Visão geral
-            </Typography>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              Resumo da aula e suas entregas
-            </Typography>
-
-            <Card sx={{ mt: 2 }}>
-              <CardContent>
-                <Stack spacing={2}>
-                  <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                    <Typography variant="body2" color="text.secondary">
-                      Alunos presentes
-                    </Typography>
-                    <Typography variant="body2" fontWeight="bold">
-                      {aula.alunosPresentes}/{aula.numeroEstudantes}
-                    </Typography>
-                  </Box>
-
-                  <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                    <Typography variant="body2" color="text.secondary">
-                      Novas Tarefas
-                    </Typography>
-                    <Typography variant="body2" fontWeight="bold">
-                      {aula.novasTarefas}
-                    </Typography>
-                  </Box>
-
-                  <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                    <Typography variant="body2" color="text.secondary">
-                      Registros disciplinares
-                    </Typography>
-                    <Typography variant="body2" fontWeight="bold">
-                      {aula.registrosDisciplinares}
-                    </Typography>
-                  </Box>
-
-                  <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                    <Typography variant="body2" color="text.secondary">
-                      Tarefas para hoje
-                    </Typography>
-                    <Typography variant="body2" fontWeight="bold">
-                      {aula.tarefasParaHoje}
-                    </Typography>
-                  </Box>
-                </Stack>
-              </CardContent>
-            </Card>
-
-            {/* Cards de tarefas na lateral */}
-            <Box sx={{ mt: 3 }}>
-              {aula.tarefas.slice(0, 3).map((tarefa, index) => (
-                <Card key={tarefa.id} sx={{ mb: 2 }}>
-                  <CardContent sx={{ p: 2 }}>
-                    <Typography variant="subtitle2" gutterBottom>
-                      Tarefa {index + 1}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" paragraph>
-                      It is a long established fact that a reader will be distracted by the readable
-                      content of a page when...
-                    </Typography>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      <Typography variant="caption" color="text.secondary">
-                        🕒 Envio: {tarefa.dataEnvio}
-                      </Typography>
-                    </Box>
-                  </CardContent>
-                </Card>
-              ))}
-            </Box>
-          </Box>
+          <SectionVisaoGeral aula={aula} />
         </LayoutColumns>
       </Container>
     </ProtectedRoute>

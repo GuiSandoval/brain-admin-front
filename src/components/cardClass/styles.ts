@@ -12,6 +12,7 @@ export const Container = styled.div`
   padding: 20px 16px;
   gap: 12px;
   border: 1px solid ${cssVarColor("border")};
+  background: ${cssVarColor("backgroundSection")};
   transition: background 0.2s ease-in;
   width: 100%;
   ${BrainBoxShadow}

@@ -11,6 +11,7 @@ export const lightTheme: DefaultTheme = {
     accent: "#10B981",
     headerMenu: "#3B82F6",
     border: "#e4e4e7",
+    backgroundSection: "#FFFFFF",
   },
   fonts: {
     body: "'Inter', sans-serif",
@@ -29,6 +30,7 @@ export const darkTheme: DefaultTheme = {
     accent: "#34D399",
     headerMenu: "#0F172A",
     border: "#374151",
+    backgroundSection: "#FFFFFF",
   },
   fonts: {
     body: "'Inter', sans-serif",

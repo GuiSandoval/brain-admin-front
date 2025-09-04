@@ -13,6 +13,7 @@ declare module "styled-components" {
       headerMenu: string;
       border: string;
       backgroundHover: string;
+      backgroundSection: string;
     };
     fonts: {
       body: string;
