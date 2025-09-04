@@ -71,7 +71,7 @@ export default function SectionMinhasAulas() {
     return (
       <S.Container>
         <DateSelector selectedDate={selectedDate} onDateChange={handleDateChange} />
-        <BrainResultNotFound customMessage="Não foram encontrado aulas para esse periodo" />
+        <BrainResultNotFound message="Não foram encontrado aulas para esse periodo" />
       </S.Container>
     );
   }

@@ -18,6 +18,7 @@ import {
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { mockAulaDetail } from "../../../../../mocks/aulaDetail";
+import ListaPresenca from "@/components/aulaDetailView/listaPresenca/listaPresenca";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -77,23 +78,20 @@ export default function AulaDetailPage() {
         {/* Tabs */}
         <LayoutColumns sizeLeft="70%" sizeRight="30%">
           <Box>
-            <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
-              <Tabs value={activeTab} onChange={handleTabChange}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 1 }}>
+              <Tabs value={activeTab} onChange={handleTabChange} variant="fullWidth">
                 <Tab label="⭐ Lista de Presença" />
                 <Tab label="⭐ Conteúdo e Tarefas" />
                 <Tab label="⭐ Registros Disciplinares" />
               </Tabs>
             </Box>
 
-            {/* Tab Panels */}
             <TabPanel value={activeTab} index={0}>
-              <AulaDetailView type="presenca" idAula={aulaId} />
+              <ListaPresenca idAula={aulaId} />
             </TabPanel>
-
             <TabPanel value={activeTab} index={1}>
               <AulaDetailView type="tarefas" data={aula.tarefas} />
             </TabPanel>
-
             <TabPanel value={activeTab} index={2}>
               <AulaDetailView type="registros" data={aula.registros} />
             </TabPanel>
