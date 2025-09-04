@@ -61,18 +61,22 @@ export default function SectionMinhasAulas() {
       </S.Container>
     );
   }
+  const formataHora = (horarioInicio: number[], horarioFim: number[]): string => {
+    const pad = (num: number) => num.toString().padStart(2, "0");
+    return `${pad(horarioInicio[0])}:${pad(horarioInicio[1])} - ${pad(horarioFim[0])}:${pad(horarioFim[1])}`;
+  };
 
   return (
     <S.Container>
       {aulas.map((aula, index) => (
         <CardClass
           key={`${aula.disciplina}-${aula.turma}-${index}`} // Chave mais específica
-          title={aula.disciplina}
+          title={`${aula.disciplina} - ${aula.serie} ${aula.turma} `}
           image={"https://placehold.co/100.png"}
-          hour={aula.horario}
-          classroom={aula.turma}
-          campus={""}
-          quantityStudents={0}
+          hour={formataHora(aula.horarioInicio, aula.horarioFim)}
+          classroom={`${aula.sala} ${aula.turma}`}
+          campus={aula.unidade}
+          quantityStudents={aula.quantidadeAlunos}
           onClick={() => handleAulaClick(index)}
         />
       ))}

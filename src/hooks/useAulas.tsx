@@ -2,11 +2,11 @@
 
 import { QUERY_KEYS } from "@/constants/queryKeys";
 import { professorApi } from "@/services/api";
-import { AulaResponse } from "@/services/domains/aula/response";
+import { ProfessorAulaResponse } from "@/services/domains/professor";
 import { useQuery } from "@tanstack/react-query";
 
 interface UseAulasReturn {
-  aulas: AulaResponse[];
+  aulas: ProfessorAulaResponse[];
   loading: boolean;
   error: string | null;
   refetch: () => void;
