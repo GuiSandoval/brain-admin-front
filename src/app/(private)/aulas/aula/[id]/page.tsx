@@ -11,6 +11,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { mockAulaDetail } from "../../../../../mocks/aulaDetail";
 import SectionVisaoGeral from "./sectionVisaoGeral/sectionVisaoGeral";
+// import DateSelector from "@/components/dateSelector";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -38,6 +39,7 @@ export default function AulaDetailPage() {
   const params = useParams();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState(0);
+  // const [selectedDate, setSelectedDate] = useState<Date>(() => new Date(2025, 8, 1));
 
   // Pega o ID da URL para uso futuro
   const aulaId = params.id as string;
@@ -49,6 +51,9 @@ export default function AulaDetailPage() {
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
   };
+  // const handleDateChange = (date: Date) => {
+  //   setSelectedDate(date);
+  // };
 
   const handleGoBack = () => {
     router.back();
@@ -70,6 +75,7 @@ export default function AulaDetailPage() {
         {/* Tabs */}
         <LayoutColumns sizeLeft="70%" sizeRight="30%">
           <Box>
+            {/* <DateSelector selectedDate={selectedDate} onDateChange={handleDateChange} /> */}
             <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 1 }}>
               <Tabs value={activeTab} onChange={handleTabChange} variant="fullWidth">
                 <Tab label="⭐ Lista de Presença" />
@@ -90,7 +96,7 @@ export default function AulaDetailPage() {
           </Box>
 
           {/* Visão geral - Seção lateral */}
-          <SectionVisaoGeral aula={aula} />
+          <SectionVisaoGeral />
         </LayoutColumns>
       </Container>
     </ProtectedRoute>
