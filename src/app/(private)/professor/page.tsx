@@ -5,7 +5,7 @@ import PageTitle from "@/components/pageTitle/pageTitle";
 import SectionMinhasAulas from "@/components/sectionMinhasAulas/sectionMinhasAulas";
 import SectionPlanejamento from "@/components/sectionPlanejamento/sectionPlanejamento";
 import { useAuth } from "@/hooks/useAuth";
-import { Container, Typography } from "@mui/material";
+import { Container } from "@mui/material";
 
 export default function ProfessorPage() {
   const { user } = useAuth();
@@ -13,11 +13,8 @@ export default function ProfessorPage() {
   return (
     <ProtectedRoute allowedRoles={["PROFESSOR"]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        <PageTitle title="Dashboard do Professor" />
+        <PageTitle title={` Bem-vindo, Professor ${user?.email}!`} />
 
-        <Typography variant="h4" component="h1" gutterBottom>
-          Bem-vindo, Professor {user?.email}!
-        </Typography>
         <LayoutColumns sizeLeft="70%" sizeRight="30%">
           <SectionMinhasAulas />
           <SectionPlanejamento />

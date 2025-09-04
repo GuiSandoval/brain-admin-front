@@ -6,7 +6,7 @@
 export const QUERY_KEYS = {
   aulas: {
     all: ["aulas"] as const,
-    lists: () => [...QUERY_KEYS.aulas.all, "list"] as const,
+    lists: (data?: string) => [...QUERY_KEYS.aulas.all, "list", data] as const,
     list: (filters?: Record<string, unknown>) =>
       [...QUERY_KEYS.aulas.lists(), { filters }] as const,
     details: () => [...QUERY_KEYS.aulas.all, "detail"] as const,

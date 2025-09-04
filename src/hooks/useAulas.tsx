@@ -14,15 +14,27 @@ interface UseAulasReturn {
   isFetching: boolean;
 }
 
+interface UseAulasProps {
+  data: string;
+}
+
 /**
  * Hook para gerenciar o estado das aulas usando React Query
+ * @param {UseAulasProps} props - Propriedades do hook
  * @returns {UseAulasReturn} Estado das aulas e funções de controle
  */
-export function useAulas(): UseAulasReturn {
-  const { data, isLoading, error, refetch, isSuccess, isFetching } = useQuery({
-    queryKey: QUERY_KEYS.aulas.lists(),
+export function useAulas({ data }: UseAulasProps): UseAulasReturn {
+  const {
+    data: aulaData,
+    isLoading,
+    error,
+    refetch,
+    isSuccess,
+    isFetching,
+  } = useQuery({
+    queryKey: QUERY_KEYS.aulas.lists(data),
     queryFn: async () => {
-      const response = await professorApi.getAulasProfessor({ data: "2025-09-01" });
+      const response = await professorApi.getAulasProfessor({ data });
       return response.content;
     },
     staleTime: 5 * 60 * 1000, // 5 minutos
@@ -35,7 +47,7 @@ export function useAulas(): UseAulasReturn {
   });
 
   return {
-    aulas: data ?? [],
+    aulas: aulaData ?? [],
     loading: isLoading,
     error: error ? "Erro ao carregar as aulas. Tente novamente." : null,
     refetch: () => {

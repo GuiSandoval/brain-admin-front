@@ -49,7 +49,7 @@ export const AreaTitle = styled.div`
   grid-area: title;
   font-size: 1.2rem;
   font-weight: bold;
-  color: ${cssVarColor("text")};
+  color: ${cssVarColor("textSecondary")};
 `;
 
 export const AreaHours = styled.div`
