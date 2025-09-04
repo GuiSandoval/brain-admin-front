@@ -1,6 +1,12 @@
-export interface AulaResponse {
-  turma: string;
-  professor: string;
+export interface ProfessorAulaResponse {
+  aulaId: number;
   disciplina: string;
-  horario: string;
+  serie: string;
+  turma: string;
+  sala: string;
+  professor: string;
+  horarioInicio: number[];
+  horarioFim: number[];
+  quantidadeAlunos: number;
+  unidade: string;
 }

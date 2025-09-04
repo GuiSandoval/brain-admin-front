@@ -1,9 +1,9 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { aulaApi } from "@/services/api";
-import { AulaResponse } from "@/services/domains/aula/response";
 import { QUERY_KEYS } from "@/constants/queryKeys";
+import { professorApi } from "@/services/api";
+import { AulaResponse } from "@/services/domains/aula/response";
+import { useQuery } from "@tanstack/react-query";
 
 interface UseAulasReturn {
   aulas: AulaResponse[];
@@ -19,17 +19,10 @@ interface UseAulasReturn {
  * @returns {UseAulasReturn} Estado das aulas e funções de controle
  */
 export function useAulas(): UseAulasReturn {
-  const {
-    data,
-    isLoading,
-    error,
-    refetch,
-    isSuccess,
-    isFetching,
-  } = useQuery({
+  const { data, isLoading, error, refetch, isSuccess, isFetching } = useQuery({
     queryKey: QUERY_KEYS.aulas.lists(),
     queryFn: async () => {
-      const response = await aulaApi.getAula();
+      const response = await professorApi.getAulasProfessor({ data: "2025-09-01" });
       return response.content;
     },
     staleTime: 5 * 60 * 1000, // 5 minutos
