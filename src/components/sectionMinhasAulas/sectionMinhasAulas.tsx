@@ -8,17 +8,11 @@ import { useRouter } from "next/navigation";
 import * as S from "./styles";
 import BrainResultNotFound from "../resultNotFound/resultNotFound";
 import LoadingComponent from "../loadingComponent/loadingComponent";
+import { formatDateForAPI } from "@/utils/utilsDate";
 
 export default function SectionMinhasAulas() {
-  const [selectedDate, setSelectedDate] = useState<Date>(() => new Date(2025, 8, 1));
+  const [selectedDate, setSelectedDate] = useState<Date>(() => new Date());
   const router = useRouter();
-
-  const formatDateForAPI = (date: Date): string => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
 
   const { aulas, loading, error, refetch, isFetching } = useAulas({
     data: formatDateForAPI(selectedDate),

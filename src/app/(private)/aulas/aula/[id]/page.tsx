@@ -11,7 +11,10 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { mockAulaDetail } from "../../../../../mocks/aulaDetail";
 import SectionVisaoGeral from "./sectionVisaoGeral/sectionVisaoGeral";
-// import DateSelector from "@/components/dateSelector";
+import DateSelector from "@/components/dateSelector";
+import { useAulas } from "@/hooks/useAulas";
+import { formatDateForAPI } from "@/utils/utilsDate";
+import BrainResultNotFound from "@/components/resultNotFound/resultNotFound";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -39,7 +42,10 @@ export default function AulaDetailPage() {
   const params = useParams();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState(0);
-  // const [selectedDate, setSelectedDate] = useState<Date>(() => new Date(2025, 8, 1));
+  const [selectedDate, setSelectedDate] = useState<Date>(() => new Date());
+  const { aulas } = useAulas({
+    data: formatDateForAPI(selectedDate),
+  });
 
   // Pega o ID da URL para uso futuro
   const aulaId = params.id as string;
@@ -51,14 +57,16 @@ export default function AulaDetailPage() {
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
   };
-  // const handleDateChange = (date: Date) => {
-  //   setSelectedDate(date);
-  // };
+  const handleDateChange = (date: Date) => {
+    setSelectedDate(date);
+  };
 
   const handleGoBack = () => {
     router.back();
   };
 
+  const existeAulaNoDia = aulas && aulas.length > 0;
+  const messageNaoExisteAulanoDia = "Não foi encontrada nenhuma aula para a data selecionada.";
   return (
     <ProtectedRoute allowedRoles={["PROFESSOR", "ADMIN"]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -75,28 +83,35 @@ export default function AulaDetailPage() {
         {/* Tabs */}
         <LayoutColumns sizeLeft="70%" sizeRight="30%">
           <Box>
-            {/* <DateSelector selectedDate={selectedDate} onDateChange={handleDateChange} /> */}
-            <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 1 }}>
-              <Tabs value={activeTab} onChange={handleTabChange} variant="fullWidth">
-                <Tab label="⭐ Lista de Presença" />
-                <Tab label="⭐ Conteúdo e Tarefas" />
-                <Tab label="⭐ Registros Disciplinares" />
-              </Tabs>
-            </Box>
+            <DateSelector selectedDate={selectedDate} onDateChange={handleDateChange} />
 
-            <TabPanel value={activeTab} index={0}>
-              <ListaPresenca idAula={aulaId} />
-            </TabPanel>
-            <TabPanel value={activeTab} index={1}>
-              <ConteudosTarefas />
-            </TabPanel>
-            <TabPanel value={activeTab} index={2}>
-              <AulaDetailView type="registros" data={aula.registros} />
-            </TabPanel>
+            {!existeAulaNoDia ? (
+              <BrainResultNotFound message={messageNaoExisteAulanoDia} />
+            ) : (
+              <>
+                <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 1 }}>
+                  <Tabs value={activeTab} onChange={handleTabChange} variant="fullWidth">
+                    <Tab label="⭐ Lista de Presença" />
+                    <Tab label="⭐ Conteúdo e Tarefas" />
+                    <Tab label="⭐ Registros Disciplinares" />
+                  </Tabs>
+                </Box>
+
+                <TabPanel value={activeTab} index={0}>
+                  <ListaPresenca idAula={aulaId} />
+                </TabPanel>
+                <TabPanel value={activeTab} index={1}>
+                  <ConteudosTarefas />
+                </TabPanel>
+                <TabPanel value={activeTab} index={2}>
+                  <AulaDetailView type="registros" data={aula.registros} />
+                </TabPanel>
+              </>
+            )}
           </Box>
 
           {/* Visão geral - Seção lateral */}
-          <SectionVisaoGeral />
+          <SectionVisaoGeral existeAulaNoDia={existeAulaNoDia} />
         </LayoutColumns>
       </Container>
     </ProtectedRoute>
