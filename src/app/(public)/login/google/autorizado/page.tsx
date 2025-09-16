@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useGoogleLogin } from "@/hooks/useGoogleLogin";
 import { CircularProgress, Typography, Paper, Box } from "@mui/material";
 import { toast } from "react-toastify";
 
-export default function GoogleAutorizadoPage() {
+function GoogleCallbackContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { handleGoogleCallback } = useGoogleLogin();
@@ -122,5 +122,40 @@ export default function GoogleAutorizadoPage() {
         {renderContent()}
       </Paper>
     </Box>
+  );
+}
+
+export default function GoogleAutorizadoPage() {
+  return (
+    <Suspense
+      fallback={
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="100vh"
+          sx={{ backgroundColor: "background.default", padding: 2 }}
+        >
+          <Paper
+            elevation={3}
+            sx={{
+              padding: 4,
+              maxWidth: 400,
+              width: "100%",
+              textAlign: "center",
+            }}
+          >
+            <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
+              <CircularProgress size={60} />
+              <Typography variant="h6" align="center">
+                Carregando...
+              </Typography>
+            </Box>
+          </Paper>
+        </Box>
+      }
+    >
+      <GoogleCallbackContent />
+    </Suspense>
   );
 }
