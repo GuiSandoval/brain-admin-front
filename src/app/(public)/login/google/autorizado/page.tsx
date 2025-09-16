@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useGoogleLogin } from "@/hooks/useGoogleLogin";
 import { CircularProgress, Typography, Paper, Box } from "@mui/material";
@@ -12,14 +12,28 @@ function GoogleCallbackContent() {
   const { handleGoogleCallback } = useGoogleLogin();
   const [status, setStatus] = useState<"processing" | "success" | "error">("processing");
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const processedRef = useRef(false);
 
   useEffect(() => {
+    // Evita executar múltiplas vezes
+    if (processedRef.current) {
+      console.log("Já processado, ignorando...");
+      return;
+    }
+
+    console.log("Iniciando processamento do callback...");
+
     const processGoogleCallback = async () => {
       try {
+        processedRef.current = true;
+        console.log("Marcando como processado...");
+
         // Captura os parâmetros da URL
         const code = searchParams.get("code");
         const scope = searchParams.get("scope");
         const error = searchParams.get("error");
+
+        console.log("Parâmetros capturados:", { code, scope, error });
 
         // Verifica se houve erro na autorização do Google
         if (error) {
@@ -31,12 +45,18 @@ function GoogleCallbackContent() {
           throw new Error("Código de autorização não encontrado na URL");
         }
 
-        console.log("Processando callback do Google:", { code, scope });
-
+        console.log("Chamando handleGoogleCallback...");
         // Chama o hook para processar o callback
-        await handleGoogleCallback(code, scope || undefined);
+        const redirectPath = await handleGoogleCallback(code, scope || undefined);
 
+        console.log("Callback processado com sucesso, redirecionando para:", redirectPath);
         setStatus("success");
+
+        // Redireciona usando router do Next.js
+        setTimeout(() => {
+          console.log("Executando redirecionamento...");
+          router.push(redirectPath);
+        }, 1500);
       } catch (error) {
         console.error("Erro no callback do Google:", error);
         const message =

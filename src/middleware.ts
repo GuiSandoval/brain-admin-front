@@ -12,6 +12,7 @@ interface JWTPayload {
 
 const publicRoutes = [
   { path: "/login", whenAuthenticated: "redirect" },
+  { path: "/login/google/autorizado", whenAuthenticated: "next" },
   { path: "/register", whenAuthenticated: "redirect" },
   { path: "/teste-ssr", whenAuthenticated: "next" },
   { path: "/princing", whenAuthenticated: "next" },

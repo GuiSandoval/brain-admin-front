@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 interface UseGoogleLoginReturn {
   isLoading: boolean;
   loginWithGoogle: () => Promise<void>;
-  handleGoogleCallback: (code: string, scope?: string) => Promise<void>;
+  handleGoogleCallback: (code: string, scope?: string) => Promise<string>; // Retorna a rota de redirecionamento
 }
 
 export function useGoogleLogin(): UseGoogleLoginReturn {
@@ -24,7 +24,7 @@ export function useGoogleLogin(): UseGoogleLoginReturn {
     }
   };
 
-  const handleGoogleCallback = async (code: string, scope?: string): Promise<void> => {
+  const handleGoogleCallback = async (code: string, scope?: string): Promise<string> => {
     try {
       setIsLoading(true);
 
@@ -67,11 +67,11 @@ export function useGoogleLogin(): UseGoogleLoginReturn {
         }
 
         toast.success("Login com Google realizado com sucesso!");
-        window.location.href = redirectPath;
+        return redirectPath;
       } catch (decodeError) {
         console.error("Erro ao decodificar token:", decodeError);
         toast.success("Login com Google realizado com sucesso!");
-        window.location.href = "/";
+        return "/";
       }
     } catch (error) {
       console.error("Erro no login com Google:", error);
