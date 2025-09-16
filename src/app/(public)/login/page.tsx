@@ -1,5 +1,5 @@
 "use client";
-import { Button, TextField, Typography, Paper } from "@mui/material";
+import { Button, TextField, Typography, Paper, Divider } from "@mui/material";
 import * as S from "./styles";
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
@@ -7,12 +7,15 @@ import Cookies from "js-cookie";
 import { loginApi } from "@/services/api";
 import { toast } from "react-toastify";
 import { setAccessToken } from "@/utils/auth";
+import { useGoogleLogin } from "@/hooks/useGoogleLogin";
+import { GoogleIcon } from "@/components/GoogleIcon";
 
 export default function LoginPage() {
   const { setTheme } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { loginWithGoogle, isLoading: googleLoading } = useGoogleLogin();
 
   useEffect(() => {
     setTheme("light");
@@ -80,6 +83,10 @@ export default function LoginPage() {
     }
   }
 
+  async function onGoogleLogin() {
+    await loginWithGoogle();
+  }
+
   return (
     <S.LoginWrapper>
       <Paper elevation={6}>
@@ -96,7 +103,7 @@ export default function LoginPage() {
             variant="outlined"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            disabled={isLoading}
+            disabled={isLoading || googleLoading}
           />
           <TextField
             fullWidth
@@ -106,7 +113,7 @@ export default function LoginPage() {
             variant="outlined"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            disabled={isLoading}
+            disabled={isLoading || googleLoading}
           />
 
           <Button
@@ -115,8 +122,34 @@ export default function LoginPage() {
             fullWidth
             size="large"
             sx={{ mt: 2, borderRadius: "8px" }}
+            disabled={isLoading || googleLoading}
           >
             Login
+          </Button>
+
+          <Divider sx={{ my: 2 }}>ou</Divider>
+
+          <Button
+            onClick={onGoogleLogin}
+            variant="outlined"
+            fullWidth
+            size="large"
+            sx={{
+              borderRadius: "20px",
+              border: " 1px solid #dadce0",
+              color: "#3c4043",
+              backgroundColor: "transparent",
+              textTransform: "none",
+              fontSize: ".8rem",
+              gap: 1,
+              "&:hover": {
+                backgroundColor: "#f7f8f8",
+              },
+            }}
+            disabled={isLoading || googleLoading}
+          >
+            <GoogleIcon size={20} />
+            Continuar com Google
           </Button>
         </S.FormBox>
       </Paper>
