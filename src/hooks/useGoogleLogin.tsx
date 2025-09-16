@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 interface UseGoogleLoginReturn {
   isLoading: boolean;
   loginWithGoogle: () => Promise<void>;
-  handleGoogleCallback: (code: string) => Promise<void>;
+  handleGoogleCallback: (code: string, scope?: string) => Promise<void>;
 }
 
 export function useGoogleLogin(): UseGoogleLoginReturn {
@@ -24,11 +24,11 @@ export function useGoogleLogin(): UseGoogleLoginReturn {
     }
   };
 
-  const handleGoogleCallback = async (code: string): Promise<void> => {
+  const handleGoogleCallback = async (code: string, scope?: string): Promise<void> => {
     try {
       setIsLoading(true);
 
-      const response = await loginGoogleApi.loginGoogleAutorizado({ code });
+      const response = await loginGoogleApi.loginGoogleAutorizado({ code, scope });
 
       if (!response || !response.tokenAcesso || !response.refreshToken) {
         throw new Error("Resposta inválida do servidor");
