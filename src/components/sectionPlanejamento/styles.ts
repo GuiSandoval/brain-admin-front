@@ -54,6 +54,8 @@ export const Subtitle = styled.p`
 
 export const TasksSection = styled.div`
   margin-bottom: 24px;
+  max-height: 400px;
+  overflow-y: auto;
 `;
 
 export const SectionTitle = styled.h4`

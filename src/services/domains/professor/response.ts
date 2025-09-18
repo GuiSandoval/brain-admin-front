@@ -10,3 +10,10 @@ export interface ProfessorAulaResponse {
   quantidadeAlunos: number;
   unidade: string;
 }
+
+export interface ProfessorPlanejamentoResponse {
+  titulo: string;
+  descricao: string;
+  dataInicio: string;
+  dataFim: string;
+}

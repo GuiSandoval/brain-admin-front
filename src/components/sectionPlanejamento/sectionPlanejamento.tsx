@@ -1,51 +1,46 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { professorApi } from "@/services/api";
+import { ProfessorPlanejamentoResponse } from "@/services/domains/professor/response";
 import * as S from "./styles";
 
-interface Task {
-  id: string;
-  title: string;
-  subject: string;
-  description: string;
-  dueDate: string;
-}
-
-interface Evaluation {
-  id: string;
-  title: string;
-  subject: string;
-  date: string;
-}
-
 export default function SectionPlanejamento() {
-  // Mock data - em produção, estes dados viriam de uma API
-  const tasks: Task[] = [
-    {
-      id: "1",
-      title: "Tarefa 1",
-      subject: "Matemática 1",
-      description:
-        "It is a long established fact that a reader will be distracted by the readable content of a page when...",
-      dueDate: "14/01/25",
-    },
-    {
-      id: "2",
-      title: "Tarefa 2",
-      subject: "Matemática 2",
-      description:
-        "It is a long established fact that a reader will be distracted by the readable content of a page when...",
-      dueDate: "14/01/25",
-    },
-  ];
+  const [planejamentos, setPlanejamentos] = useState<ProfessorPlanejamentoResponse[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const evaluations: Evaluation[] = [
-    {
-      id: "1",
-      title: "Avaliação",
-      subject: "Matemática 1",
-      date: "14/01/25",
-    },
-  ];
+  // Função para formatar data ISO para formato brasileiro
+  const formatarData = (dataISO: string): string => {
+    try {
+      const data = new Date(dataISO);
+      return data.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch (error) {
+      console.error("Erro ao formatar data:", error);
+      return dataISO; // Retorna a data original em caso de erro
+    }
+  };
+
+  useEffect(() => {
+    const loadPlanejamentos = async () => {
+      try {
+        setIsLoading(true);
+        const response = await professorApi.getPlanejamento();
+        setPlanejamentos(response);
+      } catch (error) {
+        console.error("Erro ao carregar planejamentos:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadPlanejamentos();
+  }, []);
 
   return (
     <S.Container>
@@ -53,48 +48,36 @@ export default function SectionPlanejamento() {
         <S.HeaderContent>
           <S.Title>Planejamento</S.Title>
           <S.Subtitle>
-            Visualize rapidamente as tarefas para hoje e as próximas avaliações
+            Visualize rapidamente as tarefas para hoje e as próximas atividades
           </S.Subtitle>
         </S.HeaderContent>
       </S.Header>
 
       <S.TasksSection>
         <S.SectionTitle>
-          Tarefas para hoje
-          <S.TaskCount>{tasks.length}</S.TaskCount>
+          &nbsp;
+          <S.TaskCount>{planejamentos.length}</S.TaskCount>
         </S.SectionTitle>
 
-        {tasks.map((task) => (
-          <S.TaskItem key={task.id}>
-            <S.TaskTitle>{task.title}</S.TaskTitle>
-            <S.TaskMeta>
-              <S.TaskSubject>{task.subject}</S.TaskSubject>
-              <span>Envio: {task.dueDate}</span>
-            </S.TaskMeta>
-            <S.TaskDescription>{task.description}</S.TaskDescription>
-          </S.TaskItem>
-        ))}
+        {isLoading ? (
+          <div>Carregando...</div>
+        ) : planejamentos.length > 0 ? (
+          planejamentos.map((planejamento, index) => (
+            <S.TaskItem key={index}>
+              <S.TaskTitle>{planejamento.titulo}</S.TaskTitle>
+              <S.TaskMeta>
+                <span>Início: {formatarData(planejamento.dataInicio)}</span>
+                <span>Fim: {formatarData(planejamento.dataFim)}</span>
+              </S.TaskMeta>
+              <S.TaskDescription>{planejamento.descricao}</S.TaskDescription>
+            </S.TaskItem>
+          ))
+        ) : (
+          <div>Nenhum planejamento encontrado</div>
+        )}
 
-        <S.ViewMoreButton>VER MAIS</S.ViewMoreButton>
+        {planejamentos.length > 0 && <S.ViewMoreButton>VER MAIS</S.ViewMoreButton>}
       </S.TasksSection>
-
-      <S.EvaluationsSection>
-        <S.SectionTitle>
-          Avaliações próximas
-          <S.TaskCount>{evaluations.length}</S.TaskCount>
-        </S.SectionTitle>
-
-        {evaluations.map((evaluation) => (
-          <S.EvaluationItem key={evaluation.id}>
-            <S.EvaluationIcon />
-            <S.EvaluationContent>
-              <S.EvaluationTitle>{evaluation.title}</S.EvaluationTitle>
-              <S.EvaluationMeta>3ª série - {evaluation.subject}</S.EvaluationMeta>
-            </S.EvaluationContent>
-            <S.EvaluationDate>Data: {evaluation.date}</S.EvaluationDate>
-          </S.EvaluationItem>
-        ))}
-      </S.EvaluationsSection>
     </S.Container>
   );
 }
