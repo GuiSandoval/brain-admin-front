@@ -52,11 +52,13 @@ function GoogleCallbackContent() {
         console.log("Callback processado com sucesso, redirecionando para:", redirectPath);
         setStatus("success");
 
-        // Redireciona usando router do Next.js
+        // Força uma navegação completa e limpa o histórico
         setTimeout(() => {
           console.log("Executando redirecionamento...");
-          router.push(redirectPath);
-        }, 1500);
+          // Adiciona um parâmetro para forçar recarga e evitar cache
+          const urlWithTimestamp = `${redirectPath}?t=${Date.now()}`;
+          window.location.href = urlWithTimestamp;
+        }, 1000);
       } catch (error) {
         console.error("Erro no callback do Google:", error);
         const message =
@@ -67,7 +69,7 @@ function GoogleCallbackContent() {
 
         // Redireciona para a página de login após 3 segundos em caso de erro
         setTimeout(() => {
-          router.push("/login");
+          window.location.replace("/login");
         }, 3000);
       }
     };
