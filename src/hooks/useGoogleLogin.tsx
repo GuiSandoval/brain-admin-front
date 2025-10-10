@@ -59,7 +59,7 @@ export function useGoogleLogin(): UseGoogleLoginReturn {
             redirectPath = "/aluno";
             break;
           case "PROFESSOR":
-            redirectPath = "/professor";
+            redirectPath = "/";
             break;
           case "ADMIN":
             redirectPath = "/admin";

@@ -58,7 +58,7 @@ export default function LoginPage() {
             redirectPath = "/aluno";
             break;
           case "PROFESSOR":
-            redirectPath = "/professor";
+            redirectPath = "/";
             break;
           case "ADMIN":
             redirectPath = "/admin";

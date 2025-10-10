@@ -53,28 +53,28 @@ const menusByRole: Record<
     {
       text: "Home ",
       icon: <DashboardIcon fontSize="small" />,
-      router: "/professor",
+      router: "/",
     },
-    {
-      text: "Turmas",
-      icon: <GroupIcon fontSize="small" />,
-      router: "/minhas-aulas",
-    },
-    {
-      text: "Avaliações e tarefas",
-      icon: <AssessmentIcon fontSize="small" />,
-      router: "/avaliacoes",
-    },
-    {
-      text: "Comunicados",
-      icon: <AnnouncementIcon fontSize="small" />,
-      router: "/comunicados",
-    },
-    {
-      text: "Calendário",
-      icon: <CalendarIcon fontSize="small" />,
-      router: RoutesConstants.CALENDARIO,
-    },
+    // {
+    //   text: "Turmas",
+    //   icon: <GroupIcon fontSize="small" />,
+    //   router: "/minhas-aulas",
+    // },
+    // {
+    //   text: "Avaliações e tarefas",
+    //   icon: <AssessmentIcon fontSize="small" />,
+    //   router: "/avaliacoes",
+    // },
+    // {
+    //   text: "Comunicados",
+    //   icon: <AnnouncementIcon fontSize="small" />,
+    //   router: "/comunicados",
+    // },
+    // {
+    //   text: "Calendário",
+    //   icon: <CalendarIcon fontSize="small" />,
+    //   router: RoutesConstants.CALENDARIO,
+    // },
   ],
   ADMIN: [
     {

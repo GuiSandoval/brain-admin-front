@@ -29,7 +29,7 @@ export function ProtectedRoute({ children, allowedRoles, redirectTo }: Protected
             router.push("/aluno");
             break;
           case "PROFESSOR":
-            router.push("/professor");
+            router.push("/");
             break;
           case "ADMIN":
             router.push("/admin");

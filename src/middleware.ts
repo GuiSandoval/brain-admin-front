@@ -85,7 +85,7 @@ function getDefaultRoute(userRole: UserRole): string {
     case "ESTUDANTE":
       return "/aluno";
     case "PROFESSOR":
-      return "/professor";
+      return "/";
     case "ADMIN":
       return "/admin";
     default:

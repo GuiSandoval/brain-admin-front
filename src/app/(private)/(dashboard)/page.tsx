@@ -1,36 +1,12 @@
 "use client";
 import { useAuth } from "@/hooks/useAuth";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { Typography, Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
+import DashProfessorPage from "./dashProfessor/dashProfessor";
 
 export default function Dashboard() {
   const { user, isLoading } = useAuth();
-  const router = useRouter();
 
-  useEffect(() => {
-    // Se o usuário acessar "/" diretamente, redireciona para sua página específica
-    if (!isLoading && user) {
-      let redirectPath = "/";
-      switch (user.role) {
-      case "ESTUDANTE":
-        redirectPath = "/aluno";
-        break;
-      case "PROFESSOR":
-        redirectPath = "/professor";
-        break;
-      case "ADMIN":
-        redirectPath = "/admin";
-        break;
-      }
-
-      if (redirectPath !== "/") {
-        router.replace(redirectPath); // usar replace em vez de push para não criar histórico
-      }
-    }
-  }, [user, isLoading, router]);
-
-  if (isLoading) {
+  if (isLoading && !user) {
     return (
       <Box
         display="flex"
@@ -44,6 +20,10 @@ export default function Dashboard() {
         <Typography>Carregando...</Typography>
       </Box>
     );
+  }
+
+  if (user?.role === "PROFESSOR") {
+    return <DashProfessorPage />;
   }
 
   return (
