@@ -55,6 +55,11 @@ const menusByRole: Record<
       icon: <DashboardIcon fontSize="small" />,
       router: "/",
     },
+    {
+      text: "Professor",
+      icon: <PersonIcon fontSize="small" />,
+      router: "/professor",
+    },
     // {
     //   text: "Turmas",
     //   icon: <GroupIcon fontSize="small" />,
