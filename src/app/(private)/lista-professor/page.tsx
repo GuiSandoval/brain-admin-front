@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import { Edit, Delete, Add } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
+import PageTitle from "@/components/pageTitle/pageTitle";
 
 // Mock data
 const mockProfessores = [
@@ -49,12 +50,10 @@ export default function ProfessorPage() {
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
-              Professores
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Gerencie os professores cadastrados no sistema
-            </Typography>
+            <PageTitle
+              title={"Lista de Professores"}
+              description="Gerencie os professores cadastrados no sistema"
+            />
           </Box>
           <Button
             variant="contained"
