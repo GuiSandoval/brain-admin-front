@@ -25,7 +25,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .app{
-    height: 100%;
+    min-height: 100%;
     background-color: var(--colors-background);
   }
   [data-theme="dark"] { 
