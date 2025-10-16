@@ -58,7 +58,7 @@ const menusByRole: Record<
     {
       text: "Professor",
       icon: <PersonIcon fontSize="small" />,
-      router: "/professor",
+      router: "/lista-professor",
     },
     // {
     //   text: "Turmas",
