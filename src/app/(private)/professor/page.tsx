@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { professorDefaultValues, ProfessorFormData, professorSchema } from "./schema";
 import { KeyValue } from "@/services/models/keyValue";
 import { BrainTextCPFControlled } from "@/components/brainTextCPFControlled";
+import { BrainTextRGControlled } from "@/components/brainTextRGControlled";
 
 export default function ProfessorPage() {
   const router = useRouter();
@@ -155,13 +156,7 @@ export default function ProfessorPage() {
           >
             <BrainTextCPFControlled name="cpf" control={control} label="CPF" required={true} />
 
-            <BrainTextFieldControlled
-              name="rg"
-              control={control}
-              label="RG"
-              placeholder="Digite o RG"
-              required
-            />
+            <BrainTextRGControlled name="rg" control={control} label="RG" required={true} />
 
             <BrainTextFieldControlled
               name="carteiraTrabalho"
