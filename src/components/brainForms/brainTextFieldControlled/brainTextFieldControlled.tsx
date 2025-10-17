@@ -1,5 +1,6 @@
-import { TextField, TextFieldProps } from "@mui/material";
+import { TextFieldProps } from "@mui/material";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
+import BrainTextField from "../_base/brainTextField/brainTextField";
 
 interface BrainTextFieldControlledProps<T extends FieldValues> {
   name: Path<T>;
@@ -25,7 +26,7 @@ export function BrainTextFieldControlled<T extends FieldValues>({
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <TextField
+        <BrainTextField
           {...field}
           fullWidth={true}
           size={size}
