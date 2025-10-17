@@ -10,6 +10,7 @@ import { Box, Button, Container } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { professorDefaultValues, ProfessorFormData, professorSchema } from "./schema";
 import { KeyValue } from "@/services/models/keyValue";
+import { BrainTextCPFControlled } from "@/components/brainTextCPFControlled";
 
 export default function ProfessorPage() {
   const router = useRouter();
@@ -152,13 +153,7 @@ export default function ProfessorPage() {
             description="Informações de documentação "
             numberOfCollumns={QUANTITY_COLLUMNS_DEFAULT}
           >
-            <BrainTextFieldControlled
-              name="cpf"
-              control={control}
-              label="CPF"
-              placeholder="000.000.000-00"
-              required
-            />
+            <BrainTextCPFControlled name="cpf" control={control} label="CPF" required={true} />
 
             <BrainTextFieldControlled
               name="rg"
