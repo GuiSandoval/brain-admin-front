@@ -1,12 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Typography, Paper, CircularProgress, Box } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import { usuarioApi } from "@/services/api";
 
-export default function VerificarContaPage() {
+function VerificarContaContent() {
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [mensagem, setMensagem] = useState("");
@@ -120,5 +120,26 @@ export default function VerificarContaPage() {
         {renderContent()}
       </Paper>
     </Box>
+  );
+}
+
+export default function VerificarContaPage() {
+  return (
+    <Suspense
+      fallback={
+        <Box
+          sx={{
+            minHeight: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress size={60} />
+        </Box>
+      }
+    >
+      <VerificarContaContent />
+    </Suspense>
   );
 }
