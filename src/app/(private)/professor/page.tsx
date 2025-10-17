@@ -4,16 +4,7 @@ import ContainerSection from "@/components/containerSection/containerSection";
 import PageTitle from "@/components/pageTitle/pageTitle";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useBrainForm } from "@/hooks/useBrainForm";
-import {
-  Box,
-  Button,
-  Container,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
+import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { Controller } from "react-hook-form";
 import { professorDefaultValues, ProfessorFormData, professorSchema } from "./schema";
@@ -65,53 +56,28 @@ export default function ProfessorPage() {
               required
             />
 
-            <Controller
+            <BrainTextFieldControlled
               name="nomeSocial"
               control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  size="small"
-                  label="Nome Social"
-                  placeholder="Digite o nome social (opcional)"
-                  error={!!errors.nomeSocial}
-                  helperText={errors.nomeSocial?.message}
-                />
-              )}
+              label="Nome Social"
+              placeholder="Digite o nome social (opcional)"
             />
 
-            <Controller
+            <BrainTextFieldControlled
               name="email"
               control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  size="small"
-                  label="E-mail *"
-                  placeholder="exemplo@email.com"
-                  type="email"
-                  error={!!errors.email}
-                  helperText={errors.email?.message}
-                />
-              )}
+              label="E-mail"
+              placeholder="exemplo@email.com"
+              type="email"
+              required
             />
 
-            <Controller
+            <BrainTextFieldControlled
               name="dataNascimento"
               control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  size="small"
-                  label="Data de Nascimento *"
-                  placeholder="dd/mm/aaaa"
-                  error={!!errors.dataNascimento}
-                  helperText={errors.dataNascimento?.message}
-                />
-              )}
+              label="Data de Nascimento"
+              placeholder="dd/mm/aaaa"
+              required
             />
             <Controller
               name="genero"
@@ -171,20 +137,12 @@ export default function ProfessorPage() {
               )}
             />
 
-            <Controller
+            <BrainTextFieldControlled
               name="cidadeNaturalidade"
               control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  size="small"
-                  label="Cidade de Naturalidade *"
-                  placeholder="Digite a cidade de nascimento"
-                  error={!!errors.cidadeNaturalidade}
-                  helperText={errors.cidadeNaturalidade?.message}
-                />
-              )}
+              label="Cidade de Naturalidade"
+              placeholder="Digite a cidade de nascimento"
+              required
             />
           </ContainerSection>
           {/* Seção Documentos */}
@@ -194,52 +152,28 @@ export default function ProfessorPage() {
             description="Informações de documentação "
             numberOfCollumns={QUANTITY_COLLUMNS_DEFAULT}
           >
-            <Controller
+            <BrainTextFieldControlled
               name="cpf"
               control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  size="small"
-                  label="CPF *"
-                  placeholder="000.000.000-00"
-                  error={!!errors.cpf}
-                  helperText={errors.cpf?.message}
-                />
-              )}
+              label="CPF"
+              placeholder="000.000.000-00"
+              required
             />
 
-            <Controller
+            <BrainTextFieldControlled
               name="rg"
               control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  size="small"
-                  label="RG *"
-                  placeholder="Digite o RG"
-                  error={!!errors.rg}
-                  helperText={errors.rg?.message}
-                />
-              )}
+              label="RG"
+              placeholder="Digite o RG"
+              required
             />
 
-            <Controller
+            <BrainTextFieldControlled
               name="carteiraTrabalho"
               control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  size="small"
-                  label="Carteira de Trabalho *"
-                  placeholder="Digite o número"
-                  error={!!errors.carteiraTrabalho}
-                  helperText={errors.carteiraTrabalho?.message}
-                />
-              )}
+              label="Carteira de Trabalho"
+              placeholder="Digite o número"
+              required
             />
           </ContainerSection>
           <ContainerSection
@@ -247,100 +181,51 @@ export default function ProfessorPage() {
             description="Informações de localização"
             numberOfCollumns={QUANTITY_COLLUMNS_DEFAULT}
           >
-            <Controller
+            <BrainTextFieldControlled
               name="cep"
               control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  size="small"
-                  label="CEP *"
-                  placeholder="00000-000"
-                  error={!!errors.cep}
-                  helperText={errors.cep?.message}
-                />
-              )}
+              label="CEP"
+              placeholder="00000-000"
+              required
             />
 
-            <Controller
+            <BrainTextFieldControlled
               name="logradouro"
               control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  size="small"
-                  label="Logradouro *"
-                  placeholder="Rua, Avenida, etc."
-                  error={!!errors.logradouro}
-                  helperText={errors.logradouro?.message}
-                />
-              )}
+              label="Logradouro"
+              placeholder="Rua, Avenida, etc."
+              required
             />
 
-            <Controller
+            <BrainTextFieldControlled
               name="numero"
               control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  size="small"
-                  label="Número *"
-                  placeholder="Nº"
-                  error={!!errors.numero}
-                  helperText={errors.numero?.message}
-                />
-              )}
+              label="Número"
+              placeholder="Nº"
+              required
             />
 
-            <Controller
+            <BrainTextFieldControlled
               name="complemento"
               control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  size="small"
-                  label="Complemento"
-                  placeholder="Apto, Bloco, etc. (opcional)"
-                  error={!!errors.complemento}
-                  helperText={errors.complemento?.message}
-                />
-              )}
+              label="Complemento"
+              placeholder="Apto, Bloco, etc. (opcional)"
             />
 
-            <Controller
+            <BrainTextFieldControlled
               name="bairro"
               control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  size="small"
-                  label="Bairro *"
-                  placeholder="Digite o bairro"
-                  error={!!errors.bairro}
-                  helperText={errors.bairro?.message}
-                />
-              )}
+              label="Bairro"
+              placeholder="Digite o bairro"
+              required
             />
 
-            <Controller
+            <BrainTextFieldControlled
               name="cidade"
               control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  size="small"
-                  label="Cidade *"
-                  placeholder="Digite a cidade"
-                  error={!!errors.cidade}
-                  helperText={errors.cidade?.message}
-                />
-              )}
+              label="Cidade"
+              placeholder="Digite a cidade"
+              required
             />
 
             <Controller
