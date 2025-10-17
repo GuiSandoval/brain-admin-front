@@ -1,24 +1,24 @@
 "use client";
+import { BrainDropdownControlled } from "@/components/brainDropdownControlled";
 import { BrainTextFieldControlled } from "@/components/brainTextFieldControlled";
 import ContainerSection from "@/components/containerSection/containerSection";
 import PageTitle from "@/components/pageTitle/pageTitle";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useBrainForm } from "@/hooks/useBrainForm";
-import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Box, Button, Container } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { Controller } from "react-hook-form";
 import { professorDefaultValues, ProfessorFormData, professorSchema } from "./schema";
+import { KeyValue } from "@/services/models/keyValue";
 
 export default function ProfessorPage() {
   const router = useRouter();
 
-  const { control, handleSubmit, onFormSubmit, errors, isSubmitting, isValid } =
-    useBrainForm<ProfessorFormData>({
-      schema: professorSchema,
-      defaultValues: professorDefaultValues,
-      onSubmit: onSubmit,
-      mode: "all",
-    });
+  const { control, handleSubmit, onFormSubmit, isSubmitting } = useBrainForm<ProfessorFormData>({
+    schema: professorSchema,
+    defaultValues: professorDefaultValues,
+    onSubmit: onSubmit,
+    mode: "all",
+  });
 
   async function onSubmit(data: ProfessorFormData) {
     console.log("Dados do formulário validados:", data);
@@ -27,9 +27,49 @@ export default function ProfessorPage() {
   function handleCancel() {
     router.push("/lista-professor");
   }
-
+  const OPTIONS_UF: KeyValue[] = [
+    { key: "AC", value: "AC" },
+    { key: "AL", value: "AL" },
+    { key: "AP", value: "AP" },
+    { key: "AM", value: "AM" },
+    { key: "BA", value: "BA" },
+    { key: "CE", value: "CE" },
+    { key: "DF", value: "DF" },
+    { key: "ES", value: "ES" },
+    { key: "GO", value: "GO" },
+    { key: "MA", value: "MA" },
+    { key: "MT", value: "MT" },
+    { key: "MS", value: "MS" },
+    { key: "MG", value: "MG" },
+    { key: "PA", value: "PA" },
+    { key: "PB", value: "PB" },
+    { key: "PR", value: "PR" },
+    { key: "PE", value: "PE" },
+    { key: "PI", value: "PI" },
+    { key: "RJ", value: "RJ" },
+    { key: "RN", value: "RN" },
+    { key: "RS", value: "RS" },
+    { key: "RO", value: "RO" },
+    { key: "RR", value: "RR" },
+    { key: "SC", value: "SC" },
+    { key: "SP", value: "SP" },
+    { key: "SE", value: "SE" },
+    { key: "TO", value: "TO" },
+  ];
+  const OPTIONS_GENDER: KeyValue[] = [
+    { key: "masculino", value: "Masculino" },
+    { key: "feminino", value: "Feminino" },
+    { key: "outro", value: "Outro" },
+  ];
+  const OPTIONS_COR_RACA: KeyValue[] = [
+    { key: "branca", value: "Branca" },
+    { key: "preta", value: "Preta" },
+    { key: "parda", value: "Parda" },
+    { key: "amarela", value: "Amarela" },
+    { key: "indigena", value: "Indígena" },
+  ];
   const QUANTITY_COLLUMNS_DEFAULT = 3;
-  console.log("fsdajklhfasdjkfasd");
+
   return (
     <ProtectedRoute allowedRoles={["PROFESSOR"]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -41,7 +81,7 @@ export default function ProfessorPage() {
           />
         </Box>
 
-        <form onSubmit={handleSubmit(onFormSubmit)}>
+        <form onSubmit={handleSubmit(onFormSubmit)} noValidate>
           {/* Seção Informações Pessoais */}
           <ContainerSection
             title="Informações Pessoais"
@@ -79,62 +119,22 @@ export default function ProfessorPage() {
               placeholder="dd/mm/aaaa"
               required
             />
-            <Controller
+            <BrainDropdownControlled
               name="genero"
               control={control}
-              render={({ field }) => (
-                <FormControl fullWidth error={!!errors.genero}>
-                  <InputLabel>Gênero *</InputLabel>
-                  <Select {...field} label="Gênero *" size="small">
-                    <MenuItem value="">Selecione o gênero</MenuItem>
-                    <MenuItem value="masculino">Masculino</MenuItem>
-                    <MenuItem value="feminino">Feminino</MenuItem>
-                    <MenuItem value="outro">Outro</MenuItem>
-                  </Select>
-                  {errors.genero && (
-                    <span
-                      style={{
-                        color: "#d32f2f",
-                        fontSize: "0.75rem",
-                        marginTop: "3px",
-                        marginLeft: "14px",
-                      }}
-                    >
-                      {errors.genero.message}
-                    </span>
-                  )}
-                </FormControl>
-              )}
+              label="Gênero"
+              required
+              options={OPTIONS_GENDER}
+              placeholder="Selecione o gênero"
             />
 
-            <Controller
+            <BrainDropdownControlled
               name="corRaca"
               control={control}
-              render={({ field }) => (
-                <FormControl fullWidth error={!!errors.corRaca}>
-                  <InputLabel>Cor/Raça *</InputLabel>
-                  <Select {...field} label="Cor/Raça *" size="small">
-                    <MenuItem value="">Selecione a cor/raça</MenuItem>
-                    <MenuItem value="branca">Branca</MenuItem>
-                    <MenuItem value="preta">Preta</MenuItem>
-                    <MenuItem value="parda">Parda</MenuItem>
-                    <MenuItem value="amarela">Amarela</MenuItem>
-                    <MenuItem value="indigena">Indígena</MenuItem>
-                  </Select>
-                  {errors.corRaca && (
-                    <span
-                      style={{
-                        color: "#d32f2f",
-                        fontSize: "0.75rem",
-                        marginTop: "3px",
-                        marginLeft: "14px",
-                      }}
-                    >
-                      {errors.corRaca.message}
-                    </span>
-                  )}
-                </FormControl>
-              )}
+              label="Cor/Raça"
+              required
+              options={OPTIONS_COR_RACA}
+              placeholder="Selecione a cor/raça"
             />
 
             <BrainTextFieldControlled
@@ -228,56 +228,13 @@ export default function ProfessorPage() {
               required
             />
 
-            <Controller
+            <BrainDropdownControlled
               name="uf"
               control={control}
-              render={({ field }) => (
-                <FormControl fullWidth error={!!errors.uf}>
-                  <InputLabel>UF *</InputLabel>
-                  <Select {...field} label="UF *" size="small">
-                    <MenuItem value="">UF</MenuItem>
-                    <MenuItem value="AC">AC</MenuItem>
-                    <MenuItem value="AL">AL</MenuItem>
-                    <MenuItem value="AP">AP</MenuItem>
-                    <MenuItem value="AM">AM</MenuItem>
-                    <MenuItem value="BA">BA</MenuItem>
-                    <MenuItem value="CE">CE</MenuItem>
-                    <MenuItem value="DF">DF</MenuItem>
-                    <MenuItem value="ES">ES</MenuItem>
-                    <MenuItem value="GO">GO</MenuItem>
-                    <MenuItem value="MA">MA</MenuItem>
-                    <MenuItem value="MT">MT</MenuItem>
-                    <MenuItem value="MS">MS</MenuItem>
-                    <MenuItem value="MG">MG</MenuItem>
-                    <MenuItem value="PA">PA</MenuItem>
-                    <MenuItem value="PB">PB</MenuItem>
-                    <MenuItem value="PR">PR</MenuItem>
-                    <MenuItem value="PE">PE</MenuItem>
-                    <MenuItem value="PI">PI</MenuItem>
-                    <MenuItem value="RJ">RJ</MenuItem>
-                    <MenuItem value="RN">RN</MenuItem>
-                    <MenuItem value="RS">RS</MenuItem>
-                    <MenuItem value="RO">RO</MenuItem>
-                    <MenuItem value="RR">RR</MenuItem>
-                    <MenuItem value="SC">SC</MenuItem>
-                    <MenuItem value="SP">SP</MenuItem>
-                    <MenuItem value="SE">SE</MenuItem>
-                    <MenuItem value="TO">TO</MenuItem>
-                  </Select>
-                  {errors.uf && (
-                    <span
-                      style={{
-                        color: "#d32f2f",
-                        fontSize: "0.75rem",
-                        marginTop: "3px",
-                        marginLeft: "14px",
-                      }}
-                    >
-                      {errors.uf.message}
-                    </span>
-                  )}
-                </FormControl>
-              )}
+              label="UF"
+              required
+              options={OPTIONS_UF}
+              placeholder="UF"
             />
           </ContainerSection>
 
@@ -285,7 +242,7 @@ export default function ProfessorPage() {
             <Button variant="outlined" onClick={handleCancel} disabled={isSubmitting}>
               Cancelar
             </Button>
-            <Button variant="contained" type="submit" disabled={isSubmitting || !isValid}>
+            <Button variant="contained" type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Cadastrando..." : "Cadastrar Professor"}
             </Button>
           </Box>
