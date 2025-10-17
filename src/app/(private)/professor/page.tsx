@@ -12,6 +12,7 @@ import { professorDefaultValues, ProfessorFormData, professorSchema } from "./sc
 import { KeyValue } from "@/services/models/keyValue";
 import { BrainTextCPFControlled } from "@/components/brainTextCPFControlled";
 import { BrainTextRGControlled } from "@/components/brainTextRGControlled";
+import { BrainTextCEPControlled } from "@/components/brainTextCEPControlled";
 
 export default function ProfessorPage() {
   const router = useRouter();
@@ -171,14 +172,7 @@ export default function ProfessorPage() {
             description="Informações de localização"
             numberOfCollumns={QUANTITY_COLLUMNS_DEFAULT}
           >
-            <BrainTextFieldControlled
-              name="cep"
-              control={control}
-              label="CEP"
-              placeholder="00000-000"
-              required
-            />
-
+            <BrainTextCEPControlled name="cep" control={control} label="CEP" required={true} />
             <BrainTextFieldControlled
               name="logradouro"
               control={control}
