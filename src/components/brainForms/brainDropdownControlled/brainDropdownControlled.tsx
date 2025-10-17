@@ -1,13 +1,7 @@
 import { KeyValue } from "@/services/models/keyValue";
-import {
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectProps,
-} from "@mui/material";
+import { SelectProps } from "@mui/material";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
+import BrainDropdownField from "../_base/brainDropdownField/brainDropdownField";
 
 interface BrainDropdownControlledProps<T extends FieldValues>
   extends Omit<SelectProps, "name" | "error"> {
@@ -30,25 +24,23 @@ export function BrainDropdownControlled<T extends FieldValues>({
   fullWidth = true,
   ...selectProps
 }: BrainDropdownControlledProps<T>) {
-  const displayLabel = required ? `${label} *` : label;
-
   return (
     <Controller
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <FormControl fullWidth={fullWidth} error={!!error}>
-          <InputLabel>{displayLabel}</InputLabel>
-          <Select {...field} {...selectProps} label={displayLabel} size={size}>
-            <MenuItem value="">{placeholder}</MenuItem>
-            {options.map((option) => (
-              <MenuItem key={option.key} value={option.key}>
-                {option.value}
-              </MenuItem>
-            ))}
-          </Select>
-          {error && <FormHelperText>{error.message}</FormHelperText>}
-        </FormControl>
+        <BrainDropdownField
+          {...field}
+          {...selectProps}
+          label={label}
+          options={options}
+          placeholder={placeholder}
+          required={required}
+          size={size}
+          fullWidth={fullWidth}
+          error={!!error}
+          helperText={error?.message}
+        />
       )}
     />
   );
