@@ -14,6 +14,7 @@ import { BrainTextCPFControlled } from "@/components/brainForms/brainTextCPFCont
 import { BrainTextRGControlled } from "@/components/brainForms/brainTextRGControlled";
 import { BrainTextCEPControlled } from "@/components/brainForms/brainTextCEPControlled";
 import BrainFormProvider from "@/components/brainForms/brainFormProvider/brainFormProvider";
+import BrainButtonSecondary from "@/components/brainButtons/brainButtonSecondary/brainButtonSecondary";
 
 export default function ProfessorPage() {
   const router = useRouter();
@@ -221,9 +222,7 @@ export default function ProfessorPage() {
           </ContainerSection>
 
           <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
-            <Button variant="outlined" onClick={handleCancel} disabled={isSubmitting}>
-              Cancelar
-            </Button>
+            <BrainButtonSecondary onClick={handleCancel}>Cancelar</BrainButtonSecondary>
             <Button variant="contained" type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Cadastrando..." : "Salvar"}
             </Button>
