@@ -22,4 +22,7 @@ export class ProfessorApi {
   getListaProfessores(): Promise<IBrainResult<ProfessorListaResponse>> {
     return httpClient.get(`${BASE_ROUTE}`);
   }
+  deleteProfessor(id: string): Promise<IBrainResult<void>> {
+    return httpClient.delete(`${BASE_ROUTE}/${id}`);
+  }
 }

@@ -1,6 +1,8 @@
 "use client";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useProfessores } from "@/hooks/useProfessores";
+import { useProfessorMutations } from "@/app/(private)/professor/useProfessorMutations";
+import { useState } from "react";
 import {
   Container,
   Paper,
@@ -16,6 +18,11 @@ import {
   IconButton,
   CircularProgress,
   Alert,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import { Edit, Delete, Add } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
@@ -24,13 +31,40 @@ import PageTitle from "@/components/pageTitle/pageTitle";
 export default function ProfessorPage() {
   const router = useRouter();
   const { professores, loading, error, refetch } = useProfessores();
+  const { deleteProfessor } = useProfessorMutations();
+
+  // Estado para o modal de confirmação
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [professorToDelete, setProfessorToDelete] = useState<{
+    id: string;
+    nome: string;
+  } | null>(null);
 
   const handleEditProfessor = (matricula: string) => {
     console.log("Editar professor:", matricula);
   };
 
-  const handleDeleteProfessor = (matricula: string) => {
-    console.log("Excluir professor:", matricula);
+  const handleDeleteProfessor = (professorId: string, professorNome: string) => {
+    setProfessorToDelete({ id: professorId, nome: professorNome });
+    setDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (professorToDelete) {
+      try {
+        await deleteProfessor.mutateAsync(professorToDelete.id);
+        setDeleteModalOpen(false);
+        setProfessorToDelete(null);
+      } catch (error) {
+        // O erro é tratado no hook useProfessorMutations
+        console.error("Erro ao deletar professor:", error);
+      }
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteModalOpen(false);
+    setProfessorToDelete(null);
   };
 
   const handleNewProfessor = () => {
@@ -119,7 +153,9 @@ export default function ProfessorPage() {
                         </IconButton>
                         <IconButton
                           size="small"
-                          onClick={() => handleDeleteProfessor(professor.matricula)}
+                          onClick={() =>
+                            handleDeleteProfessor(professor.id.toString(), professor.nome)
+                          }
                           sx={{ color: "error.main" }}
                           title="Excluir"
                         >
@@ -133,6 +169,41 @@ export default function ProfessorPage() {
             </Table>
           </TableContainer>
         )}
+
+        {/* Modal de confirmação para deletar professor */}
+        <Dialog
+          open={deleteModalOpen}
+          onClose={handleCancelDelete}
+          aria-labelledby="delete-dialog-title"
+          aria-describedby="delete-dialog-description"
+        >
+          <DialogTitle id="delete-dialog-title">Confirmar Exclusão</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="delete-dialog-description">
+              Tem certeza que deseja excluir o professor <strong>{professorToDelete?.nome}</strong>?
+              <br />
+              Esta ação não pode ser desfeita.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={handleCancelDelete}
+              color="inherit"
+              disabled={deleteProfessor.isPending}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleConfirmDelete}
+              color="error"
+              variant="contained"
+              disabled={deleteProfessor.isPending}
+              startIcon={deleteProfessor.isPending ? <CircularProgress size={16} /> : <Delete />}
+            >
+              {deleteProfessor.isPending ? "Excluindo..." : "Excluir"}
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </ProtectedRoute>
   );

@@ -27,7 +27,22 @@ export function useProfessorMutations() {
     },
   });
 
+  // Mutation para deletar professor
+  const deleteProfessor = useMutation({
+    mutationFn: (id: string) => professorApi.deleteProfessor(id),
+    onSuccess: () => {
+      // Invalida e refetch a lista de professores
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.professores.all });
+      toast.success("Professor excluído com sucesso!");
+    },
+    onError: (error) => {
+      console.error("Erro ao excluir professor:", error);
+      toast.error("Ocorreu um erro ao excluir o professor. Tente novamente.");
+    },
+  });
+
   return {
     createProfessor,
+    deleteProfessor,
   };
 }
