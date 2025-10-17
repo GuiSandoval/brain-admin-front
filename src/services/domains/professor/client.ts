@@ -1,7 +1,11 @@
 import { IBrainResult } from "@/services/commoResponse";
 import { httpClient } from "@/services/http";
 import { ProfessorAulaRequest, ProfessorPostRequest } from "./request";
-import { ProfessorAulaResponse, ProfessorPlanejamentoResponse } from "./response";
+import {
+  ProfessorAulaResponse,
+  ProfessorListaResponse,
+  ProfessorPlanejamentoResponse,
+} from "./response";
 
 const BASE_ROUTE = "professor";
 
@@ -14,5 +18,8 @@ export class ProfessorApi {
   }
   criarProfessor(request: ProfessorPostRequest): Promise<IBrainResult<void>> {
     return httpClient.post(`${BASE_ROUTE}`, request);
+  }
+  getListaProfessores(): Promise<IBrainResult<ProfessorListaResponse>> {
+    return httpClient.get(`${BASE_ROUTE}`);
   }
 }

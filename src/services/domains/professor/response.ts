@@ -17,3 +17,24 @@ export interface ProfessorPlanejamentoResponse {
   dataInicio: string;
   dataFim: string;
 }
+
+interface ProfessorEnderecoResponse {
+  logradouro: string;
+  bairro: string;
+  cep: string;
+  complemento: string;
+  numero: string;
+  uf: string;
+}
+export interface ProfessorListaResponse {
+  id: number;
+  cpf: string;
+  matricula: string;
+  nome: string;
+  nomeSocial: string;
+  email: string;
+  emailProfissional: string;
+  endereco: ProfessorEnderecoResponse;
+  rg: string;
+  carteiraDeTrabalho: string;
+}
