@@ -13,44 +13,42 @@ import {
   TextField,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { professorDefaultValues, ProfessorFormData, professorSchema } from "./schema";
 
 export default function ProfessorPage() {
   const router = useRouter();
 
-  const [formData, setFormData] = useState({
-    nomeCompleto: "",
-    nomeSocial: "",
-    email: "",
-    dataNascimento: "",
-    genero: "",
-    corRaca: "",
-    cidadeNaturalidade: "",
-    cpf: "",
-    rg: "",
-    carteiraTrabalho: "",
-    cep: "",
-    logradouro: "",
-    numero: "",
-    complemento: "",
-    bairro: "",
-    cidade: "",
-    uf: "",
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<ProfessorFormData>({
+    resolver: zodResolver(professorSchema),
+    defaultValues: professorDefaultValues,
   });
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
+  const onSubmit = (data: ProfessorFormData) => {
+    console.log("Dados do formulário validados:", data);
+    // Aqui você pode implementar a lógica de submissão
+    // Por exemplo: chamar uma API para cadastrar o professor
 
-  const handleSubmit = () => {
-    console.log("Dados do formulário:", formData);
+    // Exemplo de como você poderia proceder:
+    // try {
+    //   await createProfessor(data);
+    //   // Mostrar mensagem de sucesso
+    //   // Redirecionar para lista de professores
+    //   router.push("/lista-professor");
+    // } catch (error) {
+    //   // Mostrar mensagem de erro
+    //   console.error("Erro ao cadastrar professor:", error);
+    // }
   };
 
   const handleCancel = () => {
-    console.log("Cancelar");
+    reset();
     router.push("/lista-professor");
   };
 
@@ -73,81 +71,142 @@ export default function ProfessorPage() {
           description="Dados básicos do professor"
           numberOfCollumns={QUANTITY_COLLUMNS_DEFAULT}
         >
-          <TextField
-            fullWidth
-            size="small"
-            label="Nome Completo *"
-            placeholder="Digite o nome completo"
-            value={formData.nomeCompleto}
-            onChange={(e) => handleInputChange("nomeCompleto", e.target.value)}
+          <Controller
+            name="nomeCompleto"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                size="small"
+                label="Nome Completo *"
+                placeholder="Digite o nome completo"
+                error={!!errors.nomeCompleto}
+                helperText={errors.nomeCompleto?.message}
+              />
+            )}
           />
 
-          <TextField
-            fullWidth
-            size="small"
-            label="Nome Social"
-            placeholder="Digite o nome social (opcional)"
-            value={formData.nomeSocial}
-            onChange={(e) => handleInputChange("nomeSocial", e.target.value)}
+          <Controller
+            name="nomeSocial"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                size="small"
+                label="Nome Social"
+                placeholder="Digite o nome social (opcional)"
+                error={!!errors.nomeSocial}
+                helperText={errors.nomeSocial?.message}
+              />
+            )}
           />
 
-          <TextField
-            fullWidth
-            size="small"
-            label="E-mail *"
-            placeholder="exemplo@email.com"
-            type="email"
-            value={formData.email}
-            onChange={(e) => handleInputChange("email", e.target.value)}
+          <Controller
+            name="email"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                size="small"
+                label="E-mail *"
+                placeholder="exemplo@email.com"
+                type="email"
+                error={!!errors.email}
+                helperText={errors.email?.message}
+              />
+            )}
           />
 
-          <TextField
-            fullWidth
-            size="small"
-            label="Data de Nascimento *"
-            placeholder="dd/mm/aaaa"
-            value={formData.dataNascimento}
-            onChange={(e) => handleInputChange("dataNascimento", e.target.value)}
+          <Controller
+            name="dataNascimento"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                size="small"
+                label="Data de Nascimento *"
+                placeholder="dd/mm/aaaa"
+                error={!!errors.dataNascimento}
+                helperText={errors.dataNascimento?.message}
+              />
+            )}
           />
-          <FormControl fullWidth>
-            <InputLabel>Gênero *</InputLabel>
-            <Select
-              value={formData.genero}
-              label="Gênero *"
-              size="small"
-              onChange={(e) => handleInputChange("genero", e.target.value)}
-            >
-              <MenuItem value="">Selecione o gênero</MenuItem>
-              <MenuItem value="masculino">Masculino</MenuItem>
-              <MenuItem value="feminino">Feminino</MenuItem>
-              <MenuItem value="outro">Outro</MenuItem>
-            </Select>
-          </FormControl>
+          <Controller
+            name="genero"
+            control={control}
+            render={({ field }) => (
+              <FormControl fullWidth error={!!errors.genero}>
+                <InputLabel>Gênero *</InputLabel>
+                <Select {...field} label="Gênero *" size="small">
+                  <MenuItem value="">Selecione o gênero</MenuItem>
+                  <MenuItem value="masculino">Masculino</MenuItem>
+                  <MenuItem value="feminino">Feminino</MenuItem>
+                  <MenuItem value="outro">Outro</MenuItem>
+                </Select>
+                {errors.genero && (
+                  <span
+                    style={{
+                      color: "#d32f2f",
+                      fontSize: "0.75rem",
+                      marginTop: "3px",
+                      marginLeft: "14px",
+                    }}
+                  >
+                    {errors.genero.message}
+                  </span>
+                )}
+              </FormControl>
+            )}
+          />
 
-          <FormControl fullWidth>
-            <InputLabel>Cor/Raça *</InputLabel>
-            <Select
-              value={formData.corRaca}
-              label="Cor/Raça *"
-              size="small"
-              onChange={(e) => handleInputChange("corRaca", e.target.value)}
-            >
-              <MenuItem value="">Selecione a cor/raça</MenuItem>
-              <MenuItem value="branca">Branca</MenuItem>
-              <MenuItem value="preta">Preta</MenuItem>
-              <MenuItem value="parda">Parda</MenuItem>
-              <MenuItem value="amarela">Amarela</MenuItem>
-              <MenuItem value="indigena">Indígena</MenuItem>
-            </Select>
-          </FormControl>
+          <Controller
+            name="corRaca"
+            control={control}
+            render={({ field }) => (
+              <FormControl fullWidth error={!!errors.corRaca}>
+                <InputLabel>Cor/Raça *</InputLabel>
+                <Select {...field} label="Cor/Raça *" size="small">
+                  <MenuItem value="">Selecione a cor/raça</MenuItem>
+                  <MenuItem value="branca">Branca</MenuItem>
+                  <MenuItem value="preta">Preta</MenuItem>
+                  <MenuItem value="parda">Parda</MenuItem>
+                  <MenuItem value="amarela">Amarela</MenuItem>
+                  <MenuItem value="indigena">Indígena</MenuItem>
+                </Select>
+                {errors.corRaca && (
+                  <span
+                    style={{
+                      color: "#d32f2f",
+                      fontSize: "0.75rem",
+                      marginTop: "3px",
+                      marginLeft: "14px",
+                    }}
+                  >
+                    {errors.corRaca.message}
+                  </span>
+                )}
+              </FormControl>
+            )}
+          />
 
-          <TextField
-            fullWidth
-            size="small"
-            label="Cidade de Naturalidade *"
-            placeholder="Digite a cidade de nascimento"
-            value={formData.cidadeNaturalidade}
-            onChange={(e) => handleInputChange("cidadeNaturalidade", e.target.value)}
+          <Controller
+            name="cidadeNaturalidade"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                size="small"
+                label="Cidade de Naturalidade *"
+                placeholder="Digite a cidade de nascimento"
+                error={!!errors.cidadeNaturalidade}
+                helperText={errors.cidadeNaturalidade?.message}
+              />
+            )}
           />
         </ContainerSection>
         {/* Seção Documentos */}
@@ -157,31 +216,52 @@ export default function ProfessorPage() {
           description="Informações de documentação "
           numberOfCollumns={QUANTITY_COLLUMNS_DEFAULT}
         >
-          <TextField
-            fullWidth
-            size="small"
-            label="CPF *"
-            placeholder="000.000.000-00"
-            value={formData.cpf}
-            onChange={(e) => handleInputChange("cpf", e.target.value)}
+          <Controller
+            name="cpf"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                size="small"
+                label="CPF *"
+                placeholder="000.000.000-00"
+                error={!!errors.cpf}
+                helperText={errors.cpf?.message}
+              />
+            )}
           />
 
-          <TextField
-            fullWidth
-            size="small"
-            label="RG *"
-            placeholder="Digite o RG"
-            value={formData.rg}
-            onChange={(e) => handleInputChange("rg", e.target.value)}
+          <Controller
+            name="rg"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                size="small"
+                label="RG *"
+                placeholder="Digite o RG"
+                error={!!errors.rg}
+                helperText={errors.rg?.message}
+              />
+            )}
           />
 
-          <TextField
-            fullWidth
-            size="small"
-            label="Carteira de Trabalho *"
-            placeholder="Digite o número"
-            value={formData.carteiraTrabalho}
-            onChange={(e) => handleInputChange("carteiraTrabalho", e.target.value)}
+          <Controller
+            name="carteiraTrabalho"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                size="small"
+                label="Carteira de Trabalho *"
+                placeholder="Digite o número"
+                error={!!errors.carteiraTrabalho}
+                helperText={errors.carteiraTrabalho?.message}
+              />
+            )}
           />
         </ContainerSection>
         <ContainerSection
@@ -189,105 +269,160 @@ export default function ProfessorPage() {
           description="Informações de localização"
           numberOfCollumns={QUANTITY_COLLUMNS_DEFAULT}
         >
-          <TextField
-            fullWidth
-            size="small"
-            label="CEP *"
-            placeholder="00000-000"
-            value={formData.cep}
-            onChange={(e) => handleInputChange("cep", e.target.value)}
+          <Controller
+            name="cep"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                size="small"
+                label="CEP *"
+                placeholder="00000-000"
+                error={!!errors.cep}
+                helperText={errors.cep?.message}
+              />
+            )}
           />
 
-          <TextField
-            fullWidth
-            size="small"
-            label="Logradouro *"
-            placeholder="Rua, Avenida, etc."
-            value={formData.logradouro}
-            onChange={(e) => handleInputChange("logradouro", e.target.value)}
+          <Controller
+            name="logradouro"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                size="small"
+                label="Logradouro *"
+                placeholder="Rua, Avenida, etc."
+                error={!!errors.logradouro}
+                helperText={errors.logradouro?.message}
+              />
+            )}
           />
 
-          <TextField
-            fullWidth
-            size="small"
-            label="Número *"
-            placeholder="Nº"
-            value={formData.numero}
-            onChange={(e) => handleInputChange("numero", e.target.value)}
+          <Controller
+            name="numero"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                size="small"
+                label="Número *"
+                placeholder="Nº"
+                error={!!errors.numero}
+                helperText={errors.numero?.message}
+              />
+            )}
           />
 
-          <TextField
-            fullWidth
-            size="small"
-            label="Complemento"
-            placeholder="Apto, Bloco, etc. (opcional)"
-            value={formData.complemento}
-            onChange={(e) => handleInputChange("complemento", e.target.value)}
+          <Controller
+            name="complemento"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                size="small"
+                label="Complemento"
+                placeholder="Apto, Bloco, etc. (opcional)"
+                error={!!errors.complemento}
+                helperText={errors.complemento?.message}
+              />
+            )}
           />
 
-          <TextField
-            fullWidth
-            size="small"
-            label="Bairro *"
-            placeholder="Digite o bairro"
-            value={formData.bairro}
-            onChange={(e) => handleInputChange("bairro", e.target.value)}
+          <Controller
+            name="bairro"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                size="small"
+                label="Bairro *"
+                placeholder="Digite o bairro"
+                error={!!errors.bairro}
+                helperText={errors.bairro?.message}
+              />
+            )}
           />
 
-          <TextField
-            fullWidth
-            size="small"
-            label="Cidade *"
-            placeholder="Digite a cidade"
-            value={formData.cidade}
-            onChange={(e) => handleInputChange("cidade", e.target.value)}
+          <Controller
+            name="cidade"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                size="small"
+                label="Cidade *"
+                placeholder="Digite a cidade"
+                error={!!errors.cidade}
+                helperText={errors.cidade?.message}
+              />
+            )}
           />
 
-          <FormControl fullWidth>
-            <InputLabel>UF *</InputLabel>
-            <Select
-              value={formData.uf}
-              label="UF *"
-              size="small"
-              onChange={(e) => handleInputChange("uf", e.target.value)}
-            >
-              <MenuItem value="">UF</MenuItem>
-              <MenuItem value="AC">AC</MenuItem>
-              <MenuItem value="AL">AL</MenuItem>
-              <MenuItem value="AP">AP</MenuItem>
-              <MenuItem value="AM">AM</MenuItem>
-              <MenuItem value="BA">BA</MenuItem>
-              <MenuItem value="CE">CE</MenuItem>
-              <MenuItem value="DF">DF</MenuItem>
-              <MenuItem value="ES">ES</MenuItem>
-              <MenuItem value="GO">GO</MenuItem>
-              <MenuItem value="MA">MA</MenuItem>
-              <MenuItem value="MT">MT</MenuItem>
-              <MenuItem value="MS">MS</MenuItem>
-              <MenuItem value="MG">MG</MenuItem>
-              <MenuItem value="PA">PA</MenuItem>
-              <MenuItem value="PB">PB</MenuItem>
-              <MenuItem value="PR">PR</MenuItem>
-              <MenuItem value="PE">PE</MenuItem>
-              <MenuItem value="PI">PI</MenuItem>
-              <MenuItem value="RJ">RJ</MenuItem>
-              <MenuItem value="RN">RN</MenuItem>
-              <MenuItem value="RS">RS</MenuItem>
-              <MenuItem value="RO">RO</MenuItem>
-              <MenuItem value="RR">RR</MenuItem>
-              <MenuItem value="SC">SC</MenuItem>
-              <MenuItem value="SP">SP</MenuItem>
-              <MenuItem value="SE">SE</MenuItem>
-              <MenuItem value="TO">TO</MenuItem>
-            </Select>
-          </FormControl>
+          <Controller
+            name="uf"
+            control={control}
+            render={({ field }) => (
+              <FormControl fullWidth error={!!errors.uf}>
+                <InputLabel>UF *</InputLabel>
+                <Select {...field} label="UF *" size="small">
+                  <MenuItem value="">UF</MenuItem>
+                  <MenuItem value="AC">AC</MenuItem>
+                  <MenuItem value="AL">AL</MenuItem>
+                  <MenuItem value="AP">AP</MenuItem>
+                  <MenuItem value="AM">AM</MenuItem>
+                  <MenuItem value="BA">BA</MenuItem>
+                  <MenuItem value="CE">CE</MenuItem>
+                  <MenuItem value="DF">DF</MenuItem>
+                  <MenuItem value="ES">ES</MenuItem>
+                  <MenuItem value="GO">GO</MenuItem>
+                  <MenuItem value="MA">MA</MenuItem>
+                  <MenuItem value="MT">MT</MenuItem>
+                  <MenuItem value="MS">MS</MenuItem>
+                  <MenuItem value="MG">MG</MenuItem>
+                  <MenuItem value="PA">PA</MenuItem>
+                  <MenuItem value="PB">PB</MenuItem>
+                  <MenuItem value="PR">PR</MenuItem>
+                  <MenuItem value="PE">PE</MenuItem>
+                  <MenuItem value="PI">PI</MenuItem>
+                  <MenuItem value="RJ">RJ</MenuItem>
+                  <MenuItem value="RN">RN</MenuItem>
+                  <MenuItem value="RS">RS</MenuItem>
+                  <MenuItem value="RO">RO</MenuItem>
+                  <MenuItem value="RR">RR</MenuItem>
+                  <MenuItem value="SC">SC</MenuItem>
+                  <MenuItem value="SP">SP</MenuItem>
+                  <MenuItem value="SE">SE</MenuItem>
+                  <MenuItem value="TO">TO</MenuItem>
+                </Select>
+                {errors.uf && (
+                  <span
+                    style={{
+                      color: "#d32f2f",
+                      fontSize: "0.75rem",
+                      marginTop: "3px",
+                      marginLeft: "14px",
+                    }}
+                  >
+                    {errors.uf.message}
+                  </span>
+                )}
+              </FormControl>
+            )}
+          />
         </ContainerSection>
 
         <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
           <Button variant="outlined" onClick={handleCancel}>
             Cancelar
           </Button>
-          <Button variant="contained" onClick={handleSubmit}>
+          <Button variant="contained" onClick={handleSubmit(onSubmit)}>
             Cadastrar Professor
           </Button>
         </Box>
