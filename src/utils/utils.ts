@@ -19,3 +19,30 @@ export function formatDateFromArray(dateArray: number[]): string {
   const [year, month, day] = dateArray;
   return `${day.toString().padStart(2, "0")}/${month.toString().padStart(2, "0")}/${year}`;
 }
+
+/**
+ * Converte um cpf formatado (ex: 000.000.000-00) para apenas números (ex: 00000000000)
+ * @param cpf - CPF formatado
+ * @returns CPF apenas com números
+ */
+export function unmaskCPF(cpf: string): string {
+  return cpf.replace(/\D/g, "");
+}
+
+/**
+ * Converte um CEP formatado (ex: 00000-000) para apenas números (ex: 00000000)
+ * @param cep - CEP formatado
+ * @returns CEP apenas com números
+ */
+export function unmaskCEP(cep: string): string {
+  return cep.replace(/\D/g, "");
+}
+
+/**
+ * Converter um rg formatado (ex: 00.000.000-0) para apenas números (ex: 000000000)
+ * @param rg - RG formatado
+ * @returns RG apenas com números
+ */
+export function unmaskRG(rg: string): string {
+  return rg.replace(/\D/g, "");
+}

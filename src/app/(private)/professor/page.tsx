@@ -12,13 +12,16 @@ import ContainerSection from "@/components/containerSection/containerSection";
 import PageTitle from "@/components/pageTitle/pageTitle";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useBrainForm } from "@/hooks/useBrainForm";
+import { useProfessorMutations } from "@/app/(private)/professor/useProfessorMutations";
 import { KeyValue } from "@/services/models/keyValue";
+import { mapFormDataToProfessorRequest } from "@/app/(private)/professor/professorUtils";
 import { Box, Container } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { professorDefaultValues, ProfessorFormData, professorSchema } from "./schema";
 
 export default function ProfessorPage() {
   const router = useRouter();
+  const { createProfessor } = useProfessorMutations();
 
   const { control, handleSubmit, onFormSubmit, isSubmitting, methodsHookForm } =
     useBrainForm<ProfessorFormData>({
@@ -29,7 +32,17 @@ export default function ProfessorPage() {
     });
 
   async function onSubmit(data: ProfessorFormData) {
-    console.log("Dados do formulário validados:", data);
+    try {
+      const professorData = mapFormDataToProfessorRequest(data);
+
+      await createProfessor.mutateAsync(professorData);
+
+      // Redireciona para a lista de professores após sucesso
+      router.push("/lista-professor");
+    } catch (error) {
+      // O erro já é tratado no hook useProfessorMutations
+      console.error("Erro ao criar professor:", error);
+    }
   }
 
   function handleCancel() {
@@ -224,8 +237,8 @@ export default function ProfessorPage() {
 
           <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
             <BrainButtonSecondary onClick={handleCancel}>Cancelar</BrainButtonSecondary>
-            <BrainButtonPrimary type="submit" disabled={isSubmitting}>
-              Salvar
+            <BrainButtonPrimary type="submit" disabled={isSubmitting || createProfessor.isPending}>
+              {createProfessor.isPending ? "Salvando..." : "Salvar"}
             </BrainButtonPrimary>
           </Box>
         </BrainFormProvider>
