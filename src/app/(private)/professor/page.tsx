@@ -1,4 +1,5 @@
 "use client";
+import { BrainTextFieldControlled } from "@/components/brainTextFieldControlled";
 import ContainerSection from "@/components/containerSection/containerSection";
 import PageTitle from "@/components/pageTitle/pageTitle";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
@@ -56,20 +57,12 @@ export default function ProfessorPage() {
             description="Dados básicos do professor"
             numberOfCollumns={QUANTITY_COLLUMNS_DEFAULT}
           >
-            <Controller
+            <BrainTextFieldControlled
               name="nomeCompleto"
               control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  size="small"
-                  label="Nome Completo *"
-                  placeholder="Digite o nome completo"
-                  error={!!errors.nomeCompleto}
-                  helperText={errors.nomeCompleto?.message}
-                />
-              )}
+              label="Nome Completo"
+              placeholder="Digite o nome completo"
+              required
             />
 
             <Controller
