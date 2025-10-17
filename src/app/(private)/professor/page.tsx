@@ -1,20 +1,21 @@
 "use client";
+import BrainButtonPrimary from "@/components/brainButtons/brainButtonPrimary/brainButtonPrimary";
+import BrainButtonSecondary from "@/components/brainButtons/brainButtonSecondary/brainButtonSecondary";
 import { BrainDateTextControlled } from "@/components/brainForms/brainDateTextControlled";
 import { BrainDropdownControlled } from "@/components/brainForms/brainDropdownControlled";
+import BrainFormProvider from "@/components/brainForms/brainFormProvider/brainFormProvider";
+import { BrainTextCEPControlled } from "@/components/brainForms/brainTextCEPControlled";
+import { BrainTextCPFControlled } from "@/components/brainForms/brainTextCPFControlled";
 import { BrainTextFieldControlled } from "@/components/brainForms/brainTextFieldControlled";
+import { BrainTextRGControlled } from "@/components/brainForms/brainTextRGControlled";
 import ContainerSection from "@/components/containerSection/containerSection";
 import PageTitle from "@/components/pageTitle/pageTitle";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useBrainForm } from "@/hooks/useBrainForm";
-import { Box, Button, Container } from "@mui/material";
+import { KeyValue } from "@/services/models/keyValue";
+import { Box, Container } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { professorDefaultValues, ProfessorFormData, professorSchema } from "./schema";
-import { KeyValue } from "@/services/models/keyValue";
-import { BrainTextCPFControlled } from "@/components/brainForms/brainTextCPFControlled";
-import { BrainTextRGControlled } from "@/components/brainForms/brainTextRGControlled";
-import { BrainTextCEPControlled } from "@/components/brainForms/brainTextCEPControlled";
-import BrainFormProvider from "@/components/brainForms/brainFormProvider/brainFormProvider";
-import BrainButtonSecondary from "@/components/brainButtons/brainButtonSecondary/brainButtonSecondary";
 
 export default function ProfessorPage() {
   const router = useRouter();
@@ -223,9 +224,9 @@ export default function ProfessorPage() {
 
           <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
             <BrainButtonSecondary onClick={handleCancel}>Cancelar</BrainButtonSecondary>
-            <Button variant="contained" type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Cadastrando..." : "Salvar"}
-            </Button>
+            <BrainButtonPrimary type="submit" disabled={isSubmitting}>
+              Salvar
+            </BrainButtonPrimary>
           </Box>
         </BrainFormProvider>
       </Container>
