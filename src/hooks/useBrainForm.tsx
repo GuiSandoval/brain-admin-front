@@ -40,7 +40,7 @@ export interface useBrainFormReturn<T extends FieldValues> {
   trigger: UseFormTrigger<T>;
   clearErrors: UseFormClearErrors<T>;
   setError: UseFormSetError<T>;
-
+  methodsHookForm: UseFormProps<T>;
   // Custom methods
   onFormSubmit: (data: T) => Promise<void>;
   resetToDefaults: () => void;
@@ -60,7 +60,7 @@ export function useBrainForm<T extends FieldValues>({
   reValidateMode,
   shouldFocusError,
 }: useBrainFormConfig<T>): useBrainFormReturn<T> {
-  const form = useForm<T>({
+  const methodsHookForm = useForm<T>({
     // @ts-expect-error - Incompatibilidade de tipos conhecida entre zod e react-hook-form
     resolver: zodResolver(schema),
     defaultValues,
@@ -80,7 +80,7 @@ export function useBrainForm<T extends FieldValues>({
     trigger,
     clearErrors,
     setError,
-  } = form;
+  } = methodsHookForm;
 
   const { errors, isSubmitting, isDirty, isValid } = formState;
 
@@ -118,6 +118,7 @@ export function useBrainForm<T extends FieldValues>({
         trigger,
         clearErrors,
         setError,
+        methodsHookForm,
 
         // Custom methods
         onFormSubmit,
@@ -133,6 +134,7 @@ export function useBrainForm<T extends FieldValues>({
       control,
       handleSubmit,
       formState,
+      methodsHookForm,
       reset,
       setValue,
       getValues,

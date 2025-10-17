@@ -13,16 +13,18 @@ import { KeyValue } from "@/services/models/keyValue";
 import { BrainTextCPFControlled } from "@/components/brainForms/brainTextCPFControlled";
 import { BrainTextRGControlled } from "@/components/brainForms/brainTextRGControlled";
 import { BrainTextCEPControlled } from "@/components/brainForms/brainTextCEPControlled";
+import BrainFormProvider from "@/components/brainForms/brainFormProvider/brainFormProvider";
 
 export default function ProfessorPage() {
   const router = useRouter();
 
-  const { control, handleSubmit, onFormSubmit, isSubmitting } = useBrainForm<ProfessorFormData>({
-    schema: professorSchema,
-    defaultValues: professorDefaultValues,
-    onSubmit: onSubmit,
-    mode: "all",
-  });
+  const { control, handleSubmit, onFormSubmit, isSubmitting, methodsHookForm } =
+    useBrainForm<ProfessorFormData>({
+      schema: professorSchema,
+      defaultValues: professorDefaultValues,
+      onSubmit: onSubmit,
+      mode: "all",
+    });
 
   async function onSubmit(data: ProfessorFormData) {
     console.log("Dados do formulário validados:", data);
@@ -77,15 +79,11 @@ export default function ProfessorPage() {
   return (
     <ProtectedRoute allowedRoles={["PROFESSOR"]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        {/* Cabeçalho */}
-        <Box sx={{ mb: 4 }}>
-          <PageTitle
-            title={"Cadastro de Professor"}
-            description="Preencha os dados abaixo para completar o cadastro no sistema"
-          />
-        </Box>
-
-        <form onSubmit={handleSubmit(onFormSubmit)} noValidate>
+        <PageTitle
+          title={"Cadastro de Professor"}
+          description="Preencha os dados abaixo para completar o cadastro no sistema"
+        />
+        <BrainFormProvider methodsHookForm={methodsHookForm} onSubmit={handleSubmit(onFormSubmit)}>
           {/* Seção Informações Pessoais */}
           <ContainerSection
             title="Informações Pessoais"
@@ -227,10 +225,10 @@ export default function ProfessorPage() {
               Cancelar
             </Button>
             <Button variant="contained" type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Cadastrando..." : "Cadastrar Professor"}
+              {isSubmitting ? "Cadastrando..." : "Salvar"}
             </Button>
           </Box>
-        </form>
+        </BrainFormProvider>
       </Container>
     </ProtectedRoute>
   );
