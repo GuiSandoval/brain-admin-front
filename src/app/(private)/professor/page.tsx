@@ -1,4 +1,5 @@
 "use client";
+import { BrainDateTextControlled } from "@/components/brainDateTextControlled";
 import { BrainDropdownControlled } from "@/components/brainDropdownControlled";
 import { BrainTextFieldControlled } from "@/components/brainTextFieldControlled";
 import ContainerSection from "@/components/containerSection/containerSection";
@@ -112,11 +113,10 @@ export default function ProfessorPage() {
               required
             />
 
-            <BrainTextFieldControlled
+            <BrainDateTextControlled
               name="dataNascimento"
               control={control}
               label="Data de Nascimento"
-              placeholder="dd/mm/aaaa"
               required
             />
             <BrainDropdownControlled
