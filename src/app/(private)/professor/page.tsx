@@ -1,7 +1,7 @@
 "use client";
-import { BrainDateTextControlled } from "@/components/brainDateTextControlled";
-import { BrainDropdownControlled } from "@/components/brainDropdownControlled";
-import { BrainTextFieldControlled } from "@/components/brainTextFieldControlled";
+import { BrainDateTextControlled } from "@/components/brainForms/brainDateTextControlled";
+import { BrainDropdownControlled } from "@/components/brainForms/brainDropdownControlled";
+import { BrainTextFieldControlled } from "@/components/brainForms/brainTextFieldControlled";
 import ContainerSection from "@/components/containerSection/containerSection";
 import PageTitle from "@/components/pageTitle/pageTitle";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
@@ -10,9 +10,9 @@ import { Box, Button, Container } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { professorDefaultValues, ProfessorFormData, professorSchema } from "./schema";
 import { KeyValue } from "@/services/models/keyValue";
-import { BrainTextCPFControlled } from "@/components/brainTextCPFControlled";
-import { BrainTextRGControlled } from "@/components/brainTextRGControlled";
-import { BrainTextCEPControlled } from "@/components/brainTextCEPControlled";
+import { BrainTextCPFControlled } from "@/components/brainForms/brainTextCPFControlled";
+import { BrainTextRGControlled } from "@/components/brainForms/brainTextRGControlled";
+import { BrainTextCEPControlled } from "@/components/brainForms/brainTextCEPControlled";
 
 export default function ProfessorPage() {
   const router = useRouter();
