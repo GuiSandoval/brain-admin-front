@@ -43,7 +43,7 @@ export default function VerificarContaPage() {
           const message = apiError.response?.data?.mensagem || "Erro na verificação de conta";
           setMensagem(message);
         } else {
-          setMensagem("Erro interno do servidor");
+          setMensagem(`Erro interno do servidor ${error}`);
         }
       }
     };
@@ -86,11 +86,8 @@ export default function VerificarContaPage() {
             <Typography variant="h5" color="error.main" textAlign="center">
               Erro na Verificação
             </Typography>
-            <Typography variant="body1" color="textSecondary" textAlign="center">
-              {mensagem}
-            </Typography>
             <Typography variant="body2" color="textSecondary" textAlign="center">
-              Entre em contato com o suporte se o problema persistir.
+              {mensagem}
             </Typography>
           </Box>
         );
