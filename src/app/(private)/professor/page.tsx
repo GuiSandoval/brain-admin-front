@@ -153,6 +153,7 @@ function ProfessorPageContent() {
     { key: "parda", value: "Parda" },
     { key: "amarela", value: "Amarela" },
     { key: "indigena", value: "Indígena" },
+    { key: "outro", value: "Outro" },
   ];
   const QUANTITY_COLLUMNS_DEFAULT = 3;
 

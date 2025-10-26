@@ -1,13 +1,7 @@
 import { KeyValue } from "@/services/models/keyValue";
-import {
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectProps,
-} from "@mui/material";
+import { FormHelperText, InputLabel, SelectProps } from "@mui/material";
 import React from "react";
+import { StyledFormControl, StyledSelect, StyledMenuItem } from "./styles";
 
 interface IBrainDropdownFieldProps extends Omit<SelectProps, "error"> {
   id?: string;
@@ -29,18 +23,18 @@ function BrainDropdownField({
   ...selectProps
 }: IBrainDropdownFieldProps) {
   return (
-    <FormControl fullWidth={fullWidth} error={error}>
+    <StyledFormControl fullWidth={fullWidth} error={error}>
       <InputLabel>{label}</InputLabel>
-      <Select {...selectProps} label={label} size={size}>
-        <MenuItem value="">{placeholder}</MenuItem>
+      <StyledSelect {...selectProps} label={label} size={size}>
+        <StyledMenuItem value="">{placeholder}</StyledMenuItem>
         {options.map((option) => (
-          <MenuItem key={option.key} value={option.key}>
+          <StyledMenuItem key={option.key} value={option.key}>
             {option.value}
-          </MenuItem>
+          </StyledMenuItem>
         ))}
-      </Select>
+      </StyledSelect>
       {helperText && <FormHelperText>{helperText}</FormHelperText>}
-    </FormControl>
+    </StyledFormControl>
   );
 }
 
