@@ -1,4 +1,10 @@
 "use client";
+import {
+  mapFormDataToProfessorPostRequest,
+  mapFormDataToProfessorPutRequest,
+  mapProfessorResponseToFormData,
+} from "@/app/(private)/professor/professorUtils";
+import { useProfessorMutations } from "@/app/(private)/professor/useProfessorMutations";
 import BrainButtonPrimary from "@/components/brainButtons/brainButtonPrimary/brainButtonPrimary";
 import BrainButtonSecondary from "@/components/brainButtons/brainButtonSecondary/brainButtonSecondary";
 import { BrainDateTextControlled } from "@/components/brainForms/brainDateTextControlled";
@@ -12,18 +18,14 @@ import ContainerSection from "@/components/containerSection/containerSection";
 import PageTitle from "@/components/pageTitle/pageTitle";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useBrainForm } from "@/hooks/useBrainForm";
-import { useProfessorMutations } from "@/app/(private)/professor/useProfessorMutations";
 import { useProfessor } from "@/hooks/useProfessor";
+import { buscarCep } from "@/services/cep";
 import { KeyValue } from "@/services/models/keyValue";
-import {
-  mapFormDataToProfessorPostRequest,
-  mapFormDataToProfessorPutRequest,
-  mapProfessorResponseToFormData,
-} from "@/app/(private)/professor/professorUtils";
 import { Alert, Box, CircularProgress, Container } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { professorDefaultValues, ProfessorFormData, professorSchema } from "./schema";
-import { useEffect } from "react";
 
 export default function ProfessorPage() {
   const router = useRouter();
@@ -35,21 +37,62 @@ export default function ProfessorPage() {
 
   const isEditMode = !!professorId;
 
-  const { control, handleSubmit, onFormSubmit, isSubmitting, reset, methodsHookForm } =
-    useBrainForm<ProfessorFormData>({
-      schema: professorSchema,
-      defaultValues: professorDefaultValues,
-      onSubmit: onSubmit,
-      mode: "all",
-    });
+  const {
+    control,
+    handleSubmit,
+    onFormSubmit,
+    isSubmitting,
+    reset,
+    methodsHookForm,
+    setValue,
+    watch,
+  } = useBrainForm<ProfessorFormData>({
+    schema: professorSchema,
+    defaultValues: professorDefaultValues,
+    onSubmit: onSubmit,
+    mode: "all",
+  });
 
-  // Carrega os dados do professor no formulário quando estiver no modo de edição
+  const [buscandoCep, setBuscandoCep] = useState(false);
+  const watcherCepValue = watch("cep");
+
   useEffect(() => {
     if (professor && isEditMode) {
       const formData = mapProfessorResponseToFormData(professor);
       reset(formData);
     }
   }, [professor, isEditMode, reset]);
+
+  const buscarEnderecoPorCep = useCallback(
+    async (cepValue: string) => {
+      if (cepValue && cepValue.length === 9) {
+        setBuscandoCep(true);
+        try {
+          const dadosCep = await buscarCep(cepValue);
+
+          if (dadosCep && !dadosCep.erro) {
+            setValue("logradouro", dadosCep.logradouro, { shouldValidate: true });
+            setValue("bairro", dadosCep.bairro, { shouldValidate: true });
+            setValue("cidade", dadosCep.localidade, { shouldValidate: true });
+            setValue("uf", dadosCep.uf, { shouldValidate: true });
+            if (dadosCep.complemento) {
+              setValue("complemento", dadosCep.complemento, { shouldValidate: true });
+            }
+          } else {
+            const message = "CEP não encontrado.";
+            toast.error(message);
+          }
+        } finally {
+          setBuscandoCep(false);
+        }
+      }
+    },
+    [setValue],
+  );
+
+  useEffect(() => {
+    buscarEnderecoPorCep(watcherCepValue);
+  }, [watcherCepValue, buscarEnderecoPorCep]);
 
   async function onSubmit(data: ProfessorFormData) {
     try {
@@ -61,10 +104,8 @@ export default function ProfessorPage() {
         await createProfessor.mutateAsync(professorData);
       }
 
-      // Redireciona para a lista de professores após sucesso
       router.push("/lista-professor");
     } catch (error) {
-      // O erro já é tratado no hook useProfessorMutations
       console.error("Erro ao salvar professor:", error);
     }
   }
@@ -222,7 +263,26 @@ export default function ProfessorPage() {
                 description="Informações de localização"
                 numberOfCollumns={QUANTITY_COLLUMNS_DEFAULT}
               >
-                <BrainTextCEPControlled name="cep" control={control} label="CEP" required={true} />
+                <Box sx={{ position: "relative", width: "100%" }}>
+                  <BrainTextCEPControlled
+                    name="cep"
+                    control={control}
+                    label="CEP"
+                    required={true}
+                  />
+                  {buscandoCep && (
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        right: 10,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                      }}
+                    >
+                      <CircularProgress size={20} />
+                    </Box>
+                  )}
+                </Box>
                 <BrainTextFieldControlled
                   name="logradouro"
                   control={control}
