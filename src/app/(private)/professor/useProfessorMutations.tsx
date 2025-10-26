@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { professorApi } from "@/services/api";
 import { QUERY_KEYS } from "@/constants/queryKeys";
 import { toast } from "react-toastify";
-import { ProfessorPostRequest } from "@/services/domains/professor/request";
+import { ProfessorPostRequest, ProfessorPutRequest } from "@/services/domains/professor/request";
 
 /**
  * Hook para mutações relacionadas aos professores
@@ -41,8 +41,23 @@ export function useProfessorMutations() {
     },
   });
 
+  // Mutation para atualizar professor
+  const updateProfessor = useMutation({
+    mutationFn: (data: ProfessorPutRequest) => professorApi.atualizarProfessor(data),
+    onSuccess: () => {
+      // Invalida e refetch a lista de professores e o detalhe
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.professores.all });
+      toast.success("Professor atualizado com sucesso!");
+    },
+    onError: (error) => {
+      console.error("Erro ao atualizar professor:", error);
+      toast.error("Ocorreu um erro ao atualizar o professor. Tente novamente.");
+    },
+  });
+
   return {
     createProfessor,
     deleteProfessor,
+    updateProfessor,
   };
 }

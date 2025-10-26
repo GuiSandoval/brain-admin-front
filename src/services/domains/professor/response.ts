@@ -25,6 +25,7 @@ interface ProfessorEnderecoResponse {
   complemento: string;
   numero: string;
   uf: string;
+  cidade?: string;
 }
 export interface ProfessorListaResponse {
   id: number;
@@ -37,4 +38,21 @@ export interface ProfessorListaResponse {
   endereco: ProfessorEnderecoResponse;
   rg: string;
   carteiraDeTrabalho: string;
+}
+
+export interface ProfessorDetalheResponse {
+  id: number;
+  cpf: string;
+  matricula: string;
+  nome: string;
+  nomeSocial: string;
+  email: string;
+  emailProfissional: string;
+  endereco: ProfessorEnderecoResponse;
+  rg: string;
+  carteiraDeTrabalho: string;
+  dataDeNascimento?: string;
+  genero?: string;
+  corRaca?: string;
+  cidadeNaturalidade?: string;
 }

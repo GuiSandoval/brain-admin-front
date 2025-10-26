@@ -13,17 +13,29 @@ import PageTitle from "@/components/pageTitle/pageTitle";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useBrainForm } from "@/hooks/useBrainForm";
 import { useProfessorMutations } from "@/app/(private)/professor/useProfessorMutations";
+import { useProfessor } from "@/hooks/useProfessor";
 import { KeyValue } from "@/services/models/keyValue";
-import { mapFormDataToProfessorRequest } from "@/app/(private)/professor/professorUtils";
-import { Box, Container } from "@mui/material";
-import { useRouter } from "next/navigation";
+import {
+  mapFormDataToProfessorPostRequest,
+  mapFormDataToProfessorPutRequest,
+  mapProfessorResponseToFormData,
+} from "@/app/(private)/professor/professorUtils";
+import { Alert, Box, CircularProgress, Container } from "@mui/material";
+import { useRouter, useSearchParams } from "next/navigation";
 import { professorDefaultValues, ProfessorFormData, professorSchema } from "./schema";
+import { useEffect } from "react";
 
 export default function ProfessorPage() {
   const router = useRouter();
-  const { createProfessor } = useProfessorMutations();
+  const searchParams = useSearchParams();
+  const professorId = searchParams.get("id");
 
-  const { control, handleSubmit, onFormSubmit, isSubmitting, methodsHookForm } =
+  const { professor, loading: loadingProfessor, error: errorProfessor } = useProfessor(professorId);
+  const { createProfessor, updateProfessor } = useProfessorMutations();
+
+  const isEditMode = !!professorId;
+
+  const { control, handleSubmit, onFormSubmit, isSubmitting, reset, methodsHookForm } =
     useBrainForm<ProfessorFormData>({
       schema: professorSchema,
       defaultValues: professorDefaultValues,
@@ -31,17 +43,29 @@ export default function ProfessorPage() {
       mode: "all",
     });
 
+  // Carrega os dados do professor no formulário quando estiver no modo de edição
+  useEffect(() => {
+    if (professor && isEditMode) {
+      const formData = mapProfessorResponseToFormData(professor);
+      reset(formData);
+    }
+  }, [professor, isEditMode, reset]);
+
   async function onSubmit(data: ProfessorFormData) {
     try {
-      const professorData = mapFormDataToProfessorRequest(data);
-
-      await createProfessor.mutateAsync(professorData);
+      if (isEditMode && professorId) {
+        const professorData = mapFormDataToProfessorPutRequest(data, professorId);
+        await updateProfessor.mutateAsync(professorData);
+      } else {
+        const professorData = mapFormDataToProfessorPostRequest(data);
+        await createProfessor.mutateAsync(professorData);
+      }
 
       // Redireciona para a lista de professores após sucesso
       router.push("/lista-professor");
     } catch (error) {
       // O erro já é tratado no hook useProfessorMutations
-      console.error("Erro ao criar professor:", error);
+      console.error("Erro ao salvar professor:", error);
     }
   }
 
@@ -94,154 +118,174 @@ export default function ProfessorPage() {
   return (
     <ProtectedRoute allowedRoles={["PROFESSOR"]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        <PageTitle
-          title={"Cadastro de Professor"}
-          description="Preencha os dados abaixo para completar o cadastro no sistema"
-        />
-        <BrainFormProvider methodsHookForm={methodsHookForm} onSubmit={handleSubmit(onFormSubmit)}>
-          {/* Seção Informações Pessoais */}
-          <ContainerSection
-            title="Informações Pessoais"
-            description="Dados básicos do professor"
-            numberOfCollumns={QUANTITY_COLLUMNS_DEFAULT}
-          >
-            <BrainTextFieldControlled
-              name="nomeCompleto"
-              control={control}
-              label="Nome Completo"
-              placeholder="Digite o nome completo"
-              required
-            />
-
-            <BrainTextFieldControlled
-              name="nomeSocial"
-              control={control}
-              label="Nome Social"
-              placeholder="Digite o nome social (opcional)"
-            />
-
-            <BrainTextFieldControlled
-              name="email"
-              control={control}
-              label="E-mail"
-              placeholder="exemplo@email.com"
-              type="email"
-              required
-            />
-
-            <BrainDateTextControlled
-              name="dataNascimento"
-              control={control}
-              label="Data de Nascimento"
-              required
-            />
-            <BrainDropdownControlled
-              name="genero"
-              control={control}
-              label="Gênero"
-              required
-              options={OPTIONS_GENDER}
-              placeholder="Selecione o gênero"
-            />
-
-            <BrainDropdownControlled
-              name="corRaca"
-              control={control}
-              label="Cor/Raça"
-              required
-              options={OPTIONS_COR_RACA}
-              placeholder="Selecione a cor/raça"
-            />
-
-            <BrainTextFieldControlled
-              name="cidadeNaturalidade"
-              control={control}
-              label="Cidade de Naturalidade"
-              placeholder="Digite a cidade de nascimento"
-              required
-            />
-          </ContainerSection>
-          {/* Seção Documentos */}
-
-          <ContainerSection
-            title="Documentos"
-            description="Informações de documentação "
-            numberOfCollumns={QUANTITY_COLLUMNS_DEFAULT}
-          >
-            <BrainTextCPFControlled name="cpf" control={control} label="CPF" required={true} />
-
-            <BrainTextRGControlled name="rg" control={control} label="RG" required={true} />
-
-            <BrainTextFieldControlled
-              name="carteiraTrabalho"
-              control={control}
-              label="Carteira de Trabalho"
-              placeholder="Digite o número"
-              required
-            />
-          </ContainerSection>
-          <ContainerSection
-            title="Endereço"
-            description="Informações de localização"
-            numberOfCollumns={QUANTITY_COLLUMNS_DEFAULT}
-          >
-            <BrainTextCEPControlled name="cep" control={control} label="CEP" required={true} />
-            <BrainTextFieldControlled
-              name="logradouro"
-              control={control}
-              label="Logradouro"
-              placeholder="Rua, Avenida, etc."
-              required
-            />
-
-            <BrainTextFieldControlled
-              name="numero"
-              control={control}
-              label="Número"
-              placeholder="Nº"
-              required
-            />
-
-            <BrainTextFieldControlled
-              name="complemento"
-              control={control}
-              label="Complemento"
-              placeholder="Apto, Bloco, etc. (opcional)"
-            />
-
-            <BrainTextFieldControlled
-              name="bairro"
-              control={control}
-              label="Bairro"
-              placeholder="Digite o bairro"
-              required
-            />
-
-            <BrainTextFieldControlled
-              name="cidade"
-              control={control}
-              label="Cidade"
-              placeholder="Digite a cidade"
-              required
-            />
-
-            <BrainDropdownControlled
-              name="uf"
-              control={control}
-              label="UF"
-              required
-              options={OPTIONS_UF}
-              placeholder="UF"
-            />
-          </ContainerSection>
-
-          <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
-            <BrainButtonSecondary onClick={handleCancel}>Cancelar</BrainButtonSecondary>
-            <BrainButtonPrimary type="submit" disabled={isSubmitting || createProfessor.isPending}>
-              {createProfessor.isPending ? "Salvando..." : "Salvar"}
-            </BrainButtonPrimary>
+        {loadingProfessor && isEditMode ? (
+          <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+            <CircularProgress />
           </Box>
-        </BrainFormProvider>
+        ) : errorProfessor && isEditMode ? (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {errorProfessor}
+          </Alert>
+        ) : (
+          <>
+            <PageTitle
+              title={isEditMode ? "Editar Professor" : "Cadastro de Professor"}
+              description="Preencha os dados abaixo para completar o cadastro no sistema"
+            />
+            <BrainFormProvider
+              methodsHookForm={methodsHookForm}
+              onSubmit={handleSubmit(onFormSubmit)}
+            >
+              {/* Seção Informações Pessoais */}
+              <ContainerSection
+                title="Informações Pessoais"
+                description="Dados básicos do professor"
+                numberOfCollumns={QUANTITY_COLLUMNS_DEFAULT}
+              >
+                <BrainTextFieldControlled
+                  name="nomeCompleto"
+                  control={control}
+                  label="Nome Completo"
+                  placeholder="Digite o nome completo"
+                  required
+                />
+
+                <BrainTextFieldControlled
+                  name="nomeSocial"
+                  control={control}
+                  label="Nome Social"
+                  placeholder="Digite o nome social (opcional)"
+                />
+
+                <BrainTextFieldControlled
+                  name="email"
+                  control={control}
+                  label="E-mail"
+                  placeholder="exemplo@email.com"
+                  type="email"
+                  required
+                />
+
+                <BrainDateTextControlled
+                  name="dataNascimento"
+                  control={control}
+                  label="Data de Nascimento"
+                  required
+                />
+                <BrainDropdownControlled
+                  name="genero"
+                  control={control}
+                  label="Gênero"
+                  required
+                  options={OPTIONS_GENDER}
+                  placeholder="Selecione o gênero"
+                />
+
+                <BrainDropdownControlled
+                  name="corRaca"
+                  control={control}
+                  label="Cor/Raça"
+                  required
+                  options={OPTIONS_COR_RACA}
+                  placeholder="Selecione a cor/raça"
+                />
+
+                <BrainTextFieldControlled
+                  name="cidadeNaturalidade"
+                  control={control}
+                  label="Cidade de Naturalidade"
+                  placeholder="Digite a cidade de nascimento"
+                  required
+                />
+              </ContainerSection>
+              {/* Seção Documentos */}
+
+              <ContainerSection
+                title="Documentos"
+                description="Informações de documentação "
+                numberOfCollumns={QUANTITY_COLLUMNS_DEFAULT}
+              >
+                <BrainTextCPFControlled name="cpf" control={control} label="CPF" required={true} />
+
+                <BrainTextRGControlled name="rg" control={control} label="RG" required={true} />
+
+                <BrainTextFieldControlled
+                  name="carteiraTrabalho"
+                  control={control}
+                  label="Carteira de Trabalho"
+                  placeholder="Digite o número"
+                  required
+                />
+              </ContainerSection>
+              <ContainerSection
+                title="Endereço"
+                description="Informações de localização"
+                numberOfCollumns={QUANTITY_COLLUMNS_DEFAULT}
+              >
+                <BrainTextCEPControlled name="cep" control={control} label="CEP" required={true} />
+                <BrainTextFieldControlled
+                  name="logradouro"
+                  control={control}
+                  label="Logradouro"
+                  placeholder="Rua, Avenida, etc."
+                  required
+                />
+
+                <BrainTextFieldControlled
+                  name="numero"
+                  control={control}
+                  label="Número"
+                  placeholder="Nº"
+                  required
+                />
+
+                <BrainTextFieldControlled
+                  name="complemento"
+                  control={control}
+                  label="Complemento"
+                  placeholder="Apto, Bloco, etc. (opcional)"
+                />
+
+                <BrainTextFieldControlled
+                  name="bairro"
+                  control={control}
+                  label="Bairro"
+                  placeholder="Digite o bairro"
+                  required
+                />
+
+                <BrainTextFieldControlled
+                  name="cidade"
+                  control={control}
+                  label="Cidade"
+                  placeholder="Digite a cidade"
+                  required
+                />
+
+                <BrainDropdownControlled
+                  name="uf"
+                  control={control}
+                  label="UF"
+                  required
+                  options={OPTIONS_UF}
+                  placeholder="UF"
+                />
+              </ContainerSection>
+
+              <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
+                <BrainButtonSecondary onClick={handleCancel}>Cancelar</BrainButtonSecondary>
+                <BrainButtonPrimary
+                  type="submit"
+                  disabled={isSubmitting || createProfessor.isPending || updateProfessor.isPending}
+                >
+                  {createProfessor.isPending || updateProfessor.isPending
+                    ? "Salvando..."
+                    : "Salvar"}
+                </BrainButtonPrimary>
+              </Box>
+            </BrainFormProvider>
+          </>
+        )}
       </Container>
     </ProtectedRoute>
   );

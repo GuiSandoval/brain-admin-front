@@ -40,8 +40,8 @@ export default function ProfessorPage() {
     nome: string;
   } | null>(null);
 
-  const handleEditProfessor = (matricula: string) => {
-    console.log("Editar professor:", matricula);
+  const handleEditProfessor = (professorId: string) => {
+    router.push(`/professor?id=${professorId}`);
   };
 
   const handleDeleteProfessor = (professorId: string, professorNome: string) => {
@@ -145,7 +145,7 @@ export default function ProfessorPage() {
                       <Box sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
                         <IconButton
                           size="small"
-                          onClick={() => handleEditProfessor(professor.matricula)}
+                          onClick={() => handleEditProfessor(professor.id.toString())}
                           sx={{ color: "primary.main" }}
                           title="Editar"
                         >
