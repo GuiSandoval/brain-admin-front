@@ -23,11 +23,11 @@ import { buscarCep } from "@/services/cep";
 import { KeyValue } from "@/services/models/keyValue";
 import { Alert, Box, CircularProgress, Container } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { professorDefaultValues, ProfessorFormData, professorSchema } from "./schema";
 
-export default function ProfessorPage() {
+function ProfessorPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const professorId = searchParams.get("id");
@@ -348,5 +348,21 @@ export default function ProfessorPage() {
         )}
       </Container>
     </ProtectedRoute>
+  );
+}
+
+export default function ProfessorPage() {
+  return (
+    <Suspense
+      fallback={
+        <Container maxWidth="lg" sx={{ py: 4 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+            <CircularProgress />
+          </Box>
+        </Container>
+      }
+    >
+      <ProfessorPageContent />
+    </Suspense>
   );
 }
