@@ -14,6 +14,7 @@ declare module "styled-components" {
       border: string;
       backgroundHover: string;
       backgroundSection: string;
+      error: string;
     };
     fonts: {
       body: string;
