@@ -133,17 +133,17 @@ export default function DisciplinaPage() {
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2" color="text.secondary">
-                        {disciplina.unidadeNome || `Unidade ${disciplina.unidadeId}`}
+                        {disciplina.unidade}
                       </Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2" color="text.secondary">
-                        {disciplina.serieNome || `Série ${disciplina.serieId}`}
+                        {disciplina.serie}
                       </Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2" color="text.secondary">
-                        {disciplina.grupoNome || `Grupo ${disciplina.grupoId}`}
+                        {disciplina.grupo}
                       </Typography>
                     </TableCell>
                     <TableCell>{disciplina.cargaHoraria}</TableCell>

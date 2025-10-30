@@ -21,7 +21,12 @@ export function useGrupoDisciplinaMutations() {
     mutationFn: (data: GrupoDisciplinaPostRequest) => grupoDisciplinaApi.criarGrupoDisciplina(data),
     onSuccess: () => {
       // Invalida e refetch a lista de grupos de disciplina
-      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.gruposDisciplina.all });
+      queryClient.invalidateQueries({
+        queryKey: {
+          ...QUERY_KEYS.gruposDisciplina.all,
+          ...QUERY_KEYS.disciplinas.all,
+        },
+      });
       toast.success("Grupo de disciplina criado com sucesso!");
     },
     onError: (error) => {

@@ -61,14 +61,14 @@ const menusByRole: Record<
       router: "/lista-professor",
     },
     {
-      text: "Disciplinas",
-      icon: <BookIcon fontSize="small" />,
-      router: "/lista-disciplina",
-    },
-    {
       text: "Grupos de disciplina",
       icon: <GroupIcon fontSize="small" />,
       router: "/lista-grupo-disciplina",
+    },
+    {
+      text: "Disciplinas",
+      icon: <BookIcon fontSize="small" />,
+      router: "/lista-disciplina",
     },
     // {
     //   text: "Turmas",

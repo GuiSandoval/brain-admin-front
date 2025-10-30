@@ -1,13 +1,10 @@
 export interface DisciplinaListaResponse {
-  id: number;
-  unidadeId: number;
-  unidadeNome?: string;
-  serieId: number;
-  serieNome?: string;
-  nome: string;
   cargaHoraria: string;
-  grupoId: number;
-  grupoNome?: string;
+  grupo: string;
+  id: number;
+  nome: string;
+  serie: string;
+  unidade: string;
 }
 
 export interface DisciplinaDetalheResponse {
