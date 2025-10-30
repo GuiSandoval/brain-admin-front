@@ -35,6 +35,8 @@ const ROLE_ROUTES: Record<UserRole, string[]> = {
     "/aulas",
     "/minhas-aulas",
     "/comunicados",
+    "/lista-disciplina",
+    "/disciplina",
   ],
   ADMIN: [
     "/",

@@ -22,5 +22,11 @@ export const QUERY_KEYS = {
     details: () => [...QUERY_KEYS.professores.all, "detail"] as const,
     detail: (id: string | number) => [...QUERY_KEYS.professores.details(), id] as const,
   },
+  disciplinas: {
+    all: ["disciplinas"] as const,
+    lists: () => [...QUERY_KEYS.disciplinas.all, "list"] as const,
+    details: () => [...QUERY_KEYS.disciplinas.all, "detail"] as const,
+    detail: (id: string | number) => [...QUERY_KEYS.disciplinas.details(), id] as const,
+  },
   // Outros recursos podem ser adicionados aqui futuramente
 } as const;

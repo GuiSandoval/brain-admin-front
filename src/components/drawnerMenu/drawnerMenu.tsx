@@ -60,6 +60,11 @@ const menusByRole: Record<
       icon: <PersonIcon fontSize="small" />,
       router: "/lista-professor",
     },
+    {
+      text: "Disciplinas",
+      icon: <BookIcon fontSize="small" />,
+      router: "/lista-disciplina",
+    },
     // {
     //   text: "Turmas",
     //   icon: <GroupIcon fontSize="small" />,
