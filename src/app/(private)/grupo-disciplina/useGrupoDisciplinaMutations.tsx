@@ -20,13 +20,9 @@ export function useGrupoDisciplinaMutations() {
   const createGrupoDisciplina = useMutation({
     mutationFn: (data: GrupoDisciplinaPostRequest) => grupoDisciplinaApi.criarGrupoDisciplina(data),
     onSuccess: () => {
-      // Invalida e refetch a lista de grupos de disciplina
-      queryClient.invalidateQueries({
-        queryKey: {
-          ...QUERY_KEYS.gruposDisciplina.all,
-          ...QUERY_KEYS.disciplinas.all,
-        },
-      });
+      // Invalida e refetch a lista de grupos de disciplina e disciplinas
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.gruposDisciplina.all });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.disciplinas.all });
       toast.success("Grupo de disciplina criado com sucesso!");
     },
     onError: (error) => {
@@ -39,8 +35,9 @@ export function useGrupoDisciplinaMutations() {
   const deleteGrupoDisciplina = useMutation({
     mutationFn: (id: string) => grupoDisciplinaApi.deleteGrupoDisciplina(id),
     onSuccess: () => {
-      // Invalida e refetch a lista de grupos de disciplina
+      // Invalida e refetch a lista de grupos de disciplina e disciplinas
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.gruposDisciplina.all });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.disciplinas.all });
       toast.success("Grupo de disciplina excluído com sucesso!");
     },
     onError: (error) => {
@@ -54,8 +51,9 @@ export function useGrupoDisciplinaMutations() {
     mutationFn: (data: GrupoDisciplinaPutRequest) =>
       grupoDisciplinaApi.atualizarGrupoDisciplina(data),
     onSuccess: () => {
-      // Invalida e refetch a lista de grupos de disciplina e o detalhe
+      // Invalida e refetch a lista de grupos de disciplina e disciplinas
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.gruposDisciplina.all });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.disciplinas.all });
       toast.success("Grupo de disciplina atualizado com sucesso!");
     },
     onError: (error) => {
