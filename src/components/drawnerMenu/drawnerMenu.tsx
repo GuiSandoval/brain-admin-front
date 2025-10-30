@@ -65,6 +65,11 @@ const menusByRole: Record<
       icon: <BookIcon fontSize="small" />,
       router: "/lista-disciplina",
     },
+    {
+      text: "Grupos de disciplina",
+      icon: <GroupIcon fontSize="small" />,
+      router: "/lista-grupo-disciplina",
+    },
     // {
     //   text: "Turmas",
     //   icon: <GroupIcon fontSize="small" />,
