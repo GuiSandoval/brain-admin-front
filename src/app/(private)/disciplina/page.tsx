@@ -17,6 +17,7 @@ import { useBrainForm } from "@/hooks/useBrainForm";
 import { useDisciplina } from "@/hooks/useDisciplina";
 import { useUnidades } from "@/hooks/useUnidades";
 import { useSeries } from "@/hooks/useSeries";
+import { useGruposDisciplina } from "@/hooks/useGruposDisciplina";
 import { KeyValue } from "@/services/models/keyValue";
 import { Alert, Box, CircularProgress, Container } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -35,9 +36,10 @@ function DisciplinaPageContent() {
   } = useDisciplina(disciplinaId);
   const { createDisciplina, updateDisciplina } = useDisciplinaMutations();
 
-  // Buscar unidades e séries das APIs
+  // Buscar unidades, séries e grupos de disciplina das APIs
   const { unidades, loading: loadingUnidades } = useUnidades();
   const { series, loading: loadingSeries } = useSeries();
+  const { gruposDisciplina, loading: loadingGrupos } = useGruposDisciplina();
 
   const isEditMode = !!disciplinaId;
 
@@ -90,16 +92,20 @@ function DisciplinaPageContent() {
     [series],
   );
 
-  const OPTIONS_GRUPOS: KeyValue[] = [
-    { key: "1", value: "Grupo A" },
-    { key: "2", value: "Grupo B" },
-    { key: "3", value: "Grupo C" },
-  ];
+  // Converter grupos de disciplina para formato KeyValue
+  const OPTIONS_GRUPOS: KeyValue[] = useMemo(
+    () =>
+      gruposDisciplina.map((grupo) => ({
+        key: grupo.id.toString(),
+        value: `${grupo.nome} - ${grupo.area}`,
+      })),
+    [gruposDisciplina],
+  );
 
   return (
     <ProtectedRoute allowedRoles={["PROFESSOR"]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        {(loadingDisciplina && isEditMode) || loadingUnidades || loadingSeries ? (
+        {(loadingDisciplina && isEditMode) || loadingUnidades || loadingSeries || loadingGrupos ? (
           <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
             <CircularProgress />
           </Box>
