@@ -15,10 +15,12 @@ import PageTitle from "@/components/pageTitle/pageTitle";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useBrainForm } from "@/hooks/useBrainForm";
 import { useDisciplina } from "@/hooks/useDisciplina";
+import { useUnidades } from "@/hooks/useUnidades";
+import { useSeries } from "@/hooks/useSeries";
 import { KeyValue } from "@/services/models/keyValue";
 import { Alert, Box, CircularProgress, Container } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useMemo } from "react";
 import { disciplinaDefaultValues, DisciplinaFormData, disciplinaSchema } from "./schema";
 
 function DisciplinaPageContent() {
@@ -32,6 +34,10 @@ function DisciplinaPageContent() {
     error: errorDisciplina,
   } = useDisciplina(disciplinaId);
   const { createDisciplina, updateDisciplina } = useDisciplinaMutations();
+
+  // Buscar unidades e séries das APIs
+  const { unidades, loading: loadingUnidades } = useUnidades();
+  const { series, loading: loadingSeries } = useSeries();
 
   const isEditMode = !!disciplinaId;
 
@@ -72,24 +78,17 @@ function DisciplinaPageContent() {
 
   const QUANTITY_COLLUMNS_DEFAULT = 3;
 
-  // Opções de dropdowns - você pode adaptar para buscar de uma API
-  const OPTIONS_UNIDADES: KeyValue[] = [
-    { key: "1", value: "Unidade 1" },
-    { key: "2", value: "Unidade 2" },
-    { key: "3", value: "Unidade 3" },
-  ];
+  // Converter unidades para formato KeyValue
+  const OPTIONS_UNIDADES: KeyValue[] = useMemo(
+    () => unidades.map((unidade) => ({ key: unidade.id.toString(), value: unidade.nome })),
+    [unidades],
+  );
 
-  const OPTIONS_SERIES: KeyValue[] = [
-    { key: "1", value: "1º Ano" },
-    { key: "2", value: "2º Ano" },
-    { key: "3", value: "3º Ano" },
-    { key: "4", value: "4º Ano" },
-    { key: "5", value: "5º Ano" },
-    { key: "6", value: "6º Ano" },
-    { key: "7", value: "7º Ano" },
-    { key: "8", value: "8º Ano" },
-    { key: "9", value: "9º Ano" },
-  ];
+  // Converter séries para formato KeyValue
+  const OPTIONS_SERIES: KeyValue[] = useMemo(
+    () => series.map((serie) => ({ key: serie.id.toString(), value: serie.nome })),
+    [series],
+  );
 
   const OPTIONS_GRUPOS: KeyValue[] = [
     { key: "1", value: "Grupo A" },
@@ -100,7 +99,7 @@ function DisciplinaPageContent() {
   return (
     <ProtectedRoute allowedRoles={["PROFESSOR"]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        {loadingDisciplina && isEditMode ? (
+        {(loadingDisciplina && isEditMode) || loadingUnidades || loadingSeries ? (
           <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
             <CircularProgress />
           </Box>
