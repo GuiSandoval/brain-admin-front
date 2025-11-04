@@ -46,3 +46,12 @@ export function unmaskCEP(cep: string): string {
 export function unmaskRG(rg: string): string {
   return rg.replace(/\D/g, "");
 }
+
+/**
+ * Converte um telefone formatado (ex: (00) 00000-0000) para apenas números (ex: 00000000000)
+ * @param phone - Telefone formatado
+ * @returns Telefone apenas com números
+ */
+export function unmaskPhone(phone: string): string {
+  return phone.replace(/\D/g, "");
+}
