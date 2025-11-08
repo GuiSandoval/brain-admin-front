@@ -70,6 +70,11 @@ const menusByRole: Record<
       icon: <BookIcon fontSize="small" />,
       router: "/lista-disciplina",
     },
+    {
+      text: "Séries",
+      icon: <BookIcon fontSize="small" />,
+      router: "/lista-serie",
+    },
     // {
     //   text: "Turmas",
     //   icon: <GroupIcon fontSize="small" />,

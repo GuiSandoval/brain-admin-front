@@ -1,38 +1,54 @@
 "use client";
 
+import { QUERY_KEYS } from "@/constants/queryKeys";
 import { serieApi } from "@/services/api";
-import { SerieResponse } from "@/services/domains/serie/response";
+import { SerieListaResponse } from "@/services/domains/serie/response";
 import { useQuery } from "@tanstack/react-query";
 
 interface UseSeriesReturn {
-  series: SerieResponse[];
+  series: SerieListaResponse[];
   loading: boolean;
   error: string | null;
+  refetch: () => void;
+  isSuccess: boolean;
+  isFetching: boolean;
 }
 
 /**
- * Hook para buscar lista de séries
+ * Hook para gerenciar o estado da lista de séries usando React Query
+ * @returns {UseSeriesReturn} Estado da lista de séries e funções de controle
  */
 export function useSeries(): UseSeriesReturn {
   const {
     data: seriesData,
     isLoading,
     error,
+    refetch,
+    isSuccess,
+    isFetching,
   } = useQuery({
-    queryKey: ["series"],
+    queryKey: QUERY_KEYS.series.lists(),
     queryFn: async () => {
-      const response = await serieApi.getListaSeries();
-      return response;
+      const response = await serieApi.getListaSeriesPaginada();
+      return response.content;
     },
-    staleTime: 10 * 60 * 1000, // 10 minutos
-    gcTime: 30 * 60 * 1000, // 30 minutos
+    staleTime: 5 * 60 * 1000, // 5 minutos
+    gcTime: 10 * 60 * 1000, // 10 minutos
     retry: 2,
     refetchOnWindowFocus: false,
+    meta: {
+      errorMessage: "Erro ao carregar a lista de séries. Tente novamente.",
+    },
   });
 
   return {
     series: seriesData ?? [],
     loading: isLoading,
-    error: error ? "Erro ao carregar séries. Tente novamente." : null,
+    error: error ? "Erro ao carregar a lista de séries. Tente novamente." : null,
+    refetch: () => {
+      refetch();
+    },
+    isSuccess,
+    isFetching,
   };
 }
