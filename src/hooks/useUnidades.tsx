@@ -21,7 +21,7 @@ export function useUnidades(): UseUnidadesReturn {
     queryKey: QUERY_KEYS.unidades.lists(),
     queryFn: async () => {
       const response = await unidadeApi.getListaUnidades();
-      return response;
+      return response.content;
     },
     staleTime: 10 * 60 * 1000, // 10 minutos
     gcTime: 30 * 60 * 1000, // 30 minutos

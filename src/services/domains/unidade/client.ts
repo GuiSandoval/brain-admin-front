@@ -10,7 +10,7 @@ export class UnidadeApi {
     return httpClient.post(`${BASE_ROUTE}`, request);
   }
 
-  getListaUnidades(): Promise<UnidadeResponse[]> {
+  getListaUnidades(): Promise<IBrainResult<UnidadeResponse>> {
     return httpClient.get(`${BASE_ROUTE}`);
   }
 
