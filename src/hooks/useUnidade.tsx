@@ -55,5 +55,3 @@ export function useUnidade(id: string | null): UseUnidadeReturn {
     isFetching,
   };
 }
-
-

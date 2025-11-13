@@ -5,5 +5,3 @@ export interface UnidadePostRequest {
 export interface UnidadePutRequest extends UnidadePostRequest {
   id: number;
 }
-
-
