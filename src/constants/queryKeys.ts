@@ -52,5 +52,11 @@ export const QUERY_KEYS = {
     details: () => [...QUERY_KEYS.unidades.all, "detail"] as const,
     detail: (id: string | number) => [...QUERY_KEYS.unidades.details(), id] as const,
   },
+  turmas: {
+    all: ["turmas"] as const,
+    lists: () => [...QUERY_KEYS.turmas.all, "list"] as const,
+    details: () => [...QUERY_KEYS.turmas.all, "detail"] as const,
+    detail: (id: string | number) => [...QUERY_KEYS.turmas.details(), id] as const,
+  },
   // Outros recursos podem ser adicionados aqui futuramente
 } as const;

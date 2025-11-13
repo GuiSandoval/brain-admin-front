@@ -7,6 +7,7 @@ import { DisciplinaApi } from "./domains/disciplina";
 import { GrupoDisciplinaApi } from "./domains/grupo-disciplina";
 import { UnidadeApi } from "./domains/unidade";
 import { SerieApi } from "./domains/serie";
+import { TurmaApi } from "./domains/turma";
 import { TarefaApi } from "./domains/tarefa";
 import { UsuarioAPI } from "./domains/usuario";
 
@@ -18,6 +19,7 @@ export const disciplinaApi = new DisciplinaApi();
 export const grupoDisciplinaApi = new GrupoDisciplinaApi();
 export const unidadeApi = new UnidadeApi();
 export const serieApi = new SerieApi();
+export const turmaApi = new TurmaApi();
 export const tarefaApi = new TarefaApi();
 export const loginGoogleApi = new LoginGoogleAPI();
 export const usuarioApi = new UsuarioAPI();
