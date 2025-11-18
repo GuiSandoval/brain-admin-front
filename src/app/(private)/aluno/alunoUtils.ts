@@ -24,8 +24,27 @@ export function mapFormDataToAlunoPostRequest(formData: AlunoFormData): AlunoPos
     genero: formData.genero,
     corRaca: formData.corRaca,
     cidadeNaturalidade: formData.cidadeNaturalidade,
-    telefones: [unmaskPhone(formData.telefone)], // Backend espera um array de telefones
-    // Campos do responsável ainda não foram implementados na API
+    telefones: [unmaskPhone(formData.telefone)],
+    responsaveis:
+      formData.responsaveis && formData.responsaveis.length > 0
+        ? formData.responsaveis.map((responsavel) => ({
+            cpf: unmaskCPF(responsavel.cpfResponsavel),
+            nome: responsavel.nomeResponsavel,
+            email: responsavel.emailResponsavel,
+            dataDeNascimento: convertDateStringToISO(responsavel.dataNascimentoResponsavel),
+            endereco: {
+              logradouro: responsavel.logradouro,
+              bairro: responsavel.bairro,
+              cep: unmaskCEP(responsavel.cep),
+              cidade: responsavel.cidade,
+              uf: responsavel.uf,
+              complemento: responsavel.complemento || "",
+              numero: responsavel.numero,
+            },
+            financeiro: responsavel.financeiro ?? false,
+            telefones: [unmaskPhone(responsavel.telefoneResponsavel)],
+          }))
+        : undefined,
   };
 }
 
@@ -50,8 +69,27 @@ export function mapFormDataToAlunoPutRequest(formData: AlunoFormData, id: string
     genero: formData.genero,
     corRaca: formData.corRaca,
     cidadeNaturalidade: formData.cidadeNaturalidade,
-    telefones: [unmaskPhone(formData.telefone)], // API espera um array de telefones
-    // Campos do responsável ainda não foram implementados na API
+    telefones: [unmaskPhone(formData.telefone)],
+    responsaveis:
+      formData.responsaveis && formData.responsaveis.length > 0
+        ? formData.responsaveis.map((responsavel) => ({
+            cpf: unmaskCPF(responsavel.cpfResponsavel),
+            nome: responsavel.nomeResponsavel,
+            email: responsavel.emailResponsavel,
+            dataDeNascimento: convertDateStringToISO(responsavel.dataNascimentoResponsavel),
+            endereco: {
+              logradouro: responsavel.logradouro,
+              bairro: responsavel.bairro,
+              cep: unmaskCEP(responsavel.cep),
+              cidade: responsavel.cidade,
+              uf: responsavel.uf,
+              complemento: responsavel.complemento || "",
+              numero: responsavel.numero,
+            },
+            financeiro: responsavel.financeiro ?? false,
+            telefones: [unmaskPhone(responsavel.telefoneResponsavel)],
+          }))
+        : undefined,
   };
 }
 
@@ -118,10 +156,6 @@ export function mapAlunoResponseToFormData(aluno: AlunoDetalheResponse): AlunoFo
     bairro: aluno.endereco?.bairro || "",
     cidade: aluno.endereco?.cidade || "",
     uf: aluno.endereco?.uf || "",
-    // Campos do responsável ainda não foram implementados na API
-    // Então inicializamos vazios para evitar erros
-    nomeResponsavel: "",
-    telefoneResponsavel: "",
-    emailResponsavel: "",
+    responsaveis: [],
   };
 }

@@ -46,13 +46,48 @@ export const alunoSchema = z.object({
     .min(1, "Cidade é obrigatória")
     .regex(/^[A-Za-zÀ-ÿ\s]+$/, "Cidade deve conter apenas letras"),
   uf: z.string().min(1, "UF é obrigatório").length(2, "UF deve ter exatamente 2 caracteres"),
-  nomeResponsavel: z.string().optional(),
-  telefoneResponsavel: z
-    .string()
-    .regex(/^\(\d{2}\) \d{4,5}-\d{4}$/, "Telefone deve estar no formato (00) 00000-0000")
-    .optional()
-    .or(z.literal("")),
-  emailResponsavel: z.string().email("E-mail inválido").optional().or(z.literal("")),
+  responsaveis: z.array(
+    z.object({
+      cpfResponsavel: z
+        .string()
+        .min(1, "CPF do responsável é obrigatório")
+        .regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF deve estar no formato 000.000.000-00"),
+      nomeResponsavel: z.string().min(1, "Nome do responsável é obrigatório"),
+      telefoneResponsavel: z
+        .string()
+        .regex(/^\(\d{2}\) \d{4,5}-\d{4}$/, "Telefone deve estar no formato (00) 00000-0000"),
+      emailResponsavel: z.string().email("E-mail inválido"),
+      dataNascimentoResponsavel: z
+        .string()
+        .min(1, "Data de nascimento é obrigatória")
+        .regex(/^\d{2}\/\d{2}\/\d{4}$/, "Data deve estar no formato dd/mm/aaaa"),
+      cep: z
+        .string()
+        .min(1, "CEP é obrigatório")
+        .regex(/^\d{5}-\d{3}$/, "CEP deve estar no formato 00000-000"),
+      logradouro: z
+        .string()
+        .min(1, "Logradouro é obrigatório")
+        .min(5, "Logradouro deve ter pelo menos 5 caracteres"),
+      numero: z.string().min(1, "Número é obrigatório"),
+      complemento: z.string().optional(),
+      bairro: z
+        .string()
+        .min(1, "Bairro é obrigatório")
+        .min(2, "Bairro deve ter pelo menos 2 caracteres"),
+      cidade: z
+        .string()
+        .min(1, "Cidade é obrigatória")
+        .regex(/^[A-Za-zÀ-ÿ\s]+$/, "Cidade deve conter apenas letras"),
+      uf: z.string().min(1, "UF é obrigatório").length(2, "UF deve ter exatamente 2 caracteres"),
+      financeiro: z.preprocess((val) => {
+        if (val === "true" || val === true) return true;
+        if (val === "false" || val === false) return false;
+        if (val === "" || val === undefined || val === null) return undefined;
+        return val;
+      }, z.boolean().optional()),
+    }),
+  ),
 });
 
 export type AlunoFormData = z.infer<typeof alunoSchema>;
@@ -75,7 +110,5 @@ export const alunoDefaultValues: AlunoFormData = {
   bairro: "",
   cidade: "",
   uf: "",
-  nomeResponsavel: "",
-  telefoneResponsavel: "",
-  emailResponsavel: "",
+  responsaveis: [],
 };
