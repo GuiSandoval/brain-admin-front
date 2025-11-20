@@ -99,6 +99,8 @@ export default function DrawnerMenu() {
             width: drawerOpen ? DRAWER_WIDTH : DRAWER_WIDTH_CLOSED,
             boxSizing: "border-box",
             overflowX: "hidden",
+            backgroundColor: "#f5f5f5",
+            borderRight: "1px solid #e0e0e0",
             transition: (theme) =>
               theme.transitions.create("width", {
                 easing: theme.transitions.easing.sharp,
@@ -125,7 +127,7 @@ export default function DrawnerMenu() {
             {drawerOpen ? <ChevronLeftIcon /> : <MenuIcon />}
           </IconButton>
         </Box>
-        <Divider />
+        <Divider sx={{ borderColor: "#e0e0e0" }} />
         <List>
           {pages.map((page) => (
             <ListItem key={page.text} disablePadding>
