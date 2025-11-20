@@ -1,5 +1,5 @@
 import { AulaFormData } from "@/app/(private)/aula/schema";
-import { AulaPostRequest, AulaPutRequest } from "@/services/domains/aula/request";
+import { AulaPostRequest, AulaPutRequest, DiaSemana } from "@/services/domains/aula/request";
 import { AulaDetalheResponse } from "@/services/domains/aula/response";
 
 export function mapFormDataToAulaPostRequest(formData: AulaFormData): AulaPostRequest {
@@ -7,7 +7,7 @@ export function mapFormDataToAulaPostRequest(formData: AulaFormData): AulaPostRe
     disciplinaId: formData.disciplinaId,
     turmaId: formData.turmaId,
     professorId: formData.professorId,
-    diaSemana: formData.diaSemana,
+    diaSemana: formData.diaSemana as DiaSemana,
     sala: formData.sala,
     horarioId: formData.horarioId,
   };
@@ -19,7 +19,7 @@ export function mapFormDataToAulaPutRequest(formData: AulaFormData, id: string):
     disciplinaId: formData.disciplinaId,
     turmaId: formData.turmaId,
     professorId: formData.professorId,
-    diaSemana: formData.diaSemana,
+    diaSemana: formData.diaSemana as DiaSemana,
     sala: formData.sala,
     horarioId: formData.horarioId,
   };
