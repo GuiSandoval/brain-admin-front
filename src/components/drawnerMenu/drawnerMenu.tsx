@@ -1,19 +1,36 @@
 "use client";
 import { getMenuRoutes } from "@/constants/routesConfig";
 import { useAuth } from "@/hooks/useAuth";
-import AdbIcon from "@mui/icons-material/Adb";
 import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from "@mui/icons-material/Person";
+import LogoutIcon from "@mui/icons-material/Logout";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useRouter } from "next/navigation";
 
-import { AppBar, Avatar, Button, Container, Tooltip, Typography } from "@mui/material";
+import {
+  AppBar,
+  Avatar,
+  Container,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Toolbar from "@mui/material/Toolbar";
 import * as React from "react";
 import * as S from "./styles";
+
+const DRAWER_WIDTH = 240;
+const DRAWER_WIDTH_CLOSED = 60;
 
 const settings = [
   {
@@ -27,22 +44,22 @@ export default function DrawnerMenu() {
   const router = useRouter();
   const { user, signOut } = useAuth();
 
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   // Obtém o menu baseado no role do usuário
   const pages = user ? getMenuRoutes(user.role) : [];
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
+  const handleDrawerOpen = () => {
+    setDrawerOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setDrawerOpen(false);
   };
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
@@ -60,7 +77,7 @@ export default function DrawnerMenu() {
 
   const handleNavigateToPage = (route: string) => {
     router.push(route);
-    handleCloseNavMenu();
+    handleDrawerClose();
   };
 
   // Se não há usuário logado, não exibe o menu
@@ -69,150 +86,173 @@ export default function DrawnerMenu() {
   }
 
   return (
-    <AppBar
-      color="default"
-      position="static"
-      style={{
-        borderBottom: "1px solid #e0e0e0",
-      }}
-    >
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <S.LinkLogo href="/">
-            <Typography
-              variant="h6"
-              noWrap
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                fontWeight: 700,
-                color: "inherit",
-                textDecoration: "none",
-              }}
-            >
-              Brain
+    <>
+      <Drawer
+        variant="permanent"
+        open={drawerOpen}
+        sx={{
+          width: drawerOpen ? DRAWER_WIDTH : DRAWER_WIDTH_CLOSED,
+          flexShrink: 0,
+          whiteSpace: "nowrap",
+          boxSizing: "border-box",
+          "& .MuiDrawer-paper": {
+            width: drawerOpen ? DRAWER_WIDTH : DRAWER_WIDTH_CLOSED,
+            boxSizing: "border-box",
+            overflowX: "hidden",
+            transition: (theme) =>
+              theme.transitions.create("width", {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.enteringScreen,
+              }),
+          },
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: drawerOpen ? "space-between" : "center",
+            padding: 2,
+            minHeight: 64,
+          }}
+        >
+          {drawerOpen && (
+            <Typography variant="h6" fontWeight={700}>
+              Menu
             </Typography>
-          </S.LinkLogo>
-
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{ display: { xs: "block", md: "none" } }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page.text} onClick={() => handleNavigateToPage(page.router)}>
-                  <Typography
-                    color="black"
-                    sx={{ textAlign: "center", display: "flex", alignItems: "center", gap: 1 }}
+          )}
+          <IconButton onClick={drawerOpen ? handleDrawerClose : handleDrawerOpen}>
+            {drawerOpen ? <ChevronLeftIcon /> : <MenuIcon />}
+          </IconButton>
+        </Box>
+        <Divider />
+        <List>
+          {pages.map((page) => (
+            <ListItem key={page.text} disablePadding>
+              <Tooltip title={!drawerOpen ? page.text : ""} placement="right">
+                <ListItemButton
+                  onClick={() => handleNavigateToPage(page.router)}
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: drawerOpen ? "initial" : "center",
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: drawerOpen ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
                   >
                     {page.icon}
-                    {page.text}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            Brain
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <S.ItemMenu key={page.text} href={page.router}>
-                <Button sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  {page.icon}
-                  {page.text}
-                </Button>
-              </S.ItemMenu>
-            ))}
-          </Box>
+                  </ListItemIcon>
+                  {drawerOpen && <ListItemText primary={page.text} />}
+                </ListItemButton>
+              </Tooltip>
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mr: 2 }}>
-            <Typography variant="body2" color="text.secondary">
-              {user.email} ({user.role})
-            </Typography>
-          </Box>
+      <AppBar
+        position="fixed"
+        color="default"
+        sx={{
+          marginLeft: drawerOpen ? `${DRAWER_WIDTH}px` : `${DRAWER_WIDTH_CLOSED}px`,
+          width: drawerOpen
+            ? `calc(100% - ${DRAWER_WIDTH}px)`
+            : `calc(100% - ${DRAWER_WIDTH_CLOSED}px)`,
+          borderBottom: "1px solid #e0e0e0",
+          transition: (theme) =>
+            theme.transitions.create(["width", "margin"], {
+              easing: theme.transitions.easing.sharp,
+              duration: theme.transitions.duration.enteringScreen,
+            }),
+        }}
+      >
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+            <S.LinkLogo href="/">
+              <Typography
+                variant="h6"
+                noWrap
+                sx={{
+                  fontWeight: 700,
+                  color: "inherit",
+                  textDecoration: "none",
+                }}
+              >
+                Brain
+              </Typography>
+            </S.LinkLogo>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={user.email} src="/static/images/avatar/2.jpg">
-                  {user.email.charAt(0).toUpperCase()}
-                </Avatar>
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem
-                  key={setting.text}
-                  onClick={() => handleNavigateToSetting(setting.router)}
-                >
-                  <Typography
-                    sx={{ textAlign: "center", display: "flex", alignItems: "center", gap: 1 }}
+            <Box sx={{ flexGrow: 1 }} />
+
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mr: 2 }}>
+              <Typography variant="body2" color="text.secondary">
+                {user.email} ({user.role})
+              </Typography>
+            </Box>
+
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Configurações">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt={user.email} src="/static/images/avatar/2.jpg">
+                    {user.email.charAt(0).toUpperCase()}
+                  </Avatar>
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem
+                    key={setting.text}
+                    onClick={() => handleNavigateToSetting(setting.router)}
                   >
-                    {setting.icon}
-                    {setting.text}
-                  </Typography>
-                </MenuItem>
-              ))}
+                    <ListItemIcon>{setting.icon}</ListItemIcon>
+                    <Typography>{setting.text}</Typography>
+                  </MenuItem>
+                ))}
 
-              <MenuItem onClick={handleLogout}>
-                <Typography sx={{ textAlign: "center" }}>Logout</Typography>
-              </MenuItem>
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+                <MenuItem onClick={handleLogout}>
+                  <ListItemIcon>
+                    <LogoutIcon fontSize="small" />
+                  </ListItemIcon>
+                  <Typography>Logout</Typography>
+                </MenuItem>
+              </Menu>
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
+
+      <Box
+        sx={{
+          marginLeft: drawerOpen ? `${DRAWER_WIDTH}px` : `${DRAWER_WIDTH_CLOSED}px`,
+          transition: (theme) =>
+            theme.transitions.create(["margin"], {
+              easing: theme.transitions.easing.sharp,
+              duration: theme.transitions.duration.enteringScreen,
+            }),
+        }}
+      >
+        <Toolbar />
+      </Box>
+    </>
   );
 }
