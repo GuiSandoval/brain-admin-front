@@ -154,7 +154,7 @@ export default function ListaAulaPage() {
                     </TableCell>
                     <TableCell>
                       <Chip
-                        label={translateDiaSemana(aula.diaSemana)}
+                        label={translateDiaSemana(aula.diaDaSemana)}
                         size="small"
                         color="primary"
                         variant="outlined"

@@ -10,7 +10,7 @@ export interface AulaListaResponse {
   disciplina: string;
   turma: string;
   professor: string;
-  diaSemana: string;
+  diaDaSemana: string;
   sala: string;
   horario: string;
 }

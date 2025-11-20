@@ -18,7 +18,7 @@ import { useAulaDetalhe } from "@/hooks/useAulaDetalhe";
 import { useDisciplinas } from "@/hooks/useDisciplinas";
 import { useTurmas } from "@/hooks/useTurmas";
 import { useProfessores } from "@/hooks/useProfessores";
-import { useHorarios } from "@/hooks/useHorarios";
+import { useHorariosDropdown } from "@/hooks/useHorarios";
 import { Alert, Box, CircularProgress, Container } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo } from "react";
@@ -37,7 +37,7 @@ function AulaPageContent() {
   const { disciplinas, loading: loadingDisciplinas } = useDisciplinas();
   const { turmas, loading: loadingTurmas } = useTurmas();
   const { professores, loading: loadingProfessores } = useProfessores();
-  const { horarios, loading: loadingHorarios } = useHorarios();
+  const { horarios, loading: loadingHorarios } = useHorariosDropdown();
 
   const isEditMode = !!aulaId;
 
@@ -107,7 +107,7 @@ function AulaPageContent() {
   const horariosOptions: KeyValue[] = useMemo(
     () =>
       horarios.map((h) => ({
-        value: h.descricao,
+        value: `${h.nome} (${h.horarioInicio} - ${h.horarioFim})`,
         key: h.id.toString(),
       })) as KeyValue[],
     [horarios],

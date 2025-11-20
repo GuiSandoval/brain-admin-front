@@ -85,6 +85,11 @@ const menusByRole: Record<
       icon: <BookIcon fontSize="small" />,
       router: "/lista-aula",
     },
+    {
+      text: "Horários",
+      icon: <CalendarIcon fontSize="small" />,
+      router: "/lista-horario",
+    },
     // {
     //   text: "Turmas",
     //   icon: <GroupIcon fontSize="small" />,

@@ -1,8 +1,12 @@
 export interface HorarioPostRequest {
-  descricao: string;
+  nome: string;
+  horarioInicio: string;
+  horarioFim: string;
 }
 
 export interface HorarioPutRequest {
-  id: number;
-  descricao: string;
+  id: string;
+  nome: string;
+  horarioInicio: string;
+  horarioFim: string;
 }

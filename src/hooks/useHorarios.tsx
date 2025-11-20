@@ -3,26 +3,66 @@
 import { QUERY_KEYS } from "@/constants/queryKeys";
 import { useQuery } from "@tanstack/react-query";
 import { horarioApi } from "@/services/api";
-import { HorarioResponse } from "@/services/domains/horario/response";
+import { HorarioListaResponse } from "@/services/domains/horario/response";
 
 interface UseHorariosReturn {
-  horarios: HorarioResponse[];
+  horarios: HorarioListaResponse[];
   loading: boolean;
   error: string | null;
+  refetch: () => void;
+  isSuccess: boolean;
+  isFetching: boolean;
 }
 
 /**
- * Hook para buscar lista de horários
+ * Hook para gerenciar o estado da lista de horários usando React Query
+ * @returns {UseHorariosReturn} Estado da lista de horários e funções de controle
  */
 export function useHorarios(): UseHorariosReturn {
   const {
     data: horariosData,
     isLoading,
     error,
+    refetch,
+    isSuccess,
+    isFetching,
   } = useQuery({
     queryKey: QUERY_KEYS.horarios.lists(),
     queryFn: async () => {
-      const response = await horarioApi.getHorarios();
+      const response = await horarioApi.getListaHorariosPaginada();
+      return response.content;
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutos
+    gcTime: 10 * 60 * 1000, // 10 minutos
+    retry: 2,
+    refetchOnWindowFocus: false,
+    meta: {
+      errorMessage: "Erro ao carregar a lista de horários. Tente novamente.",
+    },
+  });
+
+  return {
+    horarios: horariosData ?? [],
+    loading: isLoading,
+    error: error ? "Erro ao carregar a lista de horários. Tente novamente." : null,
+    refetch: () => {
+      refetch();
+    },
+    isSuccess,
+    isFetching,
+  };
+}
+
+// Hook adicional para buscar horários para dropdowns (retorna formato simplificado)
+export function useHorariosDropdown() {
+  const {
+    data: horariosData,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["horarios", "dropdown"],
+    queryFn: async () => {
+      const response = await horarioApi.getListaHorarios();
       return response.content;
     },
     staleTime: 10 * 60 * 1000, // 10 minutos
