@@ -1,12 +1,17 @@
 import { UserRole } from "@/utils/auth";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import BookIcon from "@mui/icons-material/AutoStories";
 import CalendarIcon from "@mui/icons-material/CalendarToday";
 import GroupIcon from "@mui/icons-material/Group";
 import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import AnnouncementIcon from "@mui/icons-material/Announcement";
+import SchoolIcon from "@mui/icons-material/School";
+import ClassIcon from "@mui/icons-material/Class";
+import ScheduleIcon from "@mui/icons-material/Schedule";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import GradeIcon from "@mui/icons-material/Grade";
+import CategoryIcon from "@mui/icons-material/Category";
 import * as React from "react";
 
 export interface RouteConfig {
@@ -26,7 +31,7 @@ export const ROUTES_BY_ROLE: Record<UserRole, RouteConfig[]> = {
     },
     {
       text: "Minhas aulas",
-      icon: <BookIcon fontSize="small" />,
+      icon: <MenuBookIcon fontSize="small" />,
       router: "/minhas-aulas",
       isShowMenu: true,
     },
@@ -38,7 +43,7 @@ export const ROUTES_BY_ROLE: Record<UserRole, RouteConfig[]> = {
     },
     {
       text: "Boletim",
-      icon: <BookIcon fontSize="small" />,
+      icon: <GradeIcon fontSize="small" />,
       router: "/boletim",
       isShowMenu: true,
     },
@@ -63,6 +68,12 @@ export const ROUTES_BY_ROLE: Record<UserRole, RouteConfig[]> = {
       isShowMenu: true,
     },
     {
+      text: "Turmas",
+      icon: <GroupIcon fontSize="small" />,
+      router: "/lista-turma",
+      isShowMenu: true,
+    },
+    {
       text: "Professor",
       icon: <PersonIcon fontSize="small" />,
       router: "/professor",
@@ -70,37 +81,32 @@ export const ROUTES_BY_ROLE: Record<UserRole, RouteConfig[]> = {
     },
     {
       text: "Grupos de disciplina",
-      icon: <GroupIcon fontSize="small" />,
+      icon: <CategoryIcon fontSize="small" />,
       router: "/lista-grupo-disciplina",
       isShowMenu: true,
     },
     {
       text: "Disciplinas",
-      icon: <BookIcon fontSize="small" />,
+      icon: <MenuBookIcon fontSize="small" />,
       router: "/lista-disciplina",
       isShowMenu: true,
     },
     {
       text: "Séries",
-      icon: <BookIcon fontSize="small" />,
+      icon: <SchoolIcon fontSize="small" />,
       router: "/lista-serie",
       isShowMenu: true,
     },
-    {
-      text: "Turmas",
-      icon: <GroupIcon fontSize="small" />,
-      router: "/lista-turma",
-      isShowMenu: true,
-    },
+
     {
       text: "Aulas",
-      icon: <BookIcon fontSize="small" />,
+      icon: <ClassIcon fontSize="small" />,
       router: "/lista-aula",
       isShowMenu: true,
     },
     {
       text: "Horários",
-      icon: <CalendarIcon fontSize="small" />,
+      icon: <ScheduleIcon fontSize="small" />,
       router: "/lista-horario",
       isShowMenu: true,
     },
@@ -112,7 +118,7 @@ export const ROUTES_BY_ROLE: Record<UserRole, RouteConfig[]> = {
     },
     {
       text: "Minhas aulas",
-      icon: <BookIcon fontSize="small" />,
+      icon: <ClassIcon fontSize="small" />,
       router: "/minhas-aulas",
       isShowMenu: false,
     },
@@ -136,31 +142,31 @@ export const ROUTES_BY_ROLE: Record<UserRole, RouteConfig[]> = {
     },
     {
       text: "Aula",
-      icon: <BookIcon fontSize="small" />,
+      icon: <ClassIcon fontSize="small" />,
       router: "/aula",
       isShowMenu: false,
     },
     {
       text: "Horário",
-      icon: <CalendarIcon fontSize="small" />,
+      icon: <ScheduleIcon fontSize="small" />,
       router: "/horario",
       isShowMenu: false,
     },
     {
       text: "Disciplina",
-      icon: <BookIcon fontSize="small" />,
+      icon: <MenuBookIcon fontSize="small" />,
       router: "/disciplina",
       isShowMenu: false,
     },
     {
       text: "Grupo Disciplina",
-      icon: <GroupIcon fontSize="small" />,
+      icon: <CategoryIcon fontSize="small" />,
       router: "/grupo-disciplina",
       isShowMenu: false,
     },
     {
       text: "Série",
-      icon: <BookIcon fontSize="small" />,
+      icon: <SchoolIcon fontSize="small" />,
       router: "/serie",
       isShowMenu: false,
     },
@@ -210,25 +216,25 @@ export const ROUTES_BY_ROLE: Record<UserRole, RouteConfig[]> = {
     },
     {
       text: "Aulas",
-      icon: <BookIcon fontSize="small" />,
+      icon: <ClassIcon fontSize="small" />,
       router: "/aulas",
       isShowMenu: false,
     },
     {
       text: "Minhas aulas",
-      icon: <BookIcon fontSize="small" />,
+      icon: <ClassIcon fontSize="small" />,
       router: "/minhas-aulas",
       isShowMenu: false,
     },
     {
       text: "Aula",
-      icon: <BookIcon fontSize="small" />,
+      icon: <ClassIcon fontSize="small" />,
       router: "/aula",
       isShowMenu: false,
     },
     {
       text: "Lista de Aulas",
-      icon: <BookIcon fontSize="small" />,
+      icon: <ClassIcon fontSize="small" />,
       router: "/lista-aula",
       isShowMenu: false,
     },
