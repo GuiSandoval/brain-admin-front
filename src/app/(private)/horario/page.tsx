@@ -9,6 +9,7 @@ import BrainButtonPrimary from "@/components/brainButtons/brainButtonPrimary/bra
 import BrainButtonSecondary from "@/components/brainButtons/brainButtonSecondary/brainButtonSecondary";
 import BrainFormProvider from "@/components/brainForms/brainFormProvider/brainFormProvider";
 import { BrainTextFieldControlled } from "@/components/brainForms/brainTextFieldControlled";
+import { BrainTextHorarioControlled } from "@/components/brainForms/brainTextHorarioControlled";
 import ContainerSection from "@/components/containerSection/containerSection";
 import PageTitle from "@/components/pageTitle/pageTitle";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
@@ -103,19 +104,19 @@ function HorarioPageContent() {
 
                 <Box />
 
-                <BrainTextFieldControlled
+                <BrainTextHorarioControlled
                   name="horarioInicio"
                   control={control}
                   label="Horário de Início"
-                  placeholder="Ex: 08:00"
+                  placeholder="08:00"
                   required
                 />
 
-                <BrainTextFieldControlled
+                <BrainTextHorarioControlled
                   name="horarioFim"
                   control={control}
                   label="Horário de Fim"
-                  placeholder="Ex: 09:00"
+                  placeholder="18:00"
                   required
                 />
               </ContainerSection>
