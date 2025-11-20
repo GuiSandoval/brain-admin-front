@@ -45,6 +45,7 @@ export default function DrawnerMenu() {
   const { user, signOut } = useAuth();
 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   // Obtém o menu baseado no role do usuário
@@ -56,6 +57,10 @@ export default function DrawnerMenu() {
 
   const handleDrawerClose = () => {
     setDrawerOpen(false);
+  };
+
+  const handleMobileDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
   };
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -78,6 +83,7 @@ export default function DrawnerMenu() {
   const handleNavigateToPage = (route: string) => {
     router.push(route);
     handleDrawerClose();
+    setMobileOpen(false);
   };
 
   // Se não há usuário logado, não exibe o menu
@@ -87,10 +93,12 @@ export default function DrawnerMenu() {
 
   return (
     <>
+      {/* Drawer para Desktop */}
       <Drawer
         variant="permanent"
         open={drawerOpen}
         sx={{
+          display: { xs: "none", md: "block" },
           width: drawerOpen ? DRAWER_WIDTH : DRAWER_WIDTH_CLOSED,
           flexShrink: 0,
           whiteSpace: "nowrap",
@@ -157,14 +165,64 @@ export default function DrawnerMenu() {
         </List>
       </Drawer>
 
+      {/* Drawer para Mobile */}
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleMobileDrawerToggle}
+        ModalProps={{
+          keepMounted: true, // Melhor performance em mobile
+        }}
+        sx={{
+          display: { xs: "block", md: "none" },
+          "& .MuiDrawer-paper": {
+            width: DRAWER_WIDTH,
+            boxSizing: "border-box",
+            backgroundColor: "#f5f5f5",
+            borderRight: "1px solid #e0e0e0",
+          },
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: 2,
+            minHeight: 64,
+          }}
+        >
+          <Typography variant="h6" fontWeight={700}>
+            Menu
+          </Typography>
+          <IconButton onClick={handleMobileDrawerToggle}>
+            <ChevronLeftIcon />
+          </IconButton>
+        </Box>
+        <Divider sx={{ borderColor: "#e0e0e0" }} />
+        <List>
+          {pages.map((page) => (
+            <ListItem key={page.text} disablePadding>
+              <ListItemButton onClick={() => handleNavigateToPage(page.router)}>
+                <ListItemIcon>{page.icon}</ListItemIcon>
+                <ListItemText primary={page.text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>
+
       <AppBar
         position="fixed"
         color="default"
         sx={{
-          marginLeft: drawerOpen ? `${DRAWER_WIDTH}px` : `${DRAWER_WIDTH_CLOSED}px`,
-          width: drawerOpen
-            ? `calc(100% - ${DRAWER_WIDTH}px)`
-            : `calc(100% - ${DRAWER_WIDTH_CLOSED}px)`,
+          marginLeft: { xs: 0, md: drawerOpen ? `${DRAWER_WIDTH}px` : `${DRAWER_WIDTH_CLOSED}px` },
+          width: {
+            xs: "100%",
+            md: drawerOpen
+              ? `calc(100% - ${DRAWER_WIDTH}px)`
+              : `calc(100% - ${DRAWER_WIDTH_CLOSED}px)`,
+          },
           borderBottom: "1px solid #e0e0e0",
           transition: (theme) =>
             theme.transitions.create(["width", "margin"], {
@@ -175,6 +233,17 @@ export default function DrawnerMenu() {
       >
         <Container maxWidth="xl">
           <Toolbar disableGutters>
+            {/* Botão de menu para mobile */}
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleMobileDrawerToggle}
+              sx={{ mr: 2, display: { md: "none" } }}
+            >
+              <MenuIcon />
+            </IconButton>
+
             <S.LinkLogo href="/">
               <Typography
                 variant="h6"
@@ -245,7 +314,7 @@ export default function DrawnerMenu() {
 
       <Box
         sx={{
-          marginLeft: drawerOpen ? `${DRAWER_WIDTH}px` : `${DRAWER_WIDTH_CLOSED}px`,
+          marginLeft: { xs: 0, md: drawerOpen ? `${DRAWER_WIDTH}px` : `${DRAWER_WIDTH_CLOSED}px` },
           transition: (theme) =>
             theme.transitions.create(["margin"], {
               easing: theme.transitions.easing.sharp,
