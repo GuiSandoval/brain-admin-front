@@ -13,7 +13,7 @@ export interface RouteConfig {
   text: string;
   icon: React.JSX.Element;
   router: string;
-  showInMenu: boolean;
+  isShowMenu: boolean;
 }
 
 export const ROUTES_BY_ROLE: Record<UserRole, RouteConfig[]> = {
@@ -22,31 +22,31 @@ export const ROUTES_BY_ROLE: Record<UserRole, RouteConfig[]> = {
       text: "Home",
       icon: <DashboardIcon fontSize="small" />,
       router: "/aluno",
-      showInMenu: true,
+      isShowMenu: true,
     },
     {
       text: "Minhas aulas",
       icon: <BookIcon fontSize="small" />,
       router: "/minhas-aulas",
-      showInMenu: true,
+      isShowMenu: true,
     },
     {
       text: "Calendário",
       icon: <CalendarIcon fontSize="small" />,
       router: "/calendario",
-      showInMenu: true,
+      isShowMenu: true,
     },
     {
       text: "Boletim",
       icon: <BookIcon fontSize="small" />,
       router: "/boletim",
-      showInMenu: true,
+      isShowMenu: true,
     },
     {
       text: "Perfil",
       icon: <PersonIcon fontSize="small" />,
       router: "/perfil",
-      showInMenu: false,
+      isShowMenu: false,
     },
   ],
   PROFESSOR: [
@@ -54,115 +54,115 @@ export const ROUTES_BY_ROLE: Record<UserRole, RouteConfig[]> = {
       text: "Home",
       icon: <DashboardIcon fontSize="small" />,
       router: "/",
-      showInMenu: true,
+      isShowMenu: true,
     },
     {
       text: "Professor",
       icon: <PersonIcon fontSize="small" />,
       router: "/lista-professor",
-      showInMenu: true,
+      isShowMenu: true,
     },
     {
       text: "Grupos de disciplina",
       icon: <GroupIcon fontSize="small" />,
       router: "/lista-grupo-disciplina",
-      showInMenu: true,
+      isShowMenu: true,
     },
     {
       text: "Disciplinas",
       icon: <BookIcon fontSize="small" />,
       router: "/lista-disciplina",
-      showInMenu: true,
+      isShowMenu: true,
     },
     {
       text: "Séries",
       icon: <BookIcon fontSize="small" />,
       router: "/lista-serie",
-      showInMenu: true,
+      isShowMenu: true,
     },
     {
       text: "Turmas",
       icon: <GroupIcon fontSize="small" />,
       router: "/lista-turma",
-      showInMenu: true,
+      isShowMenu: true,
     },
     {
       text: "Aulas",
       icon: <BookIcon fontSize="small" />,
       router: "/lista-aula",
-      showInMenu: true,
+      isShowMenu: true,
     },
     {
       text: "Horários",
       icon: <CalendarIcon fontSize="small" />,
       router: "/lista-horario",
-      showInMenu: true,
+      isShowMenu: true,
     },
     {
       text: "Perfil",
       icon: <PersonIcon fontSize="small" />,
       router: "/perfil",
-      showInMenu: false,
+      isShowMenu: false,
     },
     {
       text: "Minhas aulas",
       icon: <BookIcon fontSize="small" />,
       router: "/minhas-aulas",
-      showInMenu: false,
+      isShowMenu: false,
     },
     {
       text: "Avaliações",
       icon: <AssessmentIcon fontSize="small" />,
       router: "/avaliacoes",
-      showInMenu: false,
+      isShowMenu: false,
     },
     {
       text: "Comunicados",
       icon: <AnnouncementIcon fontSize="small" />,
       router: "/comunicados",
-      showInMenu: false,
+      isShowMenu: false,
     },
     {
       text: "Calendário",
       icon: <CalendarIcon fontSize="small" />,
       router: "/calendario",
-      showInMenu: false,
+      isShowMenu: false,
     },
     {
       text: "Aula",
       icon: <BookIcon fontSize="small" />,
       router: "/aula",
-      showInMenu: false,
+      isShowMenu: false,
     },
     {
       text: "Horário",
       icon: <CalendarIcon fontSize="small" />,
       router: "/horario",
-      showInMenu: false,
+      isShowMenu: false,
     },
     {
       text: "Disciplina",
       icon: <BookIcon fontSize="small" />,
       router: "/disciplina",
-      showInMenu: false,
+      isShowMenu: false,
     },
     {
       text: "Grupo Disciplina",
       icon: <GroupIcon fontSize="small" />,
       router: "/grupo-disciplina",
-      showInMenu: false,
+      isShowMenu: false,
     },
     {
       text: "Série",
       icon: <BookIcon fontSize="small" />,
       router: "/serie",
-      showInMenu: false,
+      isShowMenu: false,
     },
     {
       text: "Turma",
       icon: <GroupIcon fontSize="small" />,
       router: "/turma",
-      showInMenu: false,
+      isShowMenu: false,
     },
   ],
   ADMIN: [
@@ -170,61 +170,61 @@ export const ROUTES_BY_ROLE: Record<UserRole, RouteConfig[]> = {
       text: "Home",
       icon: <DashboardIcon fontSize="small" />,
       router: "/admin",
-      showInMenu: true,
+      isShowMenu: true,
     },
     {
       text: "Usuários",
       icon: <GroupIcon fontSize="small" />,
       router: "/usuarios",
-      showInMenu: true,
+      isShowMenu: true,
     },
     {
       text: "Relatórios",
       icon: <AssessmentIcon fontSize="small" />,
       router: "/relatorios",
-      showInMenu: true,
+      isShowMenu: true,
     },
     {
       text: "Comunicados",
       icon: <AnnouncementIcon fontSize="small" />,
       router: "/comunicados",
-      showInMenu: true,
+      isShowMenu: true,
     },
     {
       text: "Configurações",
       icon: <SettingsIcon fontSize="small" />,
       router: "/configuracoes",
-      showInMenu: true,
+      isShowMenu: true,
     },
     {
       text: "Perfil",
       icon: <PersonIcon fontSize="small" />,
       router: "/perfil",
-      showInMenu: false,
+      isShowMenu: false,
     },
     {
       text: "Aulas",
       icon: <BookIcon fontSize="small" />,
       router: "/aulas",
-      showInMenu: false,
+      isShowMenu: false,
     },
     {
       text: "Minhas aulas",
       icon: <BookIcon fontSize="small" />,
       router: "/minhas-aulas",
-      showInMenu: false,
+      isShowMenu: false,
     },
     {
       text: "Aula",
       icon: <BookIcon fontSize="small" />,
       router: "/aula",
-      showInMenu: false,
+      isShowMenu: false,
     },
     {
       text: "Lista de Aulas",
       icon: <BookIcon fontSize="small" />,
       router: "/lista-aula",
-      showInMenu: false,
+      isShowMenu: false,
     },
   ],
 };
@@ -236,5 +236,5 @@ export function getAllowedRoutes(role: UserRole): string[] {
 
 // Função auxiliar para obter apenas as rotas que aparecem no menu
 export function getMenuRoutes(role: UserRole): RouteConfig[] {
-  return ROUTES_BY_ROLE[role]?.filter((route) => route.showInMenu) || [];
+  return ROUTES_BY_ROLE[role]?.filter((route) => route.isShowMenu) || [];
 }
