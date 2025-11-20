@@ -174,14 +174,14 @@ function AlunoPageContent() {
         await createAluno.mutateAsync(alunoData);
       }
 
-      router.push("/lista-aluno");
+      router.push("/aluno/lista");
     } catch (error) {
       console.error("Erro ao salvar aluno:", error);
     }
   }
 
   function handleCancel() {
-    router.push("/lista-aluno");
+    router.push("/aluno/lista");
   }
 
   const OPTIONS_UF: KeyValue[] = [

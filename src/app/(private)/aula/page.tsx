@@ -66,14 +66,14 @@ function AulaPageContent() {
         await createAula.mutateAsync(aulaData);
       }
 
-      router.push("/lista-aula");
+      router.push("/aula/lista");
     } catch (error) {
       console.error("Erro ao salvar aula:", error);
     }
   }
 
   function handleCancel() {
-    router.push("/lista-aula");
+    router.push("/aula/lista");
   }
 
   // Opções para os dropdowns

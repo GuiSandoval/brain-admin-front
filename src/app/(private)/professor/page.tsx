@@ -104,14 +104,14 @@ function ProfessorPageContent() {
         await createProfessor.mutateAsync(professorData);
       }
 
-      router.push("/lista-professor");
+      router.push("/professor/lista");
     } catch (error) {
       console.error("Erro ao salvar professor:", error);
     }
   }
 
   function handleCancel() {
-    router.push("/lista-professor");
+    router.push("/professor/lista");
   }
   const OPTIONS_UF: KeyValue[] = [
     { key: "AC", value: "AC" },

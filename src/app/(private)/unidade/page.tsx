@@ -54,14 +54,14 @@ function UnidadePageContent() {
         await createUnidade.mutateAsync(unidadeData);
       }
 
-      router.push("/lista-unidade");
+      router.push("/unidade/lista");
     } catch (error) {
       console.error("Erro ao salvar unidade:", error);
     }
   }
 
   function handleCancel() {
-    router.push("/lista-unidade");
+    router.push("/unidade/lista");
   }
 
   const QUANTITY_COLLUMNS_DEFAULT = 3;

@@ -68,14 +68,14 @@ function DisciplinaPageContent() {
         await createDisciplina.mutateAsync(disciplinaData);
       }
 
-      router.push("/lista-disciplina");
+      router.push("/disciplina/lista");
     } catch (error) {
       console.error("Erro ao salvar disciplina:", error);
     }
   }
 
   function handleCancel() {
-    router.push("/lista-disciplina");
+    router.push("/disciplina/lista");
   }
 
   const QUANTITY_COLLUMNS_DEFAULT = 3;

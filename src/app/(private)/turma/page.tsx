@@ -54,14 +54,14 @@ function TurmaPageContent() {
         await createTurma.mutateAsync(turmaData);
       }
 
-      router.push("/lista-turma");
+      router.push("/turma/lista");
     } catch (error) {
       console.error("Erro ao salvar turma:", error);
     }
   }
 
   function handleCancel() {
-    router.push("/lista-turma");
+    router.push("/turma/lista");
   }
 
   const QUANTITY_COLLUMNS_DEFAULT = 1;

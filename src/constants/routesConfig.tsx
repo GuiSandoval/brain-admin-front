@@ -64,13 +64,13 @@ export const ROUTES_BY_ROLE: Record<UserRole, RouteConfig[]> = {
     {
       text: "Professor",
       icon: <PersonIcon fontSize="small" />,
-      router: "/lista-professor",
+      router: "/professor/lista",
       isShowMenu: true,
     },
     {
       text: "Turmas",
       icon: <GroupIcon fontSize="small" />,
-      router: "/lista-turma",
+      router: "/turma/lista",
       isShowMenu: true,
     },
     {
@@ -82,32 +82,32 @@ export const ROUTES_BY_ROLE: Record<UserRole, RouteConfig[]> = {
     {
       text: "Grupos de disciplina",
       icon: <CategoryIcon fontSize="small" />,
-      router: "/lista-grupo-disciplina",
+      router: "/grupo-disciplina/lista",
       isShowMenu: true,
     },
     {
       text: "Disciplinas",
       icon: <MenuBookIcon fontSize="small" />,
-      router: "/lista-disciplina",
+      router: "/disciplina/lista",
       isShowMenu: true,
     },
     {
       text: "Séries",
       icon: <SchoolIcon fontSize="small" />,
-      router: "/lista-serie",
+      router: "/serie/lista",
       isShowMenu: true,
     },
 
     {
       text: "Aulas",
       icon: <ClassIcon fontSize="small" />,
-      router: "/lista-aula",
+      router: "/aula/lista",
       isShowMenu: true,
     },
     {
       text: "Horários",
       icon: <ScheduleIcon fontSize="small" />,
-      router: "/lista-horario",
+      router: "/horario/lista",
       isShowMenu: true,
     },
     {
@@ -235,7 +235,7 @@ export const ROUTES_BY_ROLE: Record<UserRole, RouteConfig[]> = {
     {
       text: "Lista de Aulas",
       icon: <ClassIcon fontSize="small" />,
-      router: "/lista-aula",
+      router: "/aula/lista",
       isShowMenu: false,
     },
   ],

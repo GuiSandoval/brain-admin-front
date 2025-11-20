@@ -54,14 +54,14 @@ function SeriePageContent() {
         await createSerie.mutateAsync(serieData);
       }
 
-      router.push("/lista-serie");
+      router.push("/serie/lista");
     } catch (error) {
       console.error("Erro ao salvar série:", error);
     }
   }
 
   function handleCancel() {
-    router.push("/lista-serie");
+    router.push("/serie/lista");
   }
 
   const QUANTITY_COLLUMNS_DEFAULT = 1;

@@ -55,14 +55,14 @@ function HorarioPageContent() {
         await createHorario.mutateAsync(horarioData);
       }
 
-      router.push("/lista-horario");
+      router.push("/horario/lista");
     } catch (error) {
       console.error("Erro ao salvar horário:", error);
     }
   }
 
   function handleCancel() {
-    router.push("/lista-horario");
+    router.push("/horario/lista");
   }
 
   const QUANTITY_COLLUMNS_DEFAULT = 2;

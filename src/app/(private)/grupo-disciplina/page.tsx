@@ -62,14 +62,14 @@ function GrupoDisciplinaPageContent() {
         await createGrupoDisciplina.mutateAsync(grupoDisciplinaData);
       }
 
-      router.push("/lista-grupo-disciplina");
+      router.push("/grupo-disciplina/lista");
     } catch (error) {
       console.error("Erro ao salvar grupo de disciplina:", error);
     }
   }
 
   function handleCancel() {
-    router.push("/lista-grupo-disciplina");
+    router.push("/grupo-disciplina/lista");
   }
 
   const QUANTITY_COLLUMNS_DEFAULT = 2;
