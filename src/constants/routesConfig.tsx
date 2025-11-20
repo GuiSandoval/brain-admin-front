@@ -19,234 +19,226 @@ export interface RouteConfig {
   icon: React.JSX.Element;
   router: string;
   isShowMenu: boolean;
+  roles: UserRole[];
 }
 
-export const ROUTES_BY_ROLE: Record<UserRole, RouteConfig[]> = {
-  ESTUDANTE: [
-    {
-      text: "Home",
-      icon: <DashboardIcon fontSize="small" />,
-      router: "/aluno",
-      isShowMenu: true,
-    },
-    {
-      text: "Minhas aulas",
-      icon: <MenuBookIcon fontSize="small" />,
-      router: "/minhas-aulas",
-      isShowMenu: true,
-    },
-    {
-      text: "Calendário",
-      icon: <CalendarIcon fontSize="small" />,
-      router: "/calendario",
-      isShowMenu: true,
-    },
-    {
-      text: "Boletim",
-      icon: <GradeIcon fontSize="small" />,
-      router: "/boletim",
-      isShowMenu: true,
-    },
-    {
-      text: "Perfil",
-      icon: <PersonIcon fontSize="small" />,
-      router: "/perfil",
-      isShowMenu: false,
-    },
-  ],
-  PROFESSOR: [
-    {
-      text: "Home",
-      icon: <DashboardIcon fontSize="small" />,
-      router: "/",
-      isShowMenu: true,
-    },
-    {
-      text: "Professor",
-      icon: <PersonIcon fontSize="small" />,
-      router: "/professor/lista",
-      isShowMenu: true,
-    },
-    {
-      text: "Turmas",
-      icon: <GroupIcon fontSize="small" />,
-      router: "/turma/lista",
-      isShowMenu: true,
-    },
-    {
-      text: "Professor",
-      icon: <PersonIcon fontSize="small" />,
-      router: "/professor",
-      isShowMenu: false,
-    },
-    {
-      text: "Grupos de disciplina",
-      icon: <CategoryIcon fontSize="small" />,
-      router: "/grupo-disciplina/lista",
-      isShowMenu: true,
-    },
-    {
-      text: "Disciplinas",
-      icon: <MenuBookIcon fontSize="small" />,
-      router: "/disciplina/lista",
-      isShowMenu: true,
-    },
-    {
-      text: "Séries",
-      icon: <SchoolIcon fontSize="small" />,
-      router: "/serie/lista",
-      isShowMenu: true,
-    },
+export const ROUTES: RouteConfig[] = [
+  {
+    text: "Home Dashboard",
+    icon: <DashboardIcon fontSize="small" />,
+    router: "/",
+    isShowMenu: true,
+    roles: ["PROFESSOR"],
+  },
+  {
+    text: "Home Estudante",
+    icon: <DashboardIcon fontSize="small" />,
+    router: "/aluno",
+    isShowMenu: true,
+    roles: ["ESTUDANTE"],
+  },
+  {
+    text: "Home Admin",
+    icon: <DashboardIcon fontSize="small" />,
+    router: "/admin",
+    isShowMenu: true,
+    roles: ["ADMIN"],
+  },
+  {
+    text: "Professores",
+    icon: <PersonIcon fontSize="small" />,
+    router: "/professor/lista",
+    isShowMenu: true,
+    roles: ["PROFESSOR"],
+  },
+  {
+    text: "Professor",
+    icon: <PersonIcon fontSize="small" />,
+    router: "/professor",
+    isShowMenu: false,
+    roles: ["PROFESSOR"],
+  },
+  {
+    text: "Turmas",
+    icon: <GroupIcon fontSize="small" />,
+    router: "/turma/lista",
+    isShowMenu: true,
+    roles: ["PROFESSOR"],
+  },
+  {
+    text: "Turma",
+    icon: <GroupIcon fontSize="small" />,
+    router: "/turma",
+    isShowMenu: false,
+    roles: ["PROFESSOR"],
+  },
+  {
+    text: "Grupos de disciplina",
+    icon: <CategoryIcon fontSize="small" />,
+    router: "/grupo-disciplina/lista",
+    isShowMenu: true,
+    roles: ["PROFESSOR"],
+  },
+  {
+    text: "Grupo Disciplina",
+    icon: <CategoryIcon fontSize="small" />,
+    router: "/grupo-disciplina",
+    isShowMenu: false,
+    roles: ["PROFESSOR"],
+  },
+  {
+    text: "Disciplinas",
+    icon: <MenuBookIcon fontSize="small" />,
+    router: "/disciplina/lista",
+    isShowMenu: true,
+    roles: ["PROFESSOR"],
+  },
+  {
+    text: "Disciplina",
+    icon: <MenuBookIcon fontSize="small" />,
+    router: "/disciplina",
+    isShowMenu: false,
+    roles: ["PROFESSOR"],
+  },
+  {
+    text: "Séries",
+    icon: <SchoolIcon fontSize="small" />,
+    router: "/serie/lista",
+    isShowMenu: true,
+    roles: ["PROFESSOR"],
+  },
+  {
+    text: "Série",
+    icon: <SchoolIcon fontSize="small" />,
+    router: "/serie",
+    isShowMenu: false,
+    roles: ["PROFESSOR"],
+  },
+  {
+    text: "Aulas",
+    icon: <ClassIcon fontSize="small" />,
+    router: "/aula/lista",
+    isShowMenu: true,
+    roles: ["PROFESSOR"],
+  },
+  {
+    text: "Aula",
+    icon: <ClassIcon fontSize="small" />,
+    router: "/aula",
+    isShowMenu: false,
+    roles: ["PROFESSOR", "ADMIN"],
+  },
+  {
+    text: "Horários",
+    icon: <ScheduleIcon fontSize="small" />,
+    router: "/horario/lista",
+    isShowMenu: true,
+    roles: ["PROFESSOR"],
+  },
+  {
+    text: "Horário",
+    icon: <ScheduleIcon fontSize="small" />,
+    router: "/horario",
+    isShowMenu: false,
+    roles: ["PROFESSOR"],
+  },
+  {
+    text: "Minhas aulas",
+    icon: <MenuBookIcon fontSize="small" />,
+    router: "/minhas-aulas",
+    isShowMenu: true,
+    roles: ["ESTUDANTE"],
+  },
+  {
+    text: "Minhas aulas",
+    icon: <ClassIcon fontSize="small" />,
+    router: "/minhas-aulas",
+    isShowMenu: false,
+    roles: ["PROFESSOR", "ADMIN"],
+  },
+  {
+    text: "Calendário",
+    icon: <CalendarIcon fontSize="small" />,
+    router: "/calendario",
+    isShowMenu: true,
+    roles: ["ESTUDANTE"],
+  },
+  {
+    text: "Calendário",
+    icon: <CalendarIcon fontSize="small" />,
+    router: "/calendario",
+    isShowMenu: false,
+    roles: ["PROFESSOR"],
+  },
+  {
+    text: "Boletim",
+    icon: <GradeIcon fontSize="small" />,
+    router: "/boletim",
+    isShowMenu: true,
+    roles: ["ESTUDANTE"],
+  },
+  {
+    text: "Avaliações",
+    icon: <AssessmentIcon fontSize="small" />,
+    router: "/avaliacoes",
+    isShowMenu: false,
+    roles: ["PROFESSOR"],
+  },
+  {
+    text: "Comunicados",
+    icon: <AnnouncementIcon fontSize="small" />,
+    router: "/comunicados",
+    isShowMenu: true,
+    roles: ["ADMIN"],
+  },
+  {
+    text: "Comunicados",
+    icon: <AnnouncementIcon fontSize="small" />,
+    router: "/comunicados",
+    isShowMenu: false,
+    roles: ["PROFESSOR"],
+  },
+  {
+    text: "Perfil",
+    icon: <PersonIcon fontSize="small" />,
+    router: "/perfil",
+    isShowMenu: false,
+    roles: ["ESTUDANTE", "PROFESSOR", "ADMIN"],
+  },
+  {
+    text: "Usuários",
+    icon: <GroupIcon fontSize="small" />,
+    router: "/usuarios",
+    isShowMenu: true,
+    roles: ["ADMIN"],
+  },
+  {
+    text: "Relatórios",
+    icon: <AssessmentIcon fontSize="small" />,
+    router: "/relatorios",
+    isShowMenu: true,
+    roles: ["ADMIN"],
+  },
+  {
+    text: "Configurações",
+    icon: <SettingsIcon fontSize="small" />,
+    router: "/configuracoes",
+    isShowMenu: true,
+    roles: ["ADMIN"],
+  },
+  {
+    text: "Aulas",
+    icon: <ClassIcon fontSize="small" />,
+    router: "/aulas",
+    isShowMenu: false,
+    roles: ["ADMIN"],
+  },
+];
 
-    {
-      text: "Aulas",
-      icon: <ClassIcon fontSize="small" />,
-      router: "/aula/lista",
-      isShowMenu: true,
-    },
-    {
-      text: "Horários",
-      icon: <ScheduleIcon fontSize="small" />,
-      router: "/horario/lista",
-      isShowMenu: true,
-    },
-    {
-      text: "Perfil",
-      icon: <PersonIcon fontSize="small" />,
-      router: "/perfil",
-      isShowMenu: false,
-    },
-    {
-      text: "Minhas aulas",
-      icon: <ClassIcon fontSize="small" />,
-      router: "/minhas-aulas",
-      isShowMenu: false,
-    },
-    {
-      text: "Avaliações",
-      icon: <AssessmentIcon fontSize="small" />,
-      router: "/avaliacoes",
-      isShowMenu: false,
-    },
-    {
-      text: "Comunicados",
-      icon: <AnnouncementIcon fontSize="small" />,
-      router: "/comunicados",
-      isShowMenu: false,
-    },
-    {
-      text: "Calendário",
-      icon: <CalendarIcon fontSize="small" />,
-      router: "/calendario",
-      isShowMenu: false,
-    },
-    {
-      text: "Aula",
-      icon: <ClassIcon fontSize="small" />,
-      router: "/aula",
-      isShowMenu: false,
-    },
-    {
-      text: "Horário",
-      icon: <ScheduleIcon fontSize="small" />,
-      router: "/horario",
-      isShowMenu: false,
-    },
-    {
-      text: "Disciplina",
-      icon: <MenuBookIcon fontSize="small" />,
-      router: "/disciplina",
-      isShowMenu: false,
-    },
-    {
-      text: "Grupo Disciplina",
-      icon: <CategoryIcon fontSize="small" />,
-      router: "/grupo-disciplina",
-      isShowMenu: false,
-    },
-    {
-      text: "Série",
-      icon: <SchoolIcon fontSize="small" />,
-      router: "/serie",
-      isShowMenu: false,
-    },
-    {
-      text: "Turma",
-      icon: <GroupIcon fontSize="small" />,
-      router: "/turma",
-      isShowMenu: false,
-    },
-  ],
-  ADMIN: [
-    {
-      text: "Home",
-      icon: <DashboardIcon fontSize="small" />,
-      router: "/admin",
-      isShowMenu: true,
-    },
-    {
-      text: "Usuários",
-      icon: <GroupIcon fontSize="small" />,
-      router: "/usuarios",
-      isShowMenu: true,
-    },
-    {
-      text: "Relatórios",
-      icon: <AssessmentIcon fontSize="small" />,
-      router: "/relatorios",
-      isShowMenu: true,
-    },
-    {
-      text: "Comunicados",
-      icon: <AnnouncementIcon fontSize="small" />,
-      router: "/comunicados",
-      isShowMenu: true,
-    },
-    {
-      text: "Configurações",
-      icon: <SettingsIcon fontSize="small" />,
-      router: "/configuracoes",
-      isShowMenu: true,
-    },
-    {
-      text: "Perfil",
-      icon: <PersonIcon fontSize="small" />,
-      router: "/perfil",
-      isShowMenu: false,
-    },
-    {
-      text: "Aulas",
-      icon: <ClassIcon fontSize="small" />,
-      router: "/aulas",
-      isShowMenu: false,
-    },
-    {
-      text: "Minhas aulas",
-      icon: <ClassIcon fontSize="small" />,
-      router: "/minhas-aulas",
-      isShowMenu: false,
-    },
-    {
-      text: "Aula",
-      icon: <ClassIcon fontSize="small" />,
-      router: "/aula",
-      isShowMenu: false,
-    },
-    {
-      text: "Lista de Aulas",
-      icon: <ClassIcon fontSize="small" />,
-      router: "/aula/lista",
-      isShowMenu: false,
-    },
-  ],
-};
-
-// Função auxiliar para obter todas as rotas permitidas por role
 export function getAllowedRoutes(role: UserRole): string[] {
-  return ROUTES_BY_ROLE[role]?.map((route) => route.router) || [];
+  return ROUTES.filter((route) => route.roles.includes(role)).map((route) => route.router);
 }
 
-// Função auxiliar para obter apenas as rotas que aparecem no menu
 export function getMenuRoutes(role: UserRole): RouteConfig[] {
-  return ROUTES_BY_ROLE[role]?.filter((route) => route.isShowMenu) || [];
+  return ROUTES.filter((route) => route.roles.includes(role) && route.isShowMenu);
 }
