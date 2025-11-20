@@ -80,6 +80,11 @@ const menusByRole: Record<
       icon: <GroupIcon fontSize="small" />,
       router: "/lista-turma",
     },
+    {
+      text: "Aulas",
+      icon: <BookIcon fontSize="small" />,
+      router: "/lista-aula",
+    },
     // {
     //   text: "Turmas",
     //   icon: <GroupIcon fontSize="small" />,

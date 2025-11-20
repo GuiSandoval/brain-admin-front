@@ -58,5 +58,11 @@ export const QUERY_KEYS = {
     details: () => [...QUERY_KEYS.turmas.all, "detail"] as const,
     detail: (id: string | number) => [...QUERY_KEYS.turmas.details(), id] as const,
   },
+  horarios: {
+    all: ["horarios"] as const,
+    lists: () => [...QUERY_KEYS.horarios.all, "list"] as const,
+    details: () => [...QUERY_KEYS.horarios.all, "detail"] as const,
+    detail: (id: string | number) => [...QUERY_KEYS.horarios.details(), id] as const,
+  },
   // Outros recursos podem ser adicionados aqui futuramente
 } as const;
