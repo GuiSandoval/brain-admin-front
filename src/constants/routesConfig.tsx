@@ -63,6 +63,12 @@ export const ROUTES_BY_ROLE: Record<UserRole, RouteConfig[]> = {
       isShowMenu: true,
     },
     {
+      text: "Professor",
+      icon: <PersonIcon fontSize="small" />,
+      router: "/professor",
+      isShowMenu: false,
+    },
+    {
       text: "Grupos de disciplina",
       icon: <GroupIcon fontSize="small" />,
       router: "/lista-grupo-disciplina",
