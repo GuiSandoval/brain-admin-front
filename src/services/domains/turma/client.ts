@@ -23,7 +23,7 @@ export class TurmaApi {
   }
 
   atualizarTurma(request: TurmaPutRequest): Promise<IBrainResult<void>> {
-    return httpClient.put(`${BASE_ROUTE}`, request);
+    return httpClient.put(`${BASE_ROUTE}/${request.id}`, request);
   }
 
   deleteTurma(id: string): Promise<IBrainResult<void>> {

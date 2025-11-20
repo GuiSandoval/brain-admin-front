@@ -19,7 +19,7 @@ export class GrupoDisciplinaApi {
   }
 
   atualizarGrupoDisciplina(request: GrupoDisciplinaPutRequest): Promise<IBrainResult<void>> {
-    return httpClient.put(`${BASE_ROUTE}`, request);
+    return httpClient.put(`${BASE_ROUTE}/${request.id}`, request);
   }
 
   deleteGrupoDisciplina(id: string): Promise<IBrainResult<void>> {

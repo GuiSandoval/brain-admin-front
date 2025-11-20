@@ -19,7 +19,7 @@ export class UnidadeApi {
   }
 
   atualizarUnidade(request: UnidadePutRequest): Promise<IBrainResult<void>> {
-    return httpClient.put(`${BASE_ROUTE}`, request);
+    return httpClient.put(`${BASE_ROUTE}/${request.id}`, request);
   }
 
   deleteUnidade(id: string): Promise<IBrainResult<void>> {

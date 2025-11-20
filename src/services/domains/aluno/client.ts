@@ -19,7 +19,7 @@ export class AlunoApi {
   }
 
   atualizarAluno(request: AlunoPutRequest): Promise<IBrainResult<void>> {
-    return httpClient.put(`${BASE_ROUTE}`, request);
+    return httpClient.put(`${BASE_ROUTE}/${request.id}`, request);
   }
 
   deleteAluno(id: string): Promise<IBrainResult<void>> {

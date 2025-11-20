@@ -27,7 +27,7 @@ export class ProfessorApi {
     return httpClient.get(`${BASE_ROUTE}/${id}`);
   }
   atualizarProfessor(request: ProfessorPutRequest): Promise<IBrainResult<void>> {
-    return httpClient.put(`${BASE_ROUTE}`, request);
+    return httpClient.put(`${BASE_ROUTE}/${request.id}`, request);
   }
   deleteProfessor(id: string): Promise<IBrainResult<void>> {
     return httpClient.delete(`${BASE_ROUTE}/${id}`);
