@@ -14,7 +14,7 @@ export function useAulasMutations() {
 
   // Mutation para criar aula
   const createAula = useMutation({
-    mutationFn: aulaApi.postAula,
+    mutationFn: aulaApi.criarAula,
     onSuccess: () => {
       // Invalida e refetch a lista de aulas
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.aulas.all });
@@ -28,7 +28,7 @@ export function useAulasMutations() {
 
   // Mutation para atualizar aula
   const updateAula = useMutation({
-    mutationFn: aulaApi.putAula,
+    mutationFn: aulaApi.atualizarAula,
     onSuccess: () => {
       // Invalida e refetch a lista de aulas
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.aulas.all });

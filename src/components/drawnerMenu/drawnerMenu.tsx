@@ -1,17 +1,9 @@
 "use client";
-import { RoutesConstants } from "@/constants/routesConstants";
+import { getMenuRoutes } from "@/constants/routesConfig";
 import { useAuth } from "@/hooks/useAuth";
-import { UserRole } from "@/utils/auth";
 import AdbIcon from "@mui/icons-material/Adb";
-import BookIcon from "@mui/icons-material/AutoStories";
-import CalendarIcon from "@mui/icons-material/CalendarToday";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import GroupIcon from "@mui/icons-material/Group";
-import PersonIcon from "@mui/icons-material/Person";
-import SettingsIcon from "@mui/icons-material/Settings";
-import AssessmentIcon from "@mui/icons-material/Assessment";
-import AnnouncementIcon from "@mui/icons-material/Announcement";
 import MenuIcon from "@mui/icons-material/Menu";
+import PersonIcon from "@mui/icons-material/Person";
 import { useRouter } from "next/navigation";
 
 import { AppBar, Avatar, Button, Container, Tooltip, Typography } from "@mui/material";
@@ -22,123 +14,6 @@ import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import * as React from "react";
 import * as S from "./styles";
-
-const menusByRole: Record<
-  UserRole,
-  Array<{ text: string; icon: React.JSX.Element; router: string }>
-> = {
-  ESTUDANTE: [
-    {
-      text: "Home",
-      icon: <DashboardIcon fontSize="small" />,
-      router: "/aluno",
-    },
-    {
-      text: "Minhas aulas",
-      icon: <BookIcon fontSize="small" />,
-      router: RoutesConstants.MINHAS_AULAS,
-    },
-    {
-      text: "Calendário",
-      icon: <CalendarIcon fontSize="small" />,
-      router: RoutesConstants.CALENDARIO,
-    },
-    {
-      text: "Boletim",
-      icon: <BookIcon fontSize="small" />,
-      router: RoutesConstants.BOLETIM,
-    },
-  ],
-  PROFESSOR: [
-    {
-      text: "Home ",
-      icon: <DashboardIcon fontSize="small" />,
-      router: "/",
-    },
-    {
-      text: "Professor",
-      icon: <PersonIcon fontSize="small" />,
-      router: "/lista-professor",
-    },
-    {
-      text: "Grupos de disciplina",
-      icon: <GroupIcon fontSize="small" />,
-      router: "/lista-grupo-disciplina",
-    },
-    {
-      text: "Disciplinas",
-      icon: <BookIcon fontSize="small" />,
-      router: "/lista-disciplina",
-    },
-    {
-      text: "Séries",
-      icon: <BookIcon fontSize="small" />,
-      router: "/lista-serie",
-    },
-    {
-      text: "Turmas",
-      icon: <GroupIcon fontSize="small" />,
-      router: "/lista-turma",
-    },
-    {
-      text: "Aulas",
-      icon: <BookIcon fontSize="small" />,
-      router: "/lista-aula",
-    },
-    {
-      text: "Horários",
-      icon: <CalendarIcon fontSize="small" />,
-      router: "/lista-horario",
-    },
-    // {
-    //   text: "Turmas",
-    //   icon: <GroupIcon fontSize="small" />,
-    //   router: "/minhas-aulas",
-    // },
-    // {
-    //   text: "Avaliações e tarefas",
-    //   icon: <AssessmentIcon fontSize="small" />,
-    //   router: "/avaliacoes",
-    // },
-    // {
-    //   text: "Comunicados",
-    //   icon: <AnnouncementIcon fontSize="small" />,
-    //   router: "/comunicados",
-    // },
-    // {
-    //   text: "Calendário",
-    //   icon: <CalendarIcon fontSize="small" />,
-    //   router: RoutesConstants.CALENDARIO,
-    // },
-  ],
-  ADMIN: [
-    {
-      text: "Home",
-      icon: <DashboardIcon fontSize="small" />,
-      router: "/admin",
-    },
-    {
-      text: "Usuários",
-      icon: <GroupIcon fontSize="small" />,
-      router: "/usuarios",
-    },
-    {
-      text: "Relatórios",
-      icon: <AssessmentIcon fontSize="small" />,
-      router: "/relatorios",
-    },
-    {
-      text: "Comunicados",
-      icon: <AnnouncementIcon fontSize="small" />,
-      router: "/comunicados",
-    },
-    {
-      text: "Configurações",
-      icon: <SettingsIcon fontSize="small" />,
-      router: "/configuracoes",
-    },
-  ],
-};
 
 const settings = [
   {
@@ -156,7 +31,7 @@ export default function DrawnerMenu() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   // Obtém o menu baseado no role do usuário
-  const pages = user ? menusByRole[user.role] || [] : [];
+  const pages = user ? getMenuRoutes(user.role) : [];
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);

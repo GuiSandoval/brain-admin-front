@@ -1,4 +1,5 @@
 import { MiddlewareConfig, NextRequest, NextResponse } from "next/server";
+import { getAllowedRoutes } from "@/constants/routesConfig";
 
 type UserRole = "ESTUDANTE" | "PROFESSOR" | "ADMIN";
 
@@ -20,48 +21,6 @@ const publicRoutes = [
 ] as const;
 
 const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/login";
-
-// Define as rotas permitidas para cada role
-const ROLE_ROUTES: Record<UserRole, string[]> = {
-  ESTUDANTE: ["/", "/aluno", "/boletim", "/calendario", "/minhas-aulas", "/perfil"],
-  PROFESSOR: [
-    "/",
-    "/professor",
-    "/lista-professor",
-    "/minhas-aulas",
-    "/avaliacoes",
-    "/calendario",
-    "/perfil",
-    "/aulas",
-    "/minhas-aulas",
-    "/comunicados",
-    "/lista-disciplina",
-    "/disciplina",
-    "/lista-grupo-disciplina",
-    "/grupo-disciplina",
-    "/serie",
-    "/lista-serie",
-    "/turma",
-    "/lista-turma",
-    "/lista-aula",
-    "/aula",
-    "/horario",
-    "/lista-horario",
-  ],
-  ADMIN: [
-    "/",
-    "/admin",
-    "/usuarios",
-    "/relatorios",
-    "/configuracoes",
-    "/perfil",
-    "/aulas",
-    "/minhas-aulas",
-    "/comunicados",
-    "/lista-aula",
-    "/aula",
-  ],
-};
 
 function decodeToken(token: string): { role: UserRole; exp: number } | null {
   try {
@@ -88,7 +47,7 @@ function decodeToken(token: string): { role: UserRole; exp: number } | null {
 }
 
 function canAccessRoute(userRole: UserRole, route: string): boolean {
-  const allowedRoutes = ROLE_ROUTES[userRole];
+  const allowedRoutes = getAllowedRoutes(userRole);
 
   if (allowedRoutes.includes(route)) return true;
   return allowedRoutes.some(
