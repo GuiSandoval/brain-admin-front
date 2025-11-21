@@ -1,7 +1,6 @@
 import { MiddlewareConfig, NextRequest, NextResponse } from "next/server";
 import { getAllowedRoutes } from "@/constants/routesConfig";
-
-type UserRole = "ESTUDANTE" | "PROFESSOR" | "ADMIN";
+import { UserRoleEnum } from "./enums";
 
 interface JWTPayload {
   iss: string;
@@ -34,7 +33,7 @@ function decodeToken(token: string): { role: UserRoleEnum; exp: number } | null 
     );
 
     const payload: JWTPayload = JSON.parse(jsonPayload);
-    const role = payload.role.replace(/[\[\]]/g, "") as UserRole;
+    const role = payload.role.replace(/[\[\]]/g, "") as UserRoleEnum;
 
     return {
       role,
