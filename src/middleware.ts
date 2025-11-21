@@ -22,7 +22,7 @@ const publicRoutes = [
 
 const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/login";
 
-function decodeToken(token: string): { role: UserRole; exp: number } | null {
+function decodeToken(token: string): { role: UserRoleEnum; exp: number } | null {
   try {
     const base64Url = token.split(".")[1];
     const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
@@ -46,7 +46,7 @@ function decodeToken(token: string): { role: UserRole; exp: number } | null {
   }
 }
 
-function canAccessRoute(userRole: UserRole, route: string): boolean {
+function canAccessRoute(userRole: UserRoleEnum, route: string): boolean {
   const allowedRoutes = getAllowedRoutes(userRole);
 
   if (allowedRoutes.includes(route)) return true;
@@ -55,7 +55,7 @@ function canAccessRoute(userRole: UserRole, route: string): boolean {
   );
 }
 
-function getDefaultRoute(userRole: UserRole): string {
+function getDefaultRoute(userRole: UserRoleEnum): string {
   switch (userRole) {
     case "ESTUDANTE":
       return "/aluno";

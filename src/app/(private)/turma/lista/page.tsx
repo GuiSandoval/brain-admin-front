@@ -1,7 +1,7 @@
 "use client";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useTurmas } from "@/hooks/useTurmas";
-import { UserRole } from "@/constants/enums";
+import { UserRoleEnum } from "@/enums";
 import { useTurmaMutations } from "@/app/(private)/turma/useTurmaMutations";
 import { TurmaListaResponse } from "@/services/domains/turma/response";
 import { useState } from "react";
@@ -74,7 +74,7 @@ export default function ListaTurmaPage() {
   };
 
   return (
-    <ProtectedRoute allowedRoles={[UserRole.PROFESSOR]}>
+    <ProtectedRoute allowedRoles={[UserRoleEnum.PROFESSOR]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box>

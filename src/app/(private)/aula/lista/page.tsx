@@ -1,7 +1,7 @@
 "use client";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useAulasLista } from "@/hooks/useAulasLista";
-import { UserRole } from "@/constants/enums";
+import { UserRoleEnum } from "@/enums";
 import { useAulaMutations } from "@/app/(private)/aula/useAulaMutations";
 import { AulaListaResponse } from "@/services/domains/aula/response";
 import { useState } from "react";
@@ -88,7 +88,7 @@ export default function ListaAulaPage() {
   };
 
   return (
-    <ProtectedRoute allowedRoles={[UserRole.PROFESSOR]}>
+    <ProtectedRoute allowedRoles={[UserRoleEnum.PROFESSOR]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box>

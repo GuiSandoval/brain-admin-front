@@ -5,7 +5,7 @@ import {
   mapDisciplinaResponseToFormData,
 } from "@/app/(private)/disciplina/disciplinaUtils";
 import { useDisciplinaMutations } from "@/app/(private)/disciplina/useDisciplinaMutations";
-import { UserRole } from "@/constants/enums";
+import { UserRoleEnum } from "@/enums";
 import BrainButtonPrimary from "@/components/brainButtons/brainButtonPrimary/brainButtonPrimary";
 import BrainButtonSecondary from "@/components/brainButtons/brainButtonSecondary/brainButtonSecondary";
 import { BrainDropdownControlled } from "@/components/brainForms/brainDropdownControlled";
@@ -104,7 +104,7 @@ function DisciplinaPageContent() {
   );
 
   return (
-    <ProtectedRoute allowedRoles={[UserRole.PROFESSOR]}>
+    <ProtectedRoute allowedRoles={[UserRoleEnum.PROFESSOR]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         {(loadingDisciplina && isEditMode) || loadingUnidades || loadingSeries || loadingGrupos ? (
           <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>

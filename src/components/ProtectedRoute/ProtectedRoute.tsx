@@ -1,13 +1,13 @@
 "use client";
 import { useAuth } from "@/hooks/useAuth";
-import { UserRole } from "@/utils/auth";
-import { Routes } from "@/constants/enums";
+import { UserRoleEnum } from "@/utils/auth";
+import { RoutesEnum } from "@/enums";
 import { useRouter } from "next/navigation";
 import { useEffect, ReactNode } from "react";
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  allowedRoles?: UserRole[];
+  allowedRoles?: UserRoleEnum[];
   redirectTo?: string;
 }
 
@@ -26,17 +26,17 @@ export function ProtectedRoute({ children, allowedRoles, redirectTo }: Protected
         router.push(redirectTo);
       } else {
         switch (user.role) {
-          case UserRole.ESTUDANTE:
-            router.push(Routes.HOME_ESTUDANTE);
+          case UserRoleEnum.ESTUDANTE:
+            router.push(RoutesEnum.HOME_ESTUDANTE);
             break;
-          case UserRole.PROFESSOR:
-            router.push(Routes.HOME);
+          case UserRoleEnum.PROFESSOR:
+            router.push(RoutesEnum.HOME);
             break;
-          case UserRole.ADMIN:
-            router.push(Routes.HOME_ADMIN);
+          case UserRoleEnum.ADMIN:
+            router.push(RoutesEnum.HOME_ADMIN);
             break;
           default:
-            router.push(Routes.HOME);
+            router.push(RoutesEnum.HOME);
         }
       }
     }

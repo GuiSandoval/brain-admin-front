@@ -5,7 +5,7 @@ import {
   mapUnidadeResponseToFormData,
 } from "@/app/(private)/unidade/unidadeUtils";
 import { useUnidadeMutations } from "@/app/(private)/unidade/useUnidadeMutations";
-import { UserRole } from "@/constants/enums";
+import { UserRoleEnum } from "@/enums";
 import BrainButtonPrimary from "@/components/brainButtons/brainButtonPrimary/brainButtonPrimary";
 import BrainButtonSecondary from "@/components/brainButtons/brainButtonSecondary/brainButtonSecondary";
 import { BrainTextFieldControlled } from "@/components/brainForms/brainTextFieldControlled";
@@ -68,7 +68,7 @@ function UnidadePageContent() {
   const QUANTITY_COLLUMNS_DEFAULT = 3;
 
   return (
-    <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.PROFESSOR]}>
+    <ProtectedRoute allowedRoles={[UserRoleEnum.ADMIN, UserRoleEnum.PROFESSOR]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         {loadingUnidade && isEditMode ? (
           <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>

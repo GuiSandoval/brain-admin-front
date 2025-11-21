@@ -1,7 +1,7 @@
 "use client";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import PageTitle from "@/components/pageTitle/pageTitle";
-import { UserRole } from "@/constants/enums";
+import { UserRoleEnum } from "@/enums";
 import LayoutColumns from "@/components/layoutColumns/layoutColumns";
 import { Container, Typography, Box, Card, CardContent, Chip, Stack } from "@mui/material";
 import { mockComunicados, Comunicado } from "../../../mocks/comunicados";
@@ -10,7 +10,7 @@ export default function ComunicadosPage() {
   const comunicados = mockComunicados;
 
   return (
-    <ProtectedRoute allowedRoles={[UserRole.PROFESSOR, UserRole.ADMIN]}>
+    <ProtectedRoute allowedRoles={[UserRoleEnum.PROFESSOR, UserRoleEnum.ADMIN]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <PageTitle title="Comunicados" />
         <Typography variant="body1" color="text.secondary" gutterBottom sx={{ mb: 4 }}>

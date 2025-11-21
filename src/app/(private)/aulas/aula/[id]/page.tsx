@@ -1,7 +1,7 @@
 "use client";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import AulaDetailView from "@/components/aulaDetailView";
-import { UserRole } from "@/constants/enums";
+import { UserRoleEnum } from "@/enums";
 import ConteudosTarefas from "@/components/aulaDetailView/conteudosTarefas/conteudosTarefas";
 import ListaPresenca from "@/components/aulaDetailView/listaPresenca/listaPresenca";
 import LayoutColumns from "@/components/layoutColumns/layoutColumns";
@@ -69,7 +69,7 @@ export default function AulaDetailPage() {
   const existeAulaNoDia = aulas && aulas.length > 0;
   const messageNaoExisteAulanoDia = "Não foi encontrada nenhuma aula para a data selecionada.";
   return (
-    <ProtectedRoute allowedRoles={[UserRole.PROFESSOR, UserRole.ADMIN]}>
+    <ProtectedRoute allowedRoles={[UserRoleEnum.PROFESSOR, UserRoleEnum.ADMIN]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Box sx={{ mb: 3, display: "flex", alignItems: "center", gap: 2 }}>
           <IconButton onClick={handleGoBack} size="small">

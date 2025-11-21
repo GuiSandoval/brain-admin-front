@@ -5,7 +5,7 @@ import {
   mapTurmaResponseToFormData,
 } from "@/app/(private)/turma/turmaUtils";
 import { useTurmaMutations } from "@/app/(private)/turma/useTurmaMutations";
-import { UserRole } from "@/constants/enums";
+import { UserRoleEnum } from "@/enums";
 import BrainButtonPrimary from "@/components/brainButtons/brainButtonPrimary/brainButtonPrimary";
 import BrainButtonSecondary from "@/components/brainButtons/brainButtonSecondary/brainButtonSecondary";
 import BrainFormProvider from "@/components/brainForms/brainFormProvider/brainFormProvider";
@@ -68,7 +68,7 @@ function TurmaPageContent() {
   const QUANTITY_COLLUMNS_DEFAULT = 1;
 
   return (
-    <ProtectedRoute allowedRoles={[UserRole.PROFESSOR]}>
+    <ProtectedRoute allowedRoles={[UserRoleEnum.PROFESSOR]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         {loadingTurma && isEditMode ? (
           <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>

@@ -5,7 +5,7 @@ import {
   mapGrupoDisciplinaResponseToFormData,
 } from "@/app/(private)/grupo-disciplina/grupoDisciplinaUtils";
 import { useGrupoDisciplinaMutations } from "@/app/(private)/grupo-disciplina/useGrupoDisciplinaMutations";
-import { UserRole } from "@/constants/enums";
+import { UserRoleEnum } from "@/enums";
 import BrainButtonPrimary from "@/components/brainButtons/brainButtonPrimary/brainButtonPrimary";
 import BrainButtonSecondary from "@/components/brainButtons/brainButtonSecondary/brainButtonSecondary";
 import BrainFormProvider from "@/components/brainForms/brainFormProvider/brainFormProvider";
@@ -76,7 +76,7 @@ function GrupoDisciplinaPageContent() {
   const QUANTITY_COLLUMNS_DEFAULT = 2;
 
   return (
-    <ProtectedRoute allowedRoles={[UserRole.PROFESSOR]}>
+    <ProtectedRoute allowedRoles={[UserRoleEnum.PROFESSOR]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         {loadingGrupoDisciplina && isEditMode ? (
           <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>

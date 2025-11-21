@@ -1,7 +1,8 @@
 import Cookies from "js-cookie";
-import { UserRole } from "@/constants/enums";
+import { UserRoleEnum } from "@/enums";
 
-export { UserRole } from "@/constants/enums";
+export { UserRoleEnum } from "@/enums";
+export type UserRole = UserRoleEnum;
 
 export interface JWTPayload {
   iss: string;
@@ -14,7 +15,7 @@ export interface JWTPayload {
 export interface UserData {
   id: number;
   email: string;
-  role: UserRole;
+  role: UserRoleEnum;
   exp: number;
 }
 
@@ -80,14 +81,14 @@ export function getCurrentUser(): UserData | null {
 /**
  * Verifica se o usuário tem permissão para acessar uma rota
  */
-export function hasPermission(userRole: UserRole, requiredRoles: UserRole[]): boolean {
+export function hasPermission(userRole: UserRoleEnum, requiredRoles: UserRoleEnum[]): boolean {
   return requiredRoles.includes(userRole);
 }
 
 /**
  * Define as rotas permitidas para cada role
  */
-export const ROLE_ROUTES: Record<UserRole, string[]> = {
+export const ROLE_ROUTES: Record<UserRoleEnum, string[]> = {
   ESTUDANTE: ["/", "/aluno", "/boletim", "/calendario", "/minhas-aulas", "/perfil"],
   PROFESSOR: [
     "/",
@@ -115,7 +116,7 @@ export const ROLE_ROUTES: Record<UserRole, string[]> = {
 /**
  * Verifica se o usuário pode acessar uma rota específica
  */
-export function canAccessRoute(userRole: UserRole, route: string): boolean {
+export function canAccessRoute(userRole: UserRoleEnum, route: string): boolean {
   const allowedRoutes = ROLE_ROUTES[userRole];
 
   // Verifica se a rota exata está permitida
@@ -130,7 +131,7 @@ export function canAccessRoute(userRole: UserRole, route: string): boolean {
 /**
  * Obtém a rota padrão baseada no role do usuário
  */
-export function getDefaultRoute(userRole: UserRole): string {
+export function getDefaultRoute(userRole: UserRoleEnum): string {
   switch (userRole) {
     case "ESTUDANTE":
       return "/aluno";

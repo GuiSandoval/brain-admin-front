@@ -1,7 +1,7 @@
 "use client";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import LayoutColumns from "@/components/layoutColumns/layoutColumns";
-import { UserRole } from "@/constants/enums";
+import { UserRoleEnum } from "@/enums";
 import PageTitle from "@/components/pageTitle/pageTitle";
 import SectionMinhasAulas from "@/components/sectionMinhasAulas/sectionMinhasAulas";
 import SectionPlanejamento from "@/components/sectionPlanejamento/sectionPlanejamento";
@@ -12,7 +12,7 @@ export default function DashProfessorPage() {
   const { user } = useAuth();
 
   return (
-    <ProtectedRoute allowedRoles={[UserRole.PROFESSOR]}>
+    <ProtectedRoute allowedRoles={[UserRoleEnum.PROFESSOR]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <PageTitle title={` Bem-vindo, Professor ${user?.email}!`} />
 
