@@ -1,6 +1,7 @@
 "use client";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useHorarios } from "@/hooks/useHorarios";
+import { UserRole } from "@/constants/enums";
 import { useHorarioMutations } from "@/app/(private)/horario/useHorarioMutations";
 import { HorarioListaResponse } from "@/services/domains/horario/response";
 import { useState } from "react";
@@ -73,7 +74,7 @@ export default function ListaHorarioPage() {
   };
 
   return (
-    <ProtectedRoute allowedRoles={["PROFESSOR"]}>
+    <ProtectedRoute allowedRoles={[UserRole.PROFESSOR]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box>

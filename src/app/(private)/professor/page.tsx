@@ -5,6 +5,7 @@ import {
   mapProfessorResponseToFormData,
 } from "@/app/(private)/professor/professorUtils";
 import { useProfessorMutations } from "@/app/(private)/professor/useProfessorMutations";
+import { UserRole } from "@/constants/enums";
 import BrainButtonPrimary from "@/components/brainButtons/brainButtonPrimary/brainButtonPrimary";
 import BrainButtonSecondary from "@/components/brainButtons/brainButtonSecondary/brainButtonSecondary";
 import { BrainDateTextControlled } from "@/components/brainForms/brainDateTextControlled";
@@ -158,7 +159,7 @@ function ProfessorPageContent() {
   const QUANTITY_COLLUMNS_DEFAULT = 3;
 
   return (
-    <ProtectedRoute allowedRoles={["PROFESSOR"]}>
+    <ProtectedRoute allowedRoles={[UserRole.PROFESSOR]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         {loadingProfessor && isEditMode ? (
           <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>

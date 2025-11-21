@@ -1,6 +1,7 @@
 import Cookies from "js-cookie";
+import { UserRole } from "@/constants/enums";
 
-export type UserRole = "ESTUDANTE" | "PROFESSOR" | "ADMIN";
+export { UserRole } from "@/constants/enums";
 
 export interface JWTPayload {
   iss: string;
@@ -33,8 +34,9 @@ export function decodeToken(token: string): UserData | null {
 
     const payload: JWTPayload = JSON.parse(jsonPayload);
 
-    // Remove os colchetes do role
-    const role = payload.role.replace(/[\[\]]/g, "") as UserRole;
+    // Remove os colchetes do role e converte para o enum
+    const roleStr = payload.role.replace(/[\[\]]/g, "");
+    const role = roleStr as unknown as UserRole;
 
     return {
       id: payload.id,

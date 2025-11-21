@@ -1,6 +1,7 @@
 "use client";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useSeries } from "@/hooks/useSeries";
+import { UserRole } from "@/constants/enums";
 import { useSerieMutations } from "@/app/(private)/serie/useSerieMutations";
 import { SerieListaResponse } from "@/services/domains/serie/response";
 import { useState } from "react";
@@ -73,7 +74,7 @@ export default function ListaSeriePage() {
   };
 
   return (
-    <ProtectedRoute allowedRoles={["PROFESSOR"]}>
+    <ProtectedRoute allowedRoles={[UserRole.PROFESSOR]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box>

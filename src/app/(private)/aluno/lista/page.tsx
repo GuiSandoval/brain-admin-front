@@ -1,6 +1,7 @@
 "use client";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useAlunos } from "@/hooks/useAlunos";
+import { UserRole } from "@/constants/enums";
 import { useAlunoMutations } from "@/app/(private)/aluno/useAlunoMutations";
 import { useState } from "react";
 import {
@@ -72,7 +73,7 @@ export default function ListaAlunoPage() {
   };
 
   return (
-    <ProtectedRoute allowedRoles={["ADMIN", "PROFESSOR"]}>
+    <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.PROFESSOR]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box>

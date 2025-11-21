@@ -5,6 +5,7 @@ import {
   mapAulaResponseToFormData,
 } from "@/app/(private)/aula/aulaUtils";
 import { useAulaMutations } from "@/app/(private)/aula/useAulaMutations";
+import { UserRole } from "@/constants/enums";
 import BrainButtonPrimary from "@/components/brainButtons/brainButtonPrimary/brainButtonPrimary";
 import BrainButtonSecondary from "@/components/brainButtons/brainButtonSecondary/brainButtonSecondary";
 import BrainFormProvider from "@/components/brainForms/brainFormProvider/brainFormProvider";
@@ -127,7 +128,7 @@ function AulaPageContent() {
   const isLoading = loadingDisciplinas || loadingTurmas || loadingProfessores || loadingHorarios;
 
   return (
-    <ProtectedRoute allowedRoles={["PROFESSOR"]}>
+    <ProtectedRoute allowedRoles={[UserRole.PROFESSOR]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         {loadingAula && isEditMode ? (
           <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>

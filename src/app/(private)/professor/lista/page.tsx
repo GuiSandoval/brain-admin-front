@@ -1,6 +1,7 @@
 "use client";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useProfessores } from "@/hooks/useProfessores";
+import { UserRole } from "@/constants/enums";
 import { useProfessorMutations } from "@/app/(private)/professor/useProfessorMutations";
 import { useState } from "react";
 import {
@@ -72,7 +73,7 @@ export default function ProfessorPage() {
   };
 
   return (
-    <ProtectedRoute allowedRoles={["PROFESSOR"]}>
+    <ProtectedRoute allowedRoles={[UserRole.PROFESSOR]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box>

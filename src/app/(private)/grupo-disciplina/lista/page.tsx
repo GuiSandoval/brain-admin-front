@@ -1,6 +1,7 @@
 "use client";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useGruposDisciplina } from "@/hooks/useGruposDisciplina";
+import { UserRole } from "@/constants/enums";
 import { useGrupoDisciplinaMutations } from "@/app/(private)/grupo-disciplina/useGrupoDisciplinaMutations";
 import { GrupoDisciplinaListaResponse } from "@/services/domains/grupo-disciplina/response";
 import { useState } from "react";
@@ -73,7 +74,7 @@ export default function ListaGrupoDisciplinaPage() {
   };
 
   return (
-    <ProtectedRoute allowedRoles={["PROFESSOR"]}>
+    <ProtectedRoute allowedRoles={[UserRole.PROFESSOR]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box>

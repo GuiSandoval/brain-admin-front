@@ -2,6 +2,7 @@
 
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import PageTitle from "@/components/pageTitle/pageTitle";
+import { UserRole } from "@/constants/enums";
 import { useUnidades } from "@/hooks/useUnidades";
 import { useUnidadeMutations } from "@/app/(private)/unidade/useUnidadeMutations";
 import { useRouter } from "next/navigation";
@@ -71,7 +72,7 @@ export default function ListaUnidadePage() {
   };
 
   return (
-    <ProtectedRoute allowedRoles={["ADMIN", "PROFESSOR"]}>
+    <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.PROFESSOR]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box>

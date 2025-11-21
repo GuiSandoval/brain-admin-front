@@ -2,6 +2,7 @@
 
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import PageTitle from "@/components/pageTitle/pageTitle";
+import { UserRole } from "@/constants/enums";
 import EvaluationCard from "@/components/evaluationCard/evaluationCard";
 import { Container } from "@mui/material";
 import { useState } from "react";
@@ -89,7 +90,7 @@ export default function AvaliacoesPage() {
   };
 
   return (
-    <ProtectedRoute allowedRoles={["PROFESSOR"]}>
+    <ProtectedRoute allowedRoles={[UserRole.PROFESSOR]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <S.Header>
           <PageTitle

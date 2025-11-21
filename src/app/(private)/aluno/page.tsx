@@ -5,6 +5,7 @@ import {
   mapAlunoResponseToFormData,
 } from "@/app/(private)/aluno/alunoUtils";
 import { useAlunoMutations } from "@/app/(private)/aluno/useAlunoMutations";
+import { UserRole } from "@/constants/enums";
 import BrainButtonPrimary from "@/components/brainButtons/brainButtonPrimary/brainButtonPrimary";
 import BrainButtonSecondary from "@/components/brainButtons/brainButtonSecondary/brainButtonSecondary";
 import { BrainDateTextControlled } from "@/components/brainForms/brainDateTextControlled";
@@ -253,7 +254,7 @@ function AlunoPageContent() {
   };
 
   return (
-    <ProtectedRoute allowedRoles={["ADMIN", "PROFESSOR"]}>
+    <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.PROFESSOR]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         {loadingAluno && isEditMode ? (
           <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>

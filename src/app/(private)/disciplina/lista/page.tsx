@@ -1,6 +1,7 @@
 "use client";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useDisciplinas } from "@/hooks/useDisciplinas";
+import { UserRole } from "@/constants/enums";
 import { useDisciplinaMutations } from "@/app/(private)/disciplina/useDisciplinaMutations";
 import { DisciplinaListaResponse } from "@/services/domains/disciplina/response";
 import { useState } from "react";
@@ -73,7 +74,7 @@ export default function DisciplinaPage() {
   };
 
   return (
-    <ProtectedRoute allowedRoles={["PROFESSOR"]}>
+    <ProtectedRoute allowedRoles={[UserRole.PROFESSOR]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box>
