@@ -1,12 +1,12 @@
 "use client";
 import {
-  getMenuCategories,
-  getRoutesByCategory,
-  getRoutesWithoutCategory,
+  getMenuModules,
+  getRoutesByModule,
+  getRoutesWithoutModule,
   type RouteConfig,
-  type MenuCategory,
+  type MenuModule,
 } from "@/constants/routesConfig";
-import { RoutesCategoryEnum } from "@/enums";
+import { RoutesModuleEnum } from "@/enums";
 import { useAuth } from "@/hooks/useAuth";
 import { useDrawer } from "@/contexts/DrawerContext";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -59,13 +59,13 @@ export default function DrawnerMenu() {
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-  const [expandedCategories, setExpandedCategories] = React.useState<
-    Partial<Record<RoutesCategoryEnum, boolean>>
+  const [expandedModules, setExpandedModules] = React.useState<
+    Partial<Record<RoutesModuleEnum, boolean>>
   >({});
 
-  // Obtém as categorias, rotas categorizadas e não categorizadas baseadas no role do usuário
-  const categories = user ? getMenuCategories(user.role) : [];
-  const uncategorizedRoutes = user ? getRoutesWithoutCategory(user.role) : [];
+  // Obtém os módulos, rotas com módulo e sem módulo baseadas no role do usuário
+  const modules = user ? getMenuModules(user.role) : [];
+  const routesWithoutModule = user ? getRoutesWithoutModule(user.role) : [];
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -102,20 +102,20 @@ export default function DrawnerMenu() {
     setMobileOpen(false);
   };
 
-  const handleToggleCategory = (categoryId: RoutesCategoryEnum) => {
+  const handleToggleModule = (moduleId: RoutesModuleEnum) => {
     // Se o drawer estiver fechado, abre primeiro
     if (!drawerOpen) {
       setDrawerOpen(true);
-      // Expande a categoria após abrir o drawer
-      setExpandedCategories((prev) => ({
+      // Expande o módulo após abrir o drawer
+      setExpandedModules((prev) => ({
         ...prev,
-        [categoryId]: true,
+        [moduleId]: true,
       }));
     } else {
-      // Se já estiver aberto, apenas alterna o estado da categoria
-      setExpandedCategories((prev) => ({
+      // Se já estiver aberto, apenas alterna o estado do módulo
+      setExpandedModules((prev) => ({
         ...prev,
-        [categoryId]: !prev[categoryId],
+        [moduleId]: !prev[moduleId],
       }));
     }
   };
@@ -177,17 +177,17 @@ export default function DrawnerMenu() {
     );
   };
 
-  const renderCategoryMenu = (category: MenuCategory) => {
-    const categoryRoutes = getRoutesByCategory(user.role, category.id);
-    const isExpanded = expandedCategories[category.id] || false;
-    const hasActiveRoute = categoryRoutes.some((route) => pathname === route.router);
+  const renderModuleMenu = (module: MenuModule) => {
+    const moduleRoutes = getRoutesByModule(user.role, module.id);
+    const isExpanded = expandedModules[module.id] || false;
+    const hasActiveRoute = moduleRoutes.some((route) => pathname === route.router);
 
     return (
-      <React.Fragment key={category.id}>
+      <React.Fragment key={module.id}>
         <ListItem disablePadding>
-          <Tooltip title={!drawerOpen ? category.text : ""} placement="right">
+          <Tooltip title={!drawerOpen ? module.text : ""} placement="right">
             <ListItemButton
-              onClick={() => handleToggleCategory(category.id)}
+              onClick={() => handleToggleModule(module.id)}
               sx={{
                 minHeight: 48,
                 justifyContent: drawerOpen ? "initial" : "center",
@@ -207,12 +207,12 @@ export default function DrawnerMenu() {
                   color: hasActiveRoute ? "primary.main" : "inherit",
                 }}
               >
-                {category.icon}
+                {module.icon}
               </ListItemIcon>
               {drawerOpen && (
                 <>
                   <ListItemText
-                    primary={category.text}
+                    primary={module.text}
                     primaryTypographyProps={{
                       fontWeight: hasActiveRoute ? 700 : 400,
                     }}
@@ -226,7 +226,7 @@ export default function DrawnerMenu() {
         {drawerOpen && (
           <Collapse in={isExpanded} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              {categoryRoutes.map((route) => renderMenuItem(route, true))}
+              {moduleRoutes.map((route) => renderMenuItem(route, true))}
             </List>
           </Collapse>
         )}
@@ -265,16 +265,16 @@ export default function DrawnerMenu() {
     );
   };
 
-  const renderCategoryMenuMobile = (category: MenuCategory) => {
-    const categoryRoutes = getRoutesByCategory(user.role, category.id);
-    const isExpanded = expandedCategories[category.id] || false;
-    const hasActiveRoute = categoryRoutes.some((route) => pathname === route.router);
+  const renderModuleMenuMobile = (module: MenuModule) => {
+    const moduleRoutes = getRoutesByModule(user.role, module.id);
+    const isExpanded = expandedModules[module.id] || false;
+    const hasActiveRoute = moduleRoutes.some((route) => pathname === route.router);
 
     return (
-      <React.Fragment key={category.id}>
+      <React.Fragment key={module.id}>
         <ListItem disablePadding>
           <ListItemButton
-            onClick={() => handleToggleCategory(category.id)}
+            onClick={() => handleToggleModule(module.id)}
             sx={{
               backgroundColor: "transparent",
               borderRight: hasActiveRoute ? "4px solid" : "4px solid transparent",
@@ -289,10 +289,10 @@ export default function DrawnerMenu() {
                 color: hasActiveRoute ? "primary.main" : "inherit",
               }}
             >
-              {category.icon}
+              {module.icon}
             </ListItemIcon>
             <ListItemText
-              primary={category.text}
+              primary={module.text}
               primaryTypographyProps={{
                 fontWeight: hasActiveRoute ? 700 : 400,
               }}
@@ -302,7 +302,7 @@ export default function DrawnerMenu() {
         </ListItem>
         <Collapse in={isExpanded} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            {categoryRoutes.map((route) => renderMenuItemMobile(route, true))}
+            {moduleRoutes.map((route) => renderMenuItemMobile(route, true))}
           </List>
         </Collapse>
       </React.Fragment>
@@ -372,8 +372,8 @@ export default function DrawnerMenu() {
         </Box>
         <Divider sx={{ borderColor: "#e0e0e0" }} />
         <List>
-          {uncategorizedRoutes.map((page) => renderMenuItem(page, false))}
-          {categories.map((category) => renderCategoryMenu(category))}
+          {routesWithoutModule.map((page) => renderMenuItem(page, false))}
+          {modules.map((module) => renderModuleMenu(module))}
         </List>
       </Drawer>
 
@@ -413,8 +413,8 @@ export default function DrawnerMenu() {
         </Box>
         <Divider sx={{ borderColor: "#e0e0e0" }} />
         <List>
-          {uncategorizedRoutes.map((page) => renderMenuItemMobile(page, false))}
-          {categories.map((category) => renderCategoryMenuMobile(category))}
+          {routesWithoutModule.map((page) => renderMenuItemMobile(page, false))}
+          {modules.map((module) => renderModuleMenuMobile(module))}
         </List>
       </Drawer>
 

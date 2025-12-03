@@ -13,7 +13,7 @@ import GradeIcon from "@mui/icons-material/Grade";
 import CategoryIcon from "@mui/icons-material/Category";
 import FolderIcon from "@mui/icons-material/Folder";
 import * as React from "react";
-import { UserRoleEnum, RoutesEnum, RouteLabelsEnum, RoutesCategoryEnum } from "@/enums";
+import { UserRoleEnum, RoutesEnum, RouteLabelsEnum, RoutesModuleEnum } from "@/enums";
 
 export interface RouteConfig {
   text: RouteLabelsEnum;
@@ -21,18 +21,18 @@ export interface RouteConfig {
   router: RoutesEnum;
   isShowMenu: boolean;
   roles: UserRoleEnum[];
-  categoryMenu?: RoutesCategoryEnum | null;
+  moduleMenu?: RoutesModuleEnum | null;
 }
 
-export interface MenuCategory {
-  id: RoutesCategoryEnum;
+export interface MenuModule {
+  id: RoutesModuleEnum;
   text: string;
   icon: React.JSX.Element;
   roles: UserRoleEnum[];
 }
 
-const CATEGORY_CONFIG: Record<RoutesCategoryEnum, { text: string; icon: React.JSX.Element }> = {
-  [RoutesCategoryEnum.CADASTROS]: {
+const MODULE_CONFIG: Record<RoutesModuleEnum, { text: string; icon: React.JSX.Element }> = {
+  [RoutesModuleEnum.CADASTROS]: {
     text: "Cadastros",
     icon: <FolderIcon fontSize="small" />,
   },
@@ -66,7 +66,7 @@ export const ROUTES: RouteConfig[] = [
     router: RoutesEnum.PROFESSOR_LISTA,
     isShowMenu: true,
     roles: [UserRoleEnum.PROFESSOR],
-    categoryMenu: RoutesCategoryEnum.CADASTROS,
+    moduleMenu: RoutesModuleEnum.CADASTROS,
   },
   {
     text: RouteLabelsEnum.PROFESSOR,
@@ -81,7 +81,7 @@ export const ROUTES: RouteConfig[] = [
     router: RoutesEnum.TURMA_LISTA,
     isShowMenu: true,
     roles: [UserRoleEnum.PROFESSOR],
-    categoryMenu: RoutesCategoryEnum.CADASTROS,
+    moduleMenu: RoutesModuleEnum.CADASTROS,
   },
   {
     text: RouteLabelsEnum.TURMA,
@@ -96,7 +96,7 @@ export const ROUTES: RouteConfig[] = [
     router: RoutesEnum.GRUPO_DISCIPLINA_LISTA,
     isShowMenu: true,
     roles: [UserRoleEnum.PROFESSOR],
-    categoryMenu: RoutesCategoryEnum.CADASTROS,
+    moduleMenu: RoutesModuleEnum.CADASTROS,
   },
   {
     text: RouteLabelsEnum.GRUPO_DISCIPLINA,
@@ -111,7 +111,7 @@ export const ROUTES: RouteConfig[] = [
     router: RoutesEnum.DISCIPLINA_LISTA,
     isShowMenu: true,
     roles: [UserRoleEnum.PROFESSOR],
-    categoryMenu: RoutesCategoryEnum.CADASTROS,
+    moduleMenu: RoutesModuleEnum.CADASTROS,
   },
   {
     text: RouteLabelsEnum.DISCIPLINA,
@@ -126,7 +126,7 @@ export const ROUTES: RouteConfig[] = [
     router: RoutesEnum.SERIE_LISTA,
     isShowMenu: true,
     roles: [UserRoleEnum.PROFESSOR],
-    categoryMenu: RoutesCategoryEnum.CADASTROS,
+    moduleMenu: RoutesModuleEnum.CADASTROS,
   },
   {
     text: RouteLabelsEnum.SERIE,
@@ -140,7 +140,7 @@ export const ROUTES: RouteConfig[] = [
     icon: <ClassIcon fontSize="small" />,
     router: RoutesEnum.AULA_LISTA,
     isShowMenu: true,
-    categoryMenu: RoutesCategoryEnum.CADASTROS,
+    moduleMenu: RoutesModuleEnum.CADASTROS,
     roles: [UserRoleEnum.PROFESSOR],
   },
   {
@@ -156,7 +156,7 @@ export const ROUTES: RouteConfig[] = [
     router: RoutesEnum.HORARIO_LISTA,
     isShowMenu: true,
     roles: [UserRoleEnum.PROFESSOR],
-    categoryMenu: RoutesCategoryEnum.CADASTROS,
+    moduleMenu: RoutesModuleEnum.CADASTROS,
   },
   {
     text: RouteLabelsEnum.HORARIO,
@@ -267,40 +267,40 @@ export function getMenuRoutes(role: UserRoleEnum): RouteConfig[] {
 }
 
 /**
- * Gera dinamicamente as categorias baseadas nas rotas disponíveis para o role
+ * Gera dinamicamente os módulos baseados nas rotas disponíveis para o role
  */
-export function getMenuCategories(role: UserRoleEnum): MenuCategory[] {
-  // Obtém todas as categorias únicas das rotas visíveis para o role
-  const categoriesSet = new Set<RoutesCategoryEnum>();
+export function getMenuModules(role: UserRoleEnum): MenuModule[] {
+  // Obtém todos os módulos únicos das rotas visíveis para o role
+  const modulesSet = new Set<RoutesModuleEnum>();
 
   ROUTES.forEach((route) => {
     if (
       route.roles.includes(role) &&
       route.isShowMenu &&
-      route.categoryMenu !== null &&
-      route.categoryMenu !== undefined
+      route.moduleMenu !== null &&
+      route.moduleMenu !== undefined
     ) {
-      categoriesSet.add(route.categoryMenu);
+      modulesSet.add(route.moduleMenu);
     }
   });
 
-  // Mapeia as categorias para o formato MenuCategory
-  return Array.from(categoriesSet).map((categoryId) => ({
-    id: categoryId,
-    text: CATEGORY_CONFIG[categoryId].text,
-    icon: CATEGORY_CONFIG[categoryId].icon,
-    roles: getUniqueRolesForCategory(categoryId),
+  // Mapeia os módulos para o formato MenuModule
+  return Array.from(modulesSet).map((moduleId) => ({
+    id: moduleId,
+    text: MODULE_CONFIG[moduleId].text,
+    icon: MODULE_CONFIG[moduleId].icon,
+    roles: getUniqueRolesForModule(moduleId),
   }));
 }
 
 /**
- * Obtém os roles únicos que têm acesso a uma categoria específica
+ * Obtém os roles únicos que têm acesso a um módulo específico
  */
-function getUniqueRolesForCategory(categoryId: RoutesCategoryEnum): UserRoleEnum[] {
+function getUniqueRolesForModule(moduleId: RoutesModuleEnum): UserRoleEnum[] {
   const rolesSet = new Set<UserRoleEnum>();
 
   ROUTES.forEach((route) => {
-    if (route.categoryMenu === categoryId && route.isShowMenu) {
+    if (route.moduleMenu === moduleId && route.isShowMenu) {
       route.roles.forEach((role) => rolesSet.add(role));
     }
   });
@@ -309,25 +309,22 @@ function getUniqueRolesForCategory(categoryId: RoutesCategoryEnum): UserRoleEnum
 }
 
 /**
- * Obtém as rotas de uma categoria específica para um role
+ * Obtém as rotas de um módulo específico para um role
  */
-export function getRoutesByCategory(
-  role: UserRoleEnum,
-  categoryId: RoutesCategoryEnum,
-): RouteConfig[] {
+export function getRoutesByModule(role: UserRoleEnum, moduleId: RoutesModuleEnum): RouteConfig[] {
   return ROUTES.filter(
-    (route) => route.roles.includes(role) && route.isShowMenu && route.categoryMenu === categoryId,
+    (route) => route.roles.includes(role) && route.isShowMenu && route.moduleMenu === moduleId,
   );
 }
 
 /**
- * Obtém as rotas que não pertencem a nenhuma categoria
+ * Obtém as rotas que não pertencem a nenhum módulo
  */
-export function getRoutesWithoutCategory(role: UserRoleEnum): RouteConfig[] {
+export function getRoutesWithoutModule(role: UserRoleEnum): RouteConfig[] {
   return ROUTES.filter(
     (route) =>
       route.roles.includes(role) &&
       route.isShowMenu &&
-      (route.categoryMenu === null || route.categoryMenu === undefined),
+      (route.moduleMenu === null || route.moduleMenu === undefined),
   );
 }
