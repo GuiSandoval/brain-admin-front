@@ -17,14 +17,14 @@ import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useBrainForm } from "@/hooks/useBrainForm";
 import { useHorario } from "@/hooks/useHorario";
 import { Alert, Box, CircularProgress, Container } from "@mui/material";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useBrainSearchParams } from "@/hooks/useBrainSearchParams";
 import { Suspense, useEffect } from "react";
 import { horarioDefaultValues, HorarioFormData, horarioSchema } from "./schema";
 
 function HorarioPageContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const horarioId = searchParams.get("id");
+  const horarioId = useBrainSearchParams("id");
 
   const { horario, loading: loadingHorario, error: errorHorario } = useHorario(horarioId);
   const { createHorario, updateHorario } = useHorarioMutations();

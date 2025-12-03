@@ -21,14 +21,14 @@ import { useSeries } from "@/hooks/useSeries";
 import { useGruposDisciplina } from "@/hooks/useGruposDisciplina";
 import { KeyValue } from "@/services/models/keyValue";
 import { Alert, Box, CircularProgress, Container } from "@mui/material";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useBrainSearchParams } from "@/hooks/useBrainSearchParams";
 import { Suspense, useEffect, useMemo } from "react";
 import { disciplinaDefaultValues, DisciplinaFormData, disciplinaSchema } from "./schema";
 
 function DisciplinaPageContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const disciplinaId = searchParams.get("id");
+  const disciplinaId = useBrainSearchParams("id");
 
   const {
     disciplina,

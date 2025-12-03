@@ -16,14 +16,14 @@ import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useBrainForm } from "@/hooks/useBrainForm";
 import { useSerie } from "@/hooks/useSerie";
 import { Alert, Box, CircularProgress, Container } from "@mui/material";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useBrainSearchParams } from "@/hooks/useBrainSearchParams";
 import { Suspense, useEffect } from "react";
 import { serieDefaultValues, SerieFormData, serieSchema } from "./schema";
 
 function SeriePageContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const serieId = searchParams.get("id");
+  const serieId = useBrainSearchParams("id");
 
   const { serie, loading: loadingSerie, error: errorSerie } = useSerie(serieId);
   const { createSerie, updateSerie } = useSerieMutations();

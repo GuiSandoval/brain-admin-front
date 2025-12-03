@@ -36,18 +36,18 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useFieldArray } from "react-hook-form";
 import { alunoDefaultValues, AlunoFormData, alunoSchema } from "./schema";
+import { useBrainSearchParams } from "@/hooks/useBrainSearchParams";
 
 const MAX_RESPONSAVEIS = 5;
 
 function AlunoPageContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const alunoId = searchParams.get("id");
+  const alunoId = useBrainSearchParams("id");
 
   const { aluno, loading: loadingAluno, error: errorAluno } = useAluno(alunoId);
   const { createAluno, updateAluno } = useAlunoMutations();

@@ -19,15 +19,15 @@ import { useAvaliacao } from "@/hooks/useAvaliacao";
 import { useDisciplinas } from "@/hooks/useDisciplinas";
 import { KeyValue } from "@/services/models/keyValue";
 import { Alert, Box, CircularProgress, Container, FormControlLabel, Checkbox } from "@mui/material";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useMemo } from "react";
 import { avaliacaoDefaultValues, AvaliacaoFormData, avaliacaoSchema } from "./schema";
 import { Controller } from "react-hook-form";
+import { useBrainSearchParams } from "@/hooks/useBrainSearchParams";
 
 function AvaliacaoPageContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const avaliacaoId = searchParams.get("id");
+  const avaliacaoId = useBrainSearchParams("id");
 
   const { avaliacao, loading: loadingAvaliacao, error: errorAvaliacao } = useAvaliacao(avaliacaoId);
   const { createAvaliacao, updateAvaliacao } = useAvaliacaoMutations();

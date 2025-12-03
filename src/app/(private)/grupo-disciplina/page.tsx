@@ -16,7 +16,8 @@ import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useBrainForm } from "@/hooks/useBrainForm";
 import { useGrupoDisciplina } from "@/hooks/useGrupoDisciplina";
 import { Alert, Box, CircularProgress, Container } from "@mui/material";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useBrainSearchParams } from "@/hooks/useBrainSearchParams";
 import { Suspense, useEffect } from "react";
 import {
   grupoDisciplinaDefaultValues,
@@ -26,8 +27,7 @@ import {
 
 function GrupoDisciplinaPageContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const grupoDisciplinaId = searchParams.get("id");
+  const grupoDisciplinaId = useBrainSearchParams("id");
 
   const {
     grupoDisciplina,

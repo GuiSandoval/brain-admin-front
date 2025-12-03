@@ -23,15 +23,15 @@ import { useProfessor } from "@/hooks/useProfessor";
 import { buscarCep } from "@/services/cep";
 import { KeyValue } from "@/services/models/keyValue";
 import { Alert, Box, CircularProgress, Container } from "@mui/material";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useBrainSearchParams } from "@/hooks/useBrainSearchParams";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { professorDefaultValues, ProfessorFormData, professorSchema } from "./schema";
 
 function ProfessorPageContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const professorId = searchParams.get("id");
+  const professorId = useBrainSearchParams("id");
 
   const { professor, loading: loadingProfessor, error: errorProfessor } = useProfessor(professorId);
   const { createProfessor, updateProfessor } = useProfessorMutations();

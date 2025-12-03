@@ -16,14 +16,14 @@ import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useBrainForm } from "@/hooks/useBrainForm";
 import { useTurma } from "@/hooks/useTurma";
 import { Alert, Box, CircularProgress, Container } from "@mui/material";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useBrainSearchParams } from "@/hooks/useBrainSearchParams";
 import { Suspense, useEffect } from "react";
 import { turmaDefaultValues, TurmaFormData, turmaSchema } from "./schema";
 
 function TurmaPageContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const turmaId = searchParams.get("id");
+  const turmaId = useBrainSearchParams("id");
 
   const { turma, loading: loadingTurma, error: errorTurma } = useTurma(turmaId);
   const { createTurma, updateTurma } = useTurmaMutations();

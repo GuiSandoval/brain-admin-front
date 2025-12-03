@@ -21,15 +21,15 @@ import { useTurmas } from "@/hooks/useTurmas";
 import { useProfessores } from "@/hooks/useProfessores";
 import { useHorariosDropdown } from "@/hooks/useHorarios";
 import { Alert, Box, CircularProgress, Container } from "@mui/material";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useMemo } from "react";
 import { aulaDefaultValues, AulaFormData, aulaSchema } from "./schema";
 import { KeyValue } from "@/services/models/keyValue";
+import { useBrainSearchParams } from "@/hooks/useBrainSearchParams";
 
 function AulaPageContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const aulaId = searchParams.get("id");
+  const aulaId = useBrainSearchParams("id");
 
   const { aula, loading: loadingAula, error: errorAula } = useAulaDetalhe(aulaId);
   const { createAula, updateAula } = useAulaMutations();

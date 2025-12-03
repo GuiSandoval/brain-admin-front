@@ -1,21 +1,19 @@
 "use client";
 import { Suspense, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { Typography, Paper, CircularProgress, Box } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import { usuarioApi } from "@/services/api";
+import { useBrainSearchParams } from "@/hooks/useBrainSearchParams";
 
 function VerificarContaContent() {
-  const searchParams = useSearchParams();
+  const codigo = useBrainSearchParams("codigo");
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [mensagem, setMensagem] = useState("");
 
   useEffect(() => {
     const verificarConta = async () => {
       try {
-        const codigo = searchParams.get("codigo");
-
         if (!codigo) {
           setStatus("error");
           setMensagem("Código de verificação é obrigatório");

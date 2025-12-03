@@ -21,14 +21,14 @@ import { useAlunos } from "@/hooks/useAlunos";
 import { useAvaliacoes } from "@/hooks/useAvaliacoes";
 import { KeyValue } from "@/services/models/keyValue";
 import { Alert, Box, CircularProgress, Container } from "@mui/material";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useBrainSearchParams } from "@/hooks/useBrainSearchParams";
 import { Suspense, useEffect, useMemo } from "react";
 import { notaDefaultValues, NotaFormData, notaSchema } from "./schema";
 
 function NotaPageContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const notaId = searchParams.get("id");
+  const notaId = useBrainSearchParams("id");
 
   const { nota, loading: loadingNota, error: errorNota } = useNota(notaId);
   const { createNota, updateNota } = useNotaMutations();

@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useState, Suspense, useRef } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useGoogleLogin } from "@/hooks/useGoogleLogin";
 import { CircularProgress, Typography, Paper, Box } from "@mui/material";
 import { toast } from "react-toastify";
+import { useBrainSearchParams } from "@/hooks/useBrainSearchParams";
 
 function GoogleCallbackContent() {
-  const searchParams = useSearchParams();
+  const code = useBrainSearchParams("code");
+  const scope = useBrainSearchParams("scope");
+  const error = useBrainSearchParams("error");
   const router = useRouter();
   const { handleGoogleCallback } = useGoogleLogin();
   const [status, setStatus] = useState<"processing" | "success" | "error">("processing");
@@ -27,11 +30,6 @@ function GoogleCallbackContent() {
       try {
         processedRef.current = true;
         console.log("Marcando como processado...");
-
-        // Captura os parâmetros da URL
-        const code = searchParams.get("code");
-        const scope = searchParams.get("scope");
-        const error = searchParams.get("error");
 
         console.log("Parâmetros capturados:", { code, scope, error });
 

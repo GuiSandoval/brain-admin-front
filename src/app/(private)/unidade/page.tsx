@@ -16,14 +16,14 @@ import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useBrainForm } from "@/hooks/useBrainForm";
 import { useUnidade } from "@/hooks/useUnidade";
 import { Alert, Box, CircularProgress, Container } from "@mui/material";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useBrainSearchParams } from "@/hooks/useBrainSearchParams";
 import { Suspense, useEffect } from "react";
 import { unidadeDefaultValues, UnidadeFormData, unidadeSchema } from "./schema";
 
 function UnidadePageContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const unidadeId = searchParams.get("id");
+  const unidadeId = useBrainSearchParams("id");
 
   const { unidade, loading: loadingUnidade, error: errorUnidade } = useUnidade(unidadeId);
   const { createUnidade, updateUnidade } = useUnidadeMutations();
