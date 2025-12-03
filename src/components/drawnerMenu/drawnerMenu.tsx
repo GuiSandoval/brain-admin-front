@@ -1,10 +1,19 @@
 "use client";
-import { getMenuRoutes } from "@/constants/routesConfig";
+import {
+  getMenuCategories,
+  getRoutesByCategory,
+  getRoutesWithoutCategory,
+  type RouteConfig,
+  type MenuCategory,
+} from "@/constants/routesConfig";
+import { RoutesCategoryEnum } from "@/enums";
 import { useAuth } from "@/hooks/useAuth";
 import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 import { useRouter, usePathname } from "next/navigation";
 
 import {
@@ -24,6 +33,7 @@ import {
   Toolbar,
   Tooltip,
   Typography,
+  Collapse,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import * as React from "react";
@@ -48,9 +58,13 @@ export default function DrawnerMenu() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [expandedCategories, setExpandedCategories] = React.useState<
+    Partial<Record<RoutesCategoryEnum, boolean>>
+  >({});
 
-  // Obtém o menu baseado no role do usuário
-  const pages = user ? getMenuRoutes(user.role) : [];
+  // Obtém as categorias, rotas categorizadas e não categorizadas baseadas no role do usuário
+  const categories = user ? getMenuCategories(user.role) : [];
+  const uncategorizedRoutes = user ? getRoutesWithoutCategory(user.role) : [];
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -87,10 +101,206 @@ export default function DrawnerMenu() {
     setMobileOpen(false);
   };
 
+  const handleToggleCategory = (categoryId: RoutesCategoryEnum) => {
+    // Se o drawer estiver fechado, abre primeiro
+    if (!drawerOpen) {
+      setDrawerOpen(true);
+      // Expande a categoria após abrir o drawer
+      setExpandedCategories((prev) => ({
+        ...prev,
+        [categoryId]: true,
+      }));
+    } else {
+      // Se já estiver aberto, apenas alterna o estado da categoria
+      setExpandedCategories((prev) => ({
+        ...prev,
+        [categoryId]: !prev[categoryId],
+      }));
+    }
+  };
+
   // Se não há usuário logado, não exibe o menu
   if (!user) {
     return null;
   }
+
+  const renderMenuItem = (page: RouteConfig, isSubItem: boolean = false) => {
+    const isActive = pathname === page.router;
+    return (
+      <ListItem key={page.text} disablePadding sx={{ pl: isSubItem ? 2 : 0 }}>
+        <Tooltip title={!drawerOpen && !isSubItem ? page.text : ""} placement="right">
+          <ListItemButton
+            onClick={() => handleNavigateToPage(page.router)}
+            sx={{
+              minHeight: 48,
+              justifyContent: drawerOpen ? "initial" : "center",
+              px: 2.5,
+              backgroundColor: "transparent",
+              color: "inherit",
+              borderRight: isActive ? "4px solid" : "4px solid transparent",
+              borderColor: isActive ? "primary.dark" : "transparent",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.04)",
+              },
+              "& .MuiListItemIcon-root": {
+                color: "inherit",
+              },
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: drawerOpen ? 3 : "auto",
+                justifyContent: "center",
+              }}
+            >
+              {page.icon}
+            </ListItemIcon>
+            {drawerOpen && (
+              <ListItemText
+                primary={page.text}
+                primaryTypographyProps={{
+                  fontWeight: isActive ? 700 : 400,
+                }}
+              />
+            )}
+          </ListItemButton>
+        </Tooltip>
+      </ListItem>
+    );
+  };
+
+  const renderCategoryMenu = (category: MenuCategory) => {
+    const categoryRoutes = getRoutesByCategory(user.role, category.id);
+    const isExpanded = expandedCategories[category.id] || false;
+    const hasActiveRoute = categoryRoutes.some((route) => pathname === route.router);
+
+    return (
+      <React.Fragment key={category.id}>
+        <ListItem disablePadding>
+          <Tooltip title={!drawerOpen ? category.text : ""} placement="right">
+            <ListItemButton
+              onClick={() => handleToggleCategory(category.id)}
+              sx={{
+                minHeight: 48,
+                justifyContent: drawerOpen ? "initial" : "center",
+                px: 2.5,
+                borderRight: hasActiveRoute ? "4px solid" : "4px solid transparent",
+                borderColor: hasActiveRoute ? "primary.main" : "transparent",
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.04)",
+                },
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: drawerOpen ? 3 : "auto",
+                  justifyContent: "center",
+                  color: hasActiveRoute ? "primary.main" : "inherit",
+                }}
+              >
+                {category.icon}
+              </ListItemIcon>
+              {drawerOpen && (
+                <>
+                  <ListItemText
+                    primary={category.text}
+                    primaryTypographyProps={{
+                      fontWeight: hasActiveRoute ? 700 : 400,
+                    }}
+                  />
+                  {isExpanded ? <ExpandLess /> : <ExpandMore />}
+                </>
+              )}
+            </ListItemButton>
+          </Tooltip>
+        </ListItem>
+        {drawerOpen && (
+          <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              {categoryRoutes.map((route) => renderMenuItem(route, true))}
+            </List>
+          </Collapse>
+        )}
+      </React.Fragment>
+    );
+  };
+
+  const renderMenuItemMobile = (page: RouteConfig, isSubItem: boolean = false) => {
+    const isActive = pathname === page.router;
+    return (
+      <ListItem key={page.text} disablePadding sx={{ pl: isSubItem ? 2 : 0 }}>
+        <ListItemButton
+          onClick={() => handleNavigateToPage(page.router)}
+          sx={{
+            backgroundColor: "transparent",
+            color: "inherit",
+            borderRight: isActive ? "4px solid" : "4px solid transparent",
+            borderColor: isActive ? "primary.dark" : "transparent",
+            "&:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.04)",
+            },
+            "& .MuiListItemIcon-root": {
+              color: "inherit",
+            },
+          }}
+        >
+          <ListItemIcon>{page.icon}</ListItemIcon>
+          <ListItemText
+            primary={page.text}
+            primaryTypographyProps={{
+              fontWeight: isActive ? 700 : 400,
+            }}
+          />
+        </ListItemButton>
+      </ListItem>
+    );
+  };
+
+  const renderCategoryMenuMobile = (category: MenuCategory) => {
+    const categoryRoutes = getRoutesByCategory(user.role, category.id);
+    const isExpanded = expandedCategories[category.id] || false;
+    const hasActiveRoute = categoryRoutes.some((route) => pathname === route.router);
+
+    return (
+      <React.Fragment key={category.id}>
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={() => handleToggleCategory(category.id)}
+            sx={{
+              backgroundColor: "transparent",
+              borderRight: hasActiveRoute ? "4px solid" : "4px solid transparent",
+              borderColor: hasActiveRoute ? "primary.main" : "transparent",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.04)",
+              },
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                color: hasActiveRoute ? "primary.main" : "inherit",
+              }}
+            >
+              {category.icon}
+            </ListItemIcon>
+            <ListItemText
+              primary={category.text}
+              primaryTypographyProps={{
+                fontWeight: hasActiveRoute ? 700 : 400,
+              }}
+            />
+            {isExpanded ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+        </ListItem>
+        <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            {categoryRoutes.map((route) => renderMenuItemMobile(route, true))}
+          </List>
+        </Collapse>
+      </React.Fragment>
+    );
+  };
 
   return (
     <>
@@ -138,44 +348,8 @@ export default function DrawnerMenu() {
         </Box>
         <Divider sx={{ borderColor: "#e0e0e0" }} />
         <List>
-          {pages.map((page) => {
-            const isActive = pathname === page.router;
-            return (
-              <ListItem key={page.text} disablePadding>
-                <Tooltip title={!drawerOpen ? page.text : ""} placement="right">
-                  <ListItemButton
-                    onClick={() => handleNavigateToPage(page.router)}
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: drawerOpen ? "initial" : "center",
-                      px: 2.5,
-                      backgroundColor: isActive ? "primary.main" : "transparent",
-                      color: isActive ? "white" : "inherit",
-                      borderLeft: isActive ? "4px solid" : "4px solid transparent",
-                      borderColor: isActive ? "primary.dark" : "transparent",
-                      "&:hover": {
-                        backgroundColor: isActive ? "primary.dark" : "rgba(0, 0, 0, 0.04)",
-                      },
-                      "& .MuiListItemIcon-root": {
-                        color: isActive ? "white" : "inherit",
-                      },
-                    }}
-                  >
-                    <ListItemIcon
-                      sx={{
-                        minWidth: 0,
-                        mr: drawerOpen ? 3 : "auto",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {page.icon}
-                    </ListItemIcon>
-                    {drawerOpen && <ListItemText primary={page.text} />}
-                  </ListItemButton>
-                </Tooltip>
-              </ListItem>
-            );
-          })}
+          {uncategorizedRoutes.map((page) => renderMenuItem(page, false))}
+          {categories.map((category) => renderCategoryMenu(category))}
         </List>
       </Drawer>
 
@@ -215,31 +389,8 @@ export default function DrawnerMenu() {
         </Box>
         <Divider sx={{ borderColor: "#e0e0e0" }} />
         <List>
-          {pages.map((page) => {
-            const isActive = pathname === page.router;
-            return (
-              <ListItem key={page.text} disablePadding>
-                <ListItemButton
-                  onClick={() => handleNavigateToPage(page.router)}
-                  sx={{
-                    backgroundColor: isActive ? "primary.main" : "transparent",
-                    color: isActive ? "white" : "inherit",
-                    borderLeft: isActive ? "4px solid" : "4px solid transparent",
-                    borderColor: isActive ? "primary.dark" : "transparent",
-                    "&:hover": {
-                      backgroundColor: isActive ? "primary.dark" : "rgba(0, 0, 0, 0.04)",
-                    },
-                    "& .MuiListItemIcon-root": {
-                      color: isActive ? "white" : "inherit",
-                    },
-                  }}
-                >
-                  <ListItemIcon>{page.icon}</ListItemIcon>
-                  <ListItemText primary={page.text} />
-                </ListItemButton>
-              </ListItem>
-            );
-          })}
+          {uncategorizedRoutes.map((page) => renderMenuItemMobile(page, false))}
+          {categories.map((category) => renderCategoryMenuMobile(category))}
         </List>
       </Drawer>
 
