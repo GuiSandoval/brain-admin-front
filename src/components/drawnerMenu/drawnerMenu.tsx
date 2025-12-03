@@ -5,7 +5,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 import {
   AppBar,
@@ -42,6 +42,7 @@ const settings = [
 
 export default function DrawnerMenu() {
   const router = useRouter();
+  const pathname = usePathname();
   const { user, signOut } = useAuth();
 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -137,31 +138,44 @@ export default function DrawnerMenu() {
         </Box>
         <Divider sx={{ borderColor: "#e0e0e0" }} />
         <List>
-          {pages.map((page) => (
-            <ListItem key={page.text} disablePadding>
-              <Tooltip title={!drawerOpen ? page.text : ""} placement="right">
-                <ListItemButton
-                  onClick={() => handleNavigateToPage(page.router)}
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: drawerOpen ? "initial" : "center",
-                    px: 2.5,
-                  }}
-                >
-                  <ListItemIcon
+          {pages.map((page) => {
+            const isActive = pathname === page.router;
+            return (
+              <ListItem key={page.text} disablePadding>
+                <Tooltip title={!drawerOpen ? page.text : ""} placement="right">
+                  <ListItemButton
+                    onClick={() => handleNavigateToPage(page.router)}
                     sx={{
-                      minWidth: 0,
-                      mr: drawerOpen ? 3 : "auto",
-                      justifyContent: "center",
+                      minHeight: 48,
+                      justifyContent: drawerOpen ? "initial" : "center",
+                      px: 2.5,
+                      backgroundColor: isActive ? "primary.main" : "transparent",
+                      color: isActive ? "white" : "inherit",
+                      borderLeft: isActive ? "4px solid" : "4px solid transparent",
+                      borderColor: isActive ? "primary.dark" : "transparent",
+                      "&:hover": {
+                        backgroundColor: isActive ? "primary.dark" : "rgba(0, 0, 0, 0.04)",
+                      },
+                      "& .MuiListItemIcon-root": {
+                        color: isActive ? "white" : "inherit",
+                      },
                     }}
                   >
-                    {page.icon}
-                  </ListItemIcon>
-                  {drawerOpen && <ListItemText primary={page.text} />}
-                </ListItemButton>
-              </Tooltip>
-            </ListItem>
-          ))}
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: drawerOpen ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {page.icon}
+                    </ListItemIcon>
+                    {drawerOpen && <ListItemText primary={page.text} />}
+                  </ListItemButton>
+                </Tooltip>
+              </ListItem>
+            );
+          })}
         </List>
       </Drawer>
 
@@ -201,14 +215,31 @@ export default function DrawnerMenu() {
         </Box>
         <Divider sx={{ borderColor: "#e0e0e0" }} />
         <List>
-          {pages.map((page) => (
-            <ListItem key={page.text} disablePadding>
-              <ListItemButton onClick={() => handleNavigateToPage(page.router)}>
-                <ListItemIcon>{page.icon}</ListItemIcon>
-                <ListItemText primary={page.text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+          {pages.map((page) => {
+            const isActive = pathname === page.router;
+            return (
+              <ListItem key={page.text} disablePadding>
+                <ListItemButton
+                  onClick={() => handleNavigateToPage(page.router)}
+                  sx={{
+                    backgroundColor: isActive ? "primary.main" : "transparent",
+                    color: isActive ? "white" : "inherit",
+                    borderLeft: isActive ? "4px solid" : "4px solid transparent",
+                    borderColor: isActive ? "primary.dark" : "transparent",
+                    "&:hover": {
+                      backgroundColor: isActive ? "primary.dark" : "rgba(0, 0, 0, 0.04)",
+                    },
+                    "& .MuiListItemIcon-root": {
+                      color: isActive ? "white" : "inherit",
+                    },
+                  }}
+                >
+                  <ListItemIcon>{page.icon}</ListItemIcon>
+                  <ListItemText primary={page.text} />
+                </ListItemButton>
+              </ListItem>
+            );
+          })}
         </List>
       </Drawer>
 
