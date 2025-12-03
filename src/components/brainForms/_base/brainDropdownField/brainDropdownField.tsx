@@ -20,12 +20,13 @@ function BrainDropdownField({
   helperText,
   fullWidth = true,
   size = "small",
+  required = false,
   ...selectProps
 }: IBrainDropdownFieldProps) {
   return (
     <StyledFormControl fullWidth={fullWidth} error={error}>
-      <InputLabel>{label}</InputLabel>
-      <StyledSelect {...selectProps} label={label} size={size}>
+      <InputLabel required={required}>{label}</InputLabel>
+      <StyledSelect {...selectProps} label={label} size={size} required={required}>
         <StyledMenuItem value="">{placeholder}</StyledMenuItem>
         {options.map((option) => (
           <StyledMenuItem key={option.key} value={option.key}>

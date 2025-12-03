@@ -32,7 +32,11 @@ export function BrainDropdownControlled<T extends FieldValues>({
         <BrainDropdownField
           {...field}
           {...selectProps}
-          value={field.value !== undefined && field.value !== null ? String(field.value) : ""}
+          value={
+            field.value === 0 || field.value === null || field.value === undefined
+              ? ""
+              : field.value
+          }
           label={label}
           options={options}
           placeholder={placeholder}
