@@ -37,6 +37,10 @@ export enum RoutesEnum {
   AVALIACAO_LISTA = "/avaliacao/lista",
   AVALIACAO = "/avaliacao",
 
+  // Notas routes
+  NOTA_LISTA = "/notas/lista",
+  NOTA = "/notas",
+
   // Common routes
   MINHAS_AULAS = "/minhas-aulas",
   CALENDARIO = "/calendario",

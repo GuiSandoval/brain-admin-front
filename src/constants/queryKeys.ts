@@ -58,6 +58,12 @@ export const QUERY_KEYS = {
     details: () => [...QUERY_KEYS.avaliacoes.all, "detail"] as const,
     detail: (id: string | number) => [...QUERY_KEYS.avaliacoes.details(), id] as const,
   },
+  notas: {
+    all: ["notas"] as const,
+    lists: () => [...QUERY_KEYS.notas.all, "list"] as const,
+    details: () => [...QUERY_KEYS.notas.all, "detail"] as const,
+    detail: (id: string | number) => [...QUERY_KEYS.notas.details(), id] as const,
+  },
   turmas: {
     all: ["turmas"] as const,
     lists: () => [...QUERY_KEYS.turmas.all, "list"] as const,

@@ -181,6 +181,21 @@ export const ROUTES: RouteConfig[] = [
     roles: [UserRoleEnum.PROFESSOR],
   },
   {
+    text: RouteLabelsEnum.NOTAS,
+    icon: <GradeIcon fontSize="small" />,
+    router: RoutesEnum.NOTA_LISTA,
+    isShowMenu: true,
+    roles: [UserRoleEnum.PROFESSOR],
+    moduleMenu: RoutesModuleEnum.CADASTROS,
+  },
+  {
+    text: RouteLabelsEnum.NOTA,
+    icon: <GradeIcon fontSize="small" />,
+    router: RoutesEnum.NOTA,
+    isShowMenu: false,
+    roles: [UserRoleEnum.PROFESSOR],
+  },
+  {
     text: RouteLabelsEnum.MINHAS_AULAS,
     icon: <MenuBookIcon fontSize="small" />,
     router: RoutesEnum.MINHAS_AULAS,

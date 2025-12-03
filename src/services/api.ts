@@ -12,6 +12,7 @@ import { TarefaApi } from "./domains/tarefa";
 import { UsuarioAPI } from "./domains/usuario";
 import { HorarioApi } from "./domains/horario";
 import { AvaliacaoApi } from "./domains/avaliacao";
+import { NotaApi } from "./domains/notas";
 
 export const alunoApi = new AlunoApi();
 export const aulaApi = new AulaApi();
@@ -27,3 +28,4 @@ export const loginGoogleApi = new LoginGoogleAPI();
 export const usuarioApi = new UsuarioAPI();
 export const horarioApi = new HorarioApi();
 export const avaliacaoApi = new AvaliacaoApi();
+export const notaApi = new NotaApi();

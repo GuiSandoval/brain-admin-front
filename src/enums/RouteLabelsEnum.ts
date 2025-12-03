@@ -36,6 +36,10 @@ export enum RouteLabelsEnum {
   AVALIACOES_CADASTRO = "Avaliações",
   AVALIACAO = "Avaliação",
 
+  // Notas labels
+  NOTAS = "Notas",
+  NOTA = "Nota",
+
   // Common labels
   MINHAS_AULAS = "Minhas aulas",
   CALENDARIO = "Calendário",
