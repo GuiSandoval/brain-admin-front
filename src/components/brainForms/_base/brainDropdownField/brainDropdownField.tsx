@@ -24,7 +24,7 @@ function BrainDropdownField({
   ...selectProps
 }: IBrainDropdownFieldProps) {
   return (
-    <StyledFormControl fullWidth={fullWidth} error={error}>
+    <StyledFormControl fullWidth={fullWidth} error={error} size={size}>
       <InputLabel required={required}>{label}</InputLabel>
       <StyledSelect {...selectProps} label={label} size={size} required={required}>
         <StyledMenuItem value="">{placeholder}</StyledMenuItem>
