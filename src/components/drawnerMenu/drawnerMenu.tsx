@@ -8,6 +8,7 @@ import {
 } from "@/constants/routesConfig";
 import { RoutesCategoryEnum } from "@/enums";
 import { useAuth } from "@/hooks/useAuth";
+import { useDrawer } from "@/contexts/DrawerContext";
 import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -54,8 +55,8 @@ export default function DrawnerMenu() {
   const router = useRouter();
   const pathname = usePathname();
   const { user, signOut } = useAuth();
+  const { drawerOpen, setDrawerOpen } = useDrawer();
 
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const [expandedCategories, setExpandedCategories] = React.useState<
@@ -116,6 +117,12 @@ export default function DrawnerMenu() {
         ...prev,
         [categoryId]: !prev[categoryId],
       }));
+    }
+  };
+
+  const handleClickOutside = () => {
+    if (drawerOpen) {
+      setDrawerOpen(false);
     }
   };
 
@@ -304,6 +311,23 @@ export default function DrawnerMenu() {
 
   return (
     <>
+      {/* Overlay para fechar o drawer quando clicar fora - Desktop */}
+      {drawerOpen && (
+        <Box
+          onClick={handleClickOutside}
+          sx={{
+            display: { xs: "none", md: "block" },
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "transparent",
+            zIndex: (theme) => theme.zIndex.drawer - 1,
+          }}
+        />
+      )}
+
       {/* Drawer para Desktop */}
       <Drawer
         variant="permanent"
@@ -493,19 +517,6 @@ export default function DrawnerMenu() {
           </Toolbar>
         </Container>
       </AppBar>
-
-      <Box
-        sx={{
-          marginLeft: { xs: 0, md: drawerOpen ? `${DRAWER_WIDTH}px` : `${DRAWER_WIDTH_CLOSED}px` },
-          transition: (theme) =>
-            theme.transitions.create(["margin"], {
-              easing: theme.transitions.easing.sharp,
-              duration: theme.transitions.duration.enteringScreen,
-            }),
-        }}
-      >
-        <Toolbar />
-      </Box>
     </>
   );
 }
