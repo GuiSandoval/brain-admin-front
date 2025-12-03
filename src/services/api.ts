@@ -11,6 +11,7 @@ import { TurmaApi } from "./domains/turma";
 import { TarefaApi } from "./domains/tarefa";
 import { UsuarioAPI } from "./domains/usuario";
 import { HorarioApi } from "./domains/horario";
+import { AvaliacaoApi } from "./domains/avaliacao";
 
 export const alunoApi = new AlunoApi();
 export const aulaApi = new AulaApi();
@@ -25,3 +26,4 @@ export const tarefaApi = new TarefaApi();
 export const loginGoogleApi = new LoginGoogleAPI();
 export const usuarioApi = new UsuarioAPI();
 export const horarioApi = new HorarioApi();
+export const avaliacaoApi = new AvaliacaoApi();

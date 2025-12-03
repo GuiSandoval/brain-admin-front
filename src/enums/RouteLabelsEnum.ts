@@ -32,11 +32,15 @@ export enum RouteLabelsEnum {
   HORARIOS = "Horários",
   HORARIO = "Horário",
 
+  // Avaliacao labels
+  AVALIACOES_CADASTRO = "Avaliações",
+  AVALIACAO = "Avaliação",
+
   // Common labels
   MINHAS_AULAS = "Minhas aulas",
   CALENDARIO = "Calendário",
   BOLETIM = "Boletim",
-  AVALIACOES = "Avaliações",
+  AVALIACOES = "Avaliações - OLD",
   COMUNICADOS = "Comunicados",
   PERFIL = "Perfil",
 

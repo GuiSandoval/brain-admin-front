@@ -33,11 +33,15 @@ export enum RoutesEnum {
   HORARIO_LISTA = "/horario/lista",
   HORARIO = "/horario",
 
+  // Avaliacao routes
+  AVALIACAO_LISTA = "/avaliacao/lista",
+  AVALIACAO = "/avaliacao",
+
   // Common routes
   MINHAS_AULAS = "/minhas-aulas",
   CALENDARIO = "/calendario",
   BOLETIM = "/boletim",
-  AVALIACOES = "/avaliacoes",
+  AVALIACOES = "/avaliacoes-old",
   COMUNICADOS = "/comunicados",
   PERFIL = "/perfil",
 
