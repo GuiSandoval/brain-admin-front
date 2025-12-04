@@ -73,7 +73,7 @@ function GoogleCallbackContent() {
     };
 
     processGoogleCallback();
-  }, [searchParams, handleGoogleCallback, router]);
+  }, [handleGoogleCallback, router]);
 
   const renderContent = () => {
     switch (status) {
