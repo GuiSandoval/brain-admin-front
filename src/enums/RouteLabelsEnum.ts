@@ -40,6 +40,10 @@ export enum RouteLabelsEnum {
   NOTAS = "Notas",
   NOTA = "Nota",
 
+  // Tarefa labels
+  TAREFA_LISTA = "Tarefas",
+  TAREFA = "Tarefa",
+
   // Common labels
   MINHAS_AULAS = "Minhas aulas",
   CALENDARIO = "Calendário",

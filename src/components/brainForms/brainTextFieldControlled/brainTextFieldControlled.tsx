@@ -10,6 +10,8 @@ interface BrainTextFieldControlledProps<T extends FieldValues> {
   required?: boolean;
   type?: string;
   size?: TextFieldProps["size"];
+  multiline?: boolean;
+  rows?: number;
 }
 
 export function BrainTextFieldControlled<T extends FieldValues>({
@@ -20,6 +22,8 @@ export function BrainTextFieldControlled<T extends FieldValues>({
   required = false,
   type = "text",
   size = "small",
+  multiline = false,
+  rows,
 }: BrainTextFieldControlledProps<T>) {
   return (
     <Controller
@@ -36,6 +40,8 @@ export function BrainTextFieldControlled<T extends FieldValues>({
           type={type}
           error={!!error}
           helperText={error?.message}
+          multiline={multiline}
+          rows={rows}
         />
       )}
     />

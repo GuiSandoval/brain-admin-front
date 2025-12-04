@@ -12,6 +12,7 @@ import MenuBookIcon from "@mui/icons-material/MenuBook";
 import GradeIcon from "@mui/icons-material/Grade";
 import CategoryIcon from "@mui/icons-material/Category";
 import FolderIcon from "@mui/icons-material/Folder";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 import * as React from "react";
 import { UserRoleEnum, RoutesEnum, RouteLabelsEnum, RoutesModuleEnum } from "@/enums";
 
@@ -194,6 +195,21 @@ export const ROUTES: RouteConfig[] = [
     router: RoutesEnum.NOTA,
     isShowMenu: false,
     roles: [UserRoleEnum.PROFESSOR],
+  },
+  {
+    text: RouteLabelsEnum.TAREFA_LISTA,
+    icon: <AssignmentIcon fontSize="small" />,
+    router: RoutesEnum.TAREFA_LISTA,
+    isShowMenu: true,
+    roles: [UserRoleEnum.PROFESSOR, UserRoleEnum.ADMIN],
+    moduleMenu: RoutesModuleEnum.CADASTROS,
+  },
+  {
+    text: RouteLabelsEnum.TAREFA,
+    icon: <AssignmentIcon fontSize="small" />,
+    router: RoutesEnum.TAREFA,
+    isShowMenu: false,
+    roles: [UserRoleEnum.PROFESSOR, UserRoleEnum.ADMIN],
   },
   {
     text: RouteLabelsEnum.MINHAS_AULAS,

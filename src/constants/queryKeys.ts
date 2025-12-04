@@ -15,6 +15,8 @@ export const QUERY_KEYS = {
   tarefas: {
     all: ["tarefas"] as const,
     lists: () => [...QUERY_KEYS.tarefas.all, "list"] as const,
+    details: () => [...QUERY_KEYS.tarefas.all, "detail"] as const,
+    detail: (id: string | number) => [...QUERY_KEYS.tarefas.details(), id] as const,
   },
   professores: {
     all: ["professores"] as const,

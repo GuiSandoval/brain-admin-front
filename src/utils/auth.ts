@@ -99,6 +99,7 @@ export const ROLE_ROUTES: Record<UserRoleEnum, string[]> = {
     "/aulas",
     "/minhas-aulas",
     "/comunicados",
+    "/tarefa",
   ],
   ADMIN: [
     "/",
@@ -110,6 +111,7 @@ export const ROLE_ROUTES: Record<UserRoleEnum, string[]> = {
     "/aulas",
     "/minhas-aulas",
     "/comunicados",
+    "/tarefa",
   ],
 };
 
