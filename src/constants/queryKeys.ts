@@ -24,6 +24,12 @@ export const QUERY_KEYS = {
     details: () => [...QUERY_KEYS.alertas.all, "detail"] as const,
     detail: (id: string | number) => [...QUERY_KEYS.alertas.details(), id] as const,
   },
+  fichasMedicas: {
+    all: ["fichasMedicas"] as const,
+    lists: () => [...QUERY_KEYS.fichasMedicas.all, "list"] as const,
+    details: () => [...QUERY_KEYS.fichasMedicas.all, "detail"] as const,
+    detail: (id: string | number) => [...QUERY_KEYS.fichasMedicas.details(), id] as const,
+  },
   professores: {
     all: ["professores"] as const,
     lists: () => [...QUERY_KEYS.professores.all, "list"] as const,

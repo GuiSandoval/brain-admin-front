@@ -13,6 +13,7 @@ import GradeIcon from "@mui/icons-material/Grade";
 import CategoryIcon from "@mui/icons-material/Category";
 import FolderIcon from "@mui/icons-material/Folder";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import * as React from "react";
 import { UserRoleEnum, RoutesEnum, RouteLabelsEnum, RoutesModuleEnum } from "@/enums";
 
@@ -223,6 +224,21 @@ export const ROUTES: RouteConfig[] = [
     text: RouteLabelsEnum.ALERTA,
     icon: <AnnouncementIcon fontSize="small" />,
     router: RoutesEnum.ALERTA,
+    isShowMenu: false,
+    roles: [UserRoleEnum.PROFESSOR, UserRoleEnum.ADMIN],
+  },
+  {
+    text: RouteLabelsEnum.FICHA_MEDICA_LISTA,
+    icon: <LocalHospitalIcon fontSize="small" />,
+    router: RoutesEnum.FICHA_MEDICA_LISTA,
+    isShowMenu: true,
+    roles: [UserRoleEnum.PROFESSOR, UserRoleEnum.ADMIN],
+    moduleMenu: RoutesModuleEnum.CADASTROS,
+  },
+  {
+    text: RouteLabelsEnum.FICHA_MEDICA,
+    icon: <LocalHospitalIcon fontSize="small" />,
+    router: RoutesEnum.FICHA_MEDICA,
     isShowMenu: false,
     roles: [UserRoleEnum.PROFESSOR, UserRoleEnum.ADMIN],
   },

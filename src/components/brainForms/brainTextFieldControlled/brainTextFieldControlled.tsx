@@ -12,6 +12,7 @@ interface BrainTextFieldControlledProps<T extends FieldValues> {
   size?: TextFieldProps["size"];
   multiline?: boolean;
   rows?: number;
+  disabled?: boolean;
 }
 
 export function BrainTextFieldControlled<T extends FieldValues>({
@@ -24,6 +25,7 @@ export function BrainTextFieldControlled<T extends FieldValues>({
   size = "small",
   multiline = false,
   rows,
+  disabled = false,
 }: BrainTextFieldControlledProps<T>) {
   return (
     <Controller
@@ -42,6 +44,7 @@ export function BrainTextFieldControlled<T extends FieldValues>({
           helperText={error?.message}
           multiline={multiline}
           rows={rows}
+          disabled={disabled}
         />
       )}
     />

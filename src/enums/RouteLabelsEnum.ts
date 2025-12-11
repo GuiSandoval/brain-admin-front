@@ -48,6 +48,10 @@ export enum RouteLabelsEnum {
   ALERTA_LISTA = "Alertas",
   ALERTA = "Alerta",
 
+  // Ficha Médica labels
+  FICHA_MEDICA_LISTA = "Fichas Médicas",
+  FICHA_MEDICA = "Ficha Médica",
+
   // Common labels
   MINHAS_AULAS = "Minhas aulas",
   CALENDARIO = "Calendário",

@@ -49,6 +49,10 @@ export enum RoutesEnum {
   ALERTA_LISTA = "/alerta/lista",
   ALERTA = "/alerta",
 
+  // Ficha Médica routes
+  FICHA_MEDICA_LISTA = "/ficha-medica/lista",
+  FICHA_MEDICA = "/ficha-medica",
+
   // Common routes
   MINHAS_AULAS = "/minhas-aulas",
   CALENDARIO = "/calendario",
