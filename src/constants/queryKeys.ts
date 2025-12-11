@@ -18,6 +18,12 @@ export const QUERY_KEYS = {
     details: () => [...QUERY_KEYS.tarefas.all, "detail"] as const,
     detail: (id: string | number) => [...QUERY_KEYS.tarefas.details(), id] as const,
   },
+  alertas: {
+    all: ["alertas"] as const,
+    lists: () => [...QUERY_KEYS.alertas.all, "list"] as const,
+    details: () => [...QUERY_KEYS.alertas.all, "detail"] as const,
+    detail: (id: string | number) => [...QUERY_KEYS.alertas.details(), id] as const,
+  },
   professores: {
     all: ["professores"] as const,
     lists: () => [...QUERY_KEYS.professores.all, "list"] as const,
