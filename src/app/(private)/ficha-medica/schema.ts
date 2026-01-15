@@ -10,7 +10,7 @@ export const fichaMedicaSchema = z.object({
   doencasRespiratorias: z.string().optional().or(z.literal("")),
   alergiasAlimentares: z.string().optional().or(z.literal("")),
   alergiasMedicamentosas: z.string().optional().or(z.literal("")),
-  laudos: z.string().optional().or(z.literal("")),
+  laudos: z.array(z.instanceof(File)).optional().default([]),
 });
 
 export type FichaMedicaFormData = z.infer<typeof fichaMedicaSchema>;
@@ -22,5 +22,5 @@ export const fichaMedicaDefaultValues: FichaMedicaFormData = {
   doencasRespiratorias: "",
   alergiasAlimentares: "",
   alergiasMedicamentosas: "",
-  laudos: "",
+  laudos: [],
 };

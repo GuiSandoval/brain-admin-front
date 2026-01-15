@@ -5,7 +5,7 @@ export interface FichaMedicaPostRequest {
   doencasRespiratorias?: string;
   alergiasAlimentares?: string;
   alergiasMedicamentosas?: string;
-  laudos?: string;
+  laudos?: File[];
 }
 
 export interface FichaMedicaPutRequest {

@@ -18,7 +18,7 @@ export function mapFormDataToFichaMedicaPostRequest(
     doencasRespiratorias: formData.doencasRespiratorias || undefined,
     alergiasAlimentares: formData.alergiasAlimentares || undefined,
     alergiasMedicamentosas: formData.alergiasMedicamentosas || undefined,
-    laudos: formData.laudos || undefined,
+    laudos: formData.laudos && formData.laudos.length > 0 ? formData.laudos : undefined,
   };
 }
 
@@ -33,7 +33,6 @@ export function mapFormDataToFichaMedicaPutRequest(
     doencasRespiratorias: formData.doencasRespiratorias || undefined,
     alergiasAlimentares: formData.alergiasAlimentares || undefined,
     alergiasMedicamentosas: formData.alergiasMedicamentosas || undefined,
-    laudos: formData.laudos || undefined,
   };
 }
 
@@ -50,6 +49,6 @@ export function mapFichaMedicaResponseToFormData(
     doencasRespiratorias: fichaMedica.doencasRespiratorias || "",
     alergiasAlimentares: fichaMedica.alergiasAlimentares || "",
     alergiasMedicamentosas: fichaMedica.alergiasMedicamentosas || "",
-    laudos: fichaMedica.laudos || "",
+    laudos: [],
   };
 }
