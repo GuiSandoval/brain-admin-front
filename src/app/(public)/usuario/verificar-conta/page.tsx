@@ -47,7 +47,7 @@ function VerificarContaContent() {
     };
 
     verificarConta();
-  }, [searchParams]);
+  }, [codigo]);
 
   const renderContent = () => {
     switch (status) {
