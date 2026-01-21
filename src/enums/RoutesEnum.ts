@@ -65,4 +65,7 @@ export enum RoutesEnum {
   USUARIOS = "/usuarios",
   RELATORIOS = "/relatorios",
   CONFIGURACOES = "/configuracoes",
+
+  // Relatórios específicos
+  RELATORIO_COMPORTAMENTO = "/relatorio-comportamento",
 }

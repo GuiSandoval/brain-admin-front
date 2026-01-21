@@ -64,4 +64,7 @@ export enum RouteLabelsEnum {
   USUARIOS = "Usuários",
   RELATORIOS = "Relatórios",
   CONFIGURACOES = "Configurações",
+
+  // Relatórios específicos
+  RELATORIO_COMPORTAMENTO = "Relatório de Comportamento",
 }

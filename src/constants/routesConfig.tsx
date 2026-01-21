@@ -14,6 +14,7 @@ import CategoryIcon from "@mui/icons-material/Category";
 import FolderIcon from "@mui/icons-material/Folder";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
+import BarChartIcon from "@mui/icons-material/BarChart";
 import * as React from "react";
 import { UserRoleEnum, RoutesEnum, RouteLabelsEnum, RoutesModuleEnum } from "@/enums";
 
@@ -37,6 +38,10 @@ const MODULE_CONFIG: Record<RoutesModuleEnum, { text: string; icon: React.JSX.El
   [RoutesModuleEnum.CADASTROS]: {
     text: "Cadastros",
     icon: <FolderIcon fontSize="small" />,
+  },
+  [RoutesModuleEnum.RELATORIOS]: {
+    text: "Relatórios",
+    icon: <BarChartIcon fontSize="small" />,
   },
 };
 
@@ -332,6 +337,14 @@ export const ROUTES: RouteConfig[] = [
     router: RoutesEnum.AULAS,
     isShowMenu: false,
     roles: [UserRoleEnum.ADMIN],
+  },
+  {
+    text: RouteLabelsEnum.RELATORIO_COMPORTAMENTO,
+    icon: <BarChartIcon fontSize="small" />,
+    router: RoutesEnum.RELATORIO_COMPORTAMENTO,
+    isShowMenu: true,
+    roles: [UserRoleEnum.ADMIN, UserRoleEnum.PROFESSOR],
+    moduleMenu: RoutesModuleEnum.RELATORIOS,
   },
 ];
 
