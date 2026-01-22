@@ -9,9 +9,23 @@ import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { UserRoleEnum } from "@/enums";
 import { useBrainForm } from "@/hooks/useBrainForm";
 import { KeyValue } from "@/services/models/keyValue";
-import { Download, Print } from "@mui/icons-material";
-import { Alert, Box, Button, CircularProgress, Container, Paper, Typography } from "@mui/material";
-import { useState } from "react";
+import { Download, Print, ArrowUpward, ArrowDownward } from "@mui/icons-material";
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Paper,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { z } from "zod";
 import * as S from "./styles";
 
@@ -54,6 +68,19 @@ const relatorioSchema = z.object({
 
 type RelatorioFormData = z.infer<typeof relatorioSchema>;
 
+type ResultadoItem = {
+  id: number;
+  aluno: string;
+  turma: string;
+  disciplina: string;
+  data: string;
+  comportamento: string;
+  observacao: string;
+};
+
+type SortField = keyof ResultadoItem | null;
+type SortDirection = "asc" | "desc";
+
 const defaultValues: RelatorioFormData = {
   nomeAluno: "",
   turma: "",
@@ -75,8 +102,74 @@ export default function RelatorioComportamentoPage() {
   // Estados para controlar carregamento
   const [loadingPDF, setLoadingPDF] = useState(false);
   const [loadingExcel, setLoadingExcel] = useState(false);
+  const [loadingBuscar, setLoadingBuscar] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [resultados, setResultados] = useState<ResultadoItem[]>([]);
+  const [todosResultados, setTodosResultados] = useState<ResultadoItem[]>([]);
+  const [sortField, setSortField] = useState<SortField>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const observerRef = useRef<HTMLDivElement>(null);
+  const ITEMS_PER_PAGE = 10;
+
+  // Função para ordenar resultados
+  const handleSort = (field: keyof ResultadoItem) => {
+    const newDirection = sortField === field && sortDirection === "asc" ? "desc" : "asc";
+    setSortField(field);
+    setSortDirection(newDirection);
+
+    const sorted = [...todosResultados].sort((a, b) => {
+      const aValue = a[field];
+      const bValue = b[field];
+
+      if (aValue < bValue) return newDirection === "asc" ? -1 : 1;
+      if (aValue > bValue) return newDirection === "asc" ? 1 : -1;
+      return 0;
+    });
+
+    setTodosResultados(sorted);
+    setResultados(sorted.slice(0, ITEMS_PER_PAGE));
+    setPage(1);
+    setHasMore(sorted.length > ITEMS_PER_PAGE);
+  };
+
+  // Função para carregar mais itens
+  const loadMoreItems = useCallback(() => {
+    if (!hasMore || loadingBuscar) return;
+
+    const nextPage = page + 1;
+    const startIndex = page * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const newItems = todosResultados.slice(startIndex, endIndex);
+
+    if (newItems.length > 0) {
+      setResultados((prev) => [...prev, ...newItems]);
+      setPage(nextPage);
+      setHasMore(endIndex < todosResultados.length);
+    } else {
+      setHasMore(false);
+    }
+  }, [page, todosResultados, hasMore, loadingBuscar]);
+
+  // Observer para scroll infinito
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          loadMoreItems();
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [loadMoreItems, hasMore]);
 
   // Função para validar filtros
   const validateFilters = () => {
@@ -159,11 +252,73 @@ export default function RelatorioComportamentoPage() {
     }, 1500);
   };
 
+  // Função para buscar relatórios
+  const handleBuscar = async () => {
+    if (!validateFilters()) return;
+
+    setLoadingBuscar(true);
+    setError("");
+
+    // Simula chamada à API
+    setTimeout(() => {
+      setLoadingBuscar(false);
+
+      // Mock de dados retornados pela API (expandido para simular paginação)
+      const mockResultados: ResultadoItem[] = Array.from({ length: 35 }, (_, index) => ({
+        id: index + 1,
+        aluno: [
+          "João Silva",
+          "Maria Santos",
+          "Pedro Oliveira",
+          "Ana Costa",
+          "Carlos Souza",
+          "Beatriz Lima",
+          "Rafael Alves",
+          "Juliana Martins",
+        ][index % 8],
+        turma: ["Turma A - 1º Ano", "Turma B - 2º Ano", "Turma C - 3º Ano"][index % 3],
+        disciplina: [
+          "Matemática",
+          "Português",
+          "História",
+          "Geografia",
+          "Ciências",
+          "Inglês",
+          "Ed. Física",
+        ][index % 7],
+        data: `${10 + (index % 20)}/01/2026`,
+        comportamento: ["Excelente", "Bom", "Regular", "Precisa Melhorar"][index % 4],
+        observacao: [
+          "Participativo e atencioso",
+          "Precisa melhorar a concentração",
+          "Conversa muito durante a aula",
+          "Ótimo desempenho nas atividades",
+          "Demonstra interesse pela matéria",
+        ][index % 5],
+      }));
+
+      setTodosResultados(mockResultados);
+      setResultados(mockResultados.slice(0, ITEMS_PER_PAGE));
+      setPage(1);
+      setHasMore(mockResultados.length > ITEMS_PER_PAGE);
+      setSortField(null);
+      setSortDirection("asc");
+      setSuccess("Busca realizada com sucesso!");
+      setTimeout(() => setSuccess(""), 3000);
+    }, 1500);
+  };
+
   // Função para limpar filtros
   const handleLimparFiltros = () => {
     reset();
     setError("");
     setSuccess("");
+    setResultados([]);
+    setTodosResultados([]);
+    setSortField(null);
+    setSortDirection("asc");
+    setPage(1);
+    setHasMore(true);
   };
 
   return (
@@ -174,6 +329,27 @@ export default function RelatorioComportamentoPage() {
             title="Relatório de Comportamento"
             description="Gere relatórios detalhados sobre o comportamento dos alunos"
           />
+        </Box>
+
+        {/* Botões de Ação - Geração de Relatórios */}
+        <Box sx={{ mb: 2, display: "flex", justifyContent: "flex-end", gap: 2 }}>
+          <Button
+            variant="contained"
+            startIcon={loadingPDF ? <CircularProgress size={20} color="inherit" /> : <Print />}
+            onClick={handleGerarPDF}
+            disabled={loadingPDF || resultados.length === 0}
+          >
+            {loadingPDF ? "Gerando..." : "Pré-visualizar PDF"}
+          </Button>
+          <Button
+            variant="contained"
+            color="success"
+            startIcon={loadingExcel ? <CircularProgress size={20} color="inherit" /> : <Download />}
+            onClick={handleGerarExcel}
+            disabled={loadingExcel || resultados.length === 0}
+          >
+            {loadingExcel ? "Gerando..." : "Gerar Relatório"}
+          </Button>
         </Box>
 
         {/* Box de Filtros */}
@@ -238,29 +414,18 @@ export default function RelatorioComportamentoPage() {
                 />
               </Box>
             </S.Container>
-            {/* Botões de Ação */}
+            {/* Botões de Filtro */}
             <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end", gap: 2 }}>
               <Button variant="outlined" onClick={handleLimparFiltros}>
                 Limpar Filtros
               </Button>
               <Button
                 variant="contained"
-                startIcon={loadingPDF ? <CircularProgress size={20} color="inherit" /> : <Print />}
-                onClick={handleGerarPDF}
-                disabled={loadingPDF}
+                onClick={handleBuscar}
+                disabled={loadingBuscar}
+                startIcon={loadingBuscar ? <CircularProgress size={20} color="inherit" /> : null}
               >
-                {loadingPDF ? "Gerando..." : "Pré-visualizar PDF"}
-              </Button>
-              <Button
-                variant="contained"
-                color="success"
-                startIcon={
-                  loadingExcel ? <CircularProgress size={20} color="inherit" /> : <Download />
-                }
-                onClick={handleGerarExcel}
-                disabled={loadingExcel}
-              >
-                {loadingExcel ? "Gerando..." : "Gerar Relatório"}
+                {loadingBuscar ? "Buscando..." : "Buscar"}
               </Button>
             </Box>
           </BrainFormProvider>
@@ -277,6 +442,77 @@ export default function RelatorioComportamentoPage() {
           <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess("")}>
             {success}
           </Alert>
+        )}
+
+        {/* Grid de Resultados */}
+        {resultados.length > 0 && (
+          <Paper sx={{ p: 3, boxShadow: 2 }}>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    {[
+                      { field: "aluno" as keyof ResultadoItem, label: "Aluno" },
+                      { field: "turma" as keyof ResultadoItem, label: "Turma" },
+                      { field: "disciplina" as keyof ResultadoItem, label: "Disciplina" },
+                      { field: "data" as keyof ResultadoItem, label: "Data" },
+                      { field: "comportamento" as keyof ResultadoItem, label: "Comportamento" },
+                      { field: "observacao" as keyof ResultadoItem, label: "Observação" },
+                    ].map(({ field, label }) => (
+                      <TableCell
+                        key={field}
+                        onClick={() => handleSort(field)}
+                        sx={{
+                          cursor: "pointer",
+                          fontWeight: 600,
+                          userSelect: "none",
+                          "&:hover": {
+                            color: "primary.main",
+                          },
+                        }}
+                      >
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                          {label}
+                          {sortField === field &&
+                            (sortDirection === "asc" ? (
+                              <ArrowUpward fontSize="small" />
+                            ) : (
+                              <ArrowDownward fontSize="small" />
+                            ))}
+                        </Box>
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {resultados.map((item) => (
+                    <TableRow key={item.id} hover>
+                      <TableCell>{item.aluno}</TableCell>
+                      <TableCell>{item.turma}</TableCell>
+                      <TableCell>{item.disciplina}</TableCell>
+                      <TableCell>{item.data}</TableCell>
+                      <TableCell>{item.comportamento}</TableCell>
+                      <TableCell>{item.observacao}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+
+            {/* Observer para scroll infinito - fora do container com scroll horizontal */}
+            <Box
+              ref={observerRef}
+              sx={{
+                height: "20px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                mt: 2,
+              }}
+            >
+              {hasMore && <CircularProgress size={24} />}
+            </Box>
+          </Paper>
         )}
       </Container>
     </ProtectedRoute>
