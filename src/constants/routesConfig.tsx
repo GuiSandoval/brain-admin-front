@@ -243,6 +243,21 @@ export const ROUTES: RouteConfig[] = [
     roles: [UserRoleEnum.PROFESSOR, UserRoleEnum.ADMIN],
   },
   {
+    text: RouteLabelsEnum.PLANEJAMENTO_ANUAL_LISTA,
+    icon: <AssignmentIcon fontSize="small" />,
+    router: RoutesEnum.PLANEJAMENTO_ANUAL_LISTA,
+    isShowMenu: true,
+    roles: [UserRoleEnum.PROFESSOR, UserRoleEnum.ADMIN],
+    moduleMenu: RoutesModuleEnum.CADASTROS,
+  },
+  {
+    text: RouteLabelsEnum.PLANEJAMENTO_ANUAL,
+    icon: <AssignmentIcon fontSize="small" />,
+    router: RoutesEnum.PLANEJAMENTO_ANUAL,
+    isShowMenu: false,
+    roles: [UserRoleEnum.PROFESSOR, UserRoleEnum.ADMIN],
+  },
+  {
     text: RouteLabelsEnum.MINHAS_AULAS,
     icon: <MenuBookIcon fontSize="small" />,
     router: RoutesEnum.MINHAS_AULAS,

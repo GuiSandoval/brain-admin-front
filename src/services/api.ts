@@ -15,6 +15,7 @@ import { UsuarioAPI } from "./domains/usuario";
 import { HorarioApi } from "./domains/horario";
 import { AvaliacaoApi } from "./domains/avaliacao";
 import { NotaApi } from "./domains/notas";
+import { PlanejamentoAnualAPI } from "./domains/planejamento-anual";
 
 export const alunoApi = new AlunoApi();
 export const aulaApi = new AulaApi();
@@ -33,3 +34,4 @@ export const usuarioApi = new UsuarioAPI();
 export const horarioApi = new HorarioApi();
 export const avaliacaoApi = new AvaliacaoApi();
 export const notaApi = new NotaApi();
+export const planejamentoAnualApi = new PlanejamentoAnualAPI();

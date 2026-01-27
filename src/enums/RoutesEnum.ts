@@ -53,6 +53,10 @@ export enum RoutesEnum {
   FICHA_MEDICA_LISTA = "/ficha-medica/lista",
   FICHA_MEDICA = "/ficha-medica",
 
+  // Planejamento Anual routes
+  PLANEJAMENTO_ANUAL_LISTA = "/planejamento-anual/lista",
+  PLANEJAMENTO_ANUAL = "/planejamento-anual",
+
   // Common routes
   MINHAS_AULAS = "/minhas-aulas",
   CALENDARIO = "/calendario",

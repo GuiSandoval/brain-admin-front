@@ -52,6 +52,10 @@ export enum RouteLabelsEnum {
   FICHA_MEDICA_LISTA = "Fichas Médicas",
   FICHA_MEDICA = "Ficha Médica",
 
+  // Planejamento Anual labels
+  PLANEJAMENTO_ANUAL_LISTA = "Planejamentos Anuais",
+  PLANEJAMENTO_ANUAL = "Cadastro de Planejamento Anual",
+
   // Common labels
   MINHAS_AULAS = "Minhas aulas",
   CALENDARIO = "Calendário",
