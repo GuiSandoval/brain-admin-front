@@ -38,7 +38,6 @@ export default function ListaFichaMedicaPage() {
   const { deleteFichaMedica } = useFichaMedicaMutations();
   const [downloadingFichaId, setDownloadingFichaId] = useState<string | null>(null);
 
-  // Estado para o modal de confirmação
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [fichaMedicaToDelete, setFichaMedicaToDelete] = useState<{
     id: string;
@@ -46,8 +45,6 @@ export default function ListaFichaMedicaPage() {
   } | null>(null);
 
   const handleEditFichaMedica = (fichaMedicaId: string) => {
-    // Nota: A rota /ficha-medica/{id} espera o ID da ficha médica
-    // Como o backend não retorna dadosPessoaisId, usamos o id da ficha
     router.push(`${RoutesEnum.FICHA_MEDICA}/${fichaMedicaId}`);
   };
 
@@ -59,8 +56,6 @@ export default function ListaFichaMedicaPage() {
   const handleDownloadAllLaudos = async (fichaMedicaId: string) => {
     try {
       setDownloadingFichaId(fichaMedicaId);
-      // Nota: O backend retorna TODOS os laudos (não filtra por ficha específica)
-      // O {id} na URL é ignorado pelo backend
       const res = await fichaMedicaApi.listarLaudos(fichaMedicaId, { size: 1000 });
       const laudos = res.content ?? [];
 
@@ -69,8 +64,7 @@ export default function ListaFichaMedicaPage() {
         return;
       }
 
-      // Dispara o download de cada arquivo via URL pré-assinada (S3).
-      // Usa links temporários para evitar bloqueio de pop-ups no Safari
+      /* Usando links temporários para evitar bloqueio de pop-ups */
       for (let i = 0; i < laudos.length; i++) {
         const laudo = laudos[i];
         const link = document.createElement("a");
@@ -82,7 +76,6 @@ export default function ListaFichaMedicaPage() {
         link.click();
         document.body.removeChild(link);
 
-        // Pequeno delay entre downloads para evitar sobrecarga
         if (i < laudos.length - 1) {
           await new Promise((resolve) => setTimeout(resolve, 200));
         }
@@ -102,7 +95,6 @@ export default function ListaFichaMedicaPage() {
         setDeleteModalOpen(false);
         setFichaMedicaToDelete(null);
       } catch (error) {
-        // O erro é tratado no hook useFichaMedicaMutations
         console.error("Erro ao deletar ficha médica:", error);
       }
     }
@@ -114,11 +106,9 @@ export default function ListaFichaMedicaPage() {
   };
 
   const handleNewFichaMedica = () => {
-    // For creating new, we need a user ID - redirect to lista or show message
     alert("Selecione um usuário para criar a ficha médica.");
   };
 
-  // Função para formatar o tipo sanguíneo
   const formatTipoSanguineo = (tipo: string): string => {
     if (!tipo) return "-";
     return tipo.replace("_", " ");

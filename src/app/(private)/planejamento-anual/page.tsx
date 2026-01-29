@@ -70,7 +70,7 @@ export default function PlanejamentoAnualCadastroPage() {
     if (files && files.length > 0) {
       setValue("planejamento", files[0], { shouldValidate: true });
     }
-    // Reset input so same file can be selected again
+
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
