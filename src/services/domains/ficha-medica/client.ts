@@ -1,6 +1,6 @@
 import { IBrainResult } from "@/services/commoResponse";
 import { httpClient } from "@/services/http";
-import { FichaMedicaResponse } from "./response";
+import { FichaMedicaResponse, ListagemArquivoResponse } from "./response";
 import { FichaMedicaPostRequest, FichaMedicaPutRequest } from "./request";
 
 const BASE_ROUTE = "ficha-medica";
@@ -12,16 +12,22 @@ export class FichaMedicaApi {
 
   criarFichaMedica(data: FichaMedicaPostRequest): Promise<FichaMedicaResponse> {
     const formData = new FormData();
-    formData.append("dadosPessoaisId", data.dadosPessoaisId.toString());
-    if (data.tipoSanguineo) formData.append("tipoSanguineo", data.tipoSanguineo);
-    if (data.necessidadesEspeciais)
-      formData.append("necessidadesEspeciais", data.necessidadesEspeciais);
-    if (data.doencasRespiratorias)
-      formData.append("doencasRespiratorias", data.doencasRespiratorias);
-    if (data.alergiasAlimentares)
-      formData.append("alergiasAlimentares", data.alergiasAlimentares);
-    if (data.alergiasMedicamentosas)
-      formData.append("alergiasMedicamentosas", data.alergiasMedicamentosas);
+    formData.append(
+      "dados",
+      new Blob(
+        [
+          JSON.stringify({
+            dadosPessoaisId: data.dadosPessoaisId,
+            tipoSanguineo: data.tipoSanguineo,
+            necessidadesEspeciais: data.necessidadesEspeciais,
+            doencasRespiratorias: data.doencasRespiratorias,
+            alergiasAlimentares: data.alergiasAlimentares,
+            alergiasMedicamentosas: data.alergiasMedicamentosas,
+          }),
+        ],
+        { type: "application/json" },
+      ),
+    );
 
     if (data.laudos && data.laudos.length > 0) {
       data.laudos.forEach((file) => {
@@ -46,5 +52,12 @@ export class FichaMedicaApi {
 
   buscarFichaMedica(id: string): Promise<FichaMedicaResponse> {
     return httpClient.get(`${BASE_ROUTE}/${id}`);
+  }
+
+  listarLaudos(
+    id: string,
+    params?: { page?: number; size?: number; sort?: string[] },
+  ): Promise<IBrainResult<ListagemArquivoResponse>> {
+    return httpClient.get(`${BASE_ROUTE}/${id}/laudos`, { params });
   }
 }

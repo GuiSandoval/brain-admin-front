@@ -25,15 +25,18 @@ import {
   DialogContentText,
   DialogTitle,
   Chip,
+  Tooltip,
 } from "@mui/material";
-import { Edit, Delete, Add, LocalHospital } from "@mui/icons-material";
+import { Edit, Delete, Add, LocalHospital, Download } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import PageTitle from "@/components/pageTitle/pageTitle";
+import { fichaMedicaApi } from "@/services/api";
 
 export default function ListaFichaMedicaPage() {
   const router = useRouter();
   const { fichasMedicas, loading, error, refetch } = useFichasMedicas();
   const { deleteFichaMedica } = useFichaMedicaMutations();
+  const [downloadingFichaId, setDownloadingFichaId] = useState<string | null>(null);
 
   // Estado para o modal de confirmação
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -42,13 +45,54 @@ export default function ListaFichaMedicaPage() {
     nome: string;
   } | null>(null);
 
-  const handleEditFichaMedica = (dadosPessoaisId: string) => {
-    router.push(`${RoutesEnum.FICHA_MEDICA}/${dadosPessoaisId}`);
+  const handleEditFichaMedica = (fichaMedicaId: string) => {
+    // Nota: A rota /ficha-medica/{id} espera o ID da ficha médica
+    // Como o backend não retorna dadosPessoaisId, usamos o id da ficha
+    router.push(`${RoutesEnum.FICHA_MEDICA}/${fichaMedicaId}`);
   };
 
   const handleDeleteFichaMedica = (fichaMedicaId: string, nome: string) => {
     setFichaMedicaToDelete({ id: fichaMedicaId, nome });
     setDeleteModalOpen(true);
+  };
+
+  const handleDownloadAllLaudos = async (fichaMedicaId: string) => {
+    try {
+      setDownloadingFichaId(fichaMedicaId);
+      // Nota: O backend retorna TODOS os laudos (não filtra por ficha específica)
+      // O {id} na URL é ignorado pelo backend
+      const res = await fichaMedicaApi.listarLaudos(fichaMedicaId, { size: 1000 });
+      const laudos = res.content ?? [];
+
+      if (laudos.length === 0) {
+        alert("Nenhum laudo encontrado no sistema.");
+        return;
+      }
+
+      // Dispara o download de cada arquivo via URL pré-assinada (S3).
+      // Usa links temporários para evitar bloqueio de pop-ups no Safari
+      for (let i = 0; i < laudos.length; i++) {
+        const laudo = laudos[i];
+        const link = document.createElement("a");
+        link.href = laudo.downloadUrl;
+        link.download = laudo.nome || `laudo-${laudo.id}`;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Pequeno delay entre downloads para evitar sobrecarga
+        if (i < laudos.length - 1) {
+          await new Promise((resolve) => setTimeout(resolve, 200));
+        }
+      }
+    } catch (e) {
+      console.error("Erro ao baixar laudos:", e);
+      alert("Erro ao baixar laudos. Tente novamente.");
+    } finally {
+      setDownloadingFichaId(null);
+    }
   };
 
   const handleConfirmDelete = async () => {
@@ -139,6 +183,7 @@ export default function ListaFichaMedicaPage() {
                   <TableCell sx={{ fontWeight: "bold" }}>Tipo Sanguíneo</TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>Necessidades Especiais</TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>Alergias</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", textAlign: "center" }}>Laudos</TableCell>
                   <TableCell sx={{ fontWeight: "bold", textAlign: "center" }}>Ações</TableCell>
                 </TableRow>
               </TableHead>
@@ -200,6 +245,26 @@ export default function ListaFichaMedicaPage() {
                             Nenhuma
                           </Typography>
                         )}
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box sx={{ display: "flex", justifyContent: "center" }}>
+                        <Tooltip title="Baixar todos os laudos">
+                          <span>
+                            <IconButton
+                              size="small"
+                              onClick={() => handleDownloadAllLaudos(ficha.id.toString())}
+                              disabled={downloadingFichaId === ficha.id.toString()}
+                              sx={{ color: "primary.main" }}
+                            >
+                              {downloadingFichaId === ficha.id.toString() ? (
+                                <CircularProgress size={16} />
+                              ) : (
+                                <Download fontSize="small" />
+                              )}
+                            </IconButton>
+                          </span>
+                        </Tooltip>
                       </Box>
                     </TableCell>
                     <TableCell>

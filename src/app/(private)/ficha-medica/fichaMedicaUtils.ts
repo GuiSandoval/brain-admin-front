@@ -42,6 +42,8 @@ export function mapFormDataToFichaMedicaPutRequest(
 export function mapFichaMedicaResponseToFormData(
   fichaMedica: FichaMedicaResponse,
 ): FichaMedicaFormData {
+  // Nota: O backend não retorna dadosPessoaisId no DTO de listagem/detalhe
+  // Usamos o id da ficha como fallback (será necessário ajustar a página de edição)
   return {
     dadosPessoaisId: fichaMedica.id || "",
     tipoSanguineo: fichaMedica.tipoSanguineo || "",
