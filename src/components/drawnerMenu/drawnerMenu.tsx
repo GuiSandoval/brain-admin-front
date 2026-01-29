@@ -6,20 +6,23 @@ import {
   type RouteConfig,
   type MenuModule,
 } from "@/constants/routesConfig";
-import { RoutesModuleEnum } from "@/enums";
+import { RoutesModuleEnum, RoutesEnum } from "@/enums";
 import { useAuth } from "@/hooks/useAuth";
 import { useDrawer } from "@/contexts/DrawerContext";
+import { useAlertas } from "@/hooks/useAlertas";
 import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useRouter, usePathname } from "next/navigation";
 
 import {
   AppBar,
   Avatar,
+  Badge,
   Container,
   Divider,
   Drawer,
@@ -56,6 +59,10 @@ export default function DrawnerMenu() {
   const pathname = usePathname();
   const { user, signOut } = useAuth();
   const { drawerOpen, setDrawerOpen } = useDrawer();
+  const { alertas } = useAlertas();
+
+  // Calcular notificações não lidas (por enquanto todas são não lidas, já que não temos backend para isso)
+  const unreadCount = alertas?.length || 0;
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -472,7 +479,33 @@ export default function DrawnerMenu() {
               </Typography>
             </Box>
 
-            <Box sx={{ flexGrow: 0 }}>
+            <Box sx={{ flexGrow: 0, display: "flex", alignItems: "center", gap: 1 }}>
+              <Tooltip title="Alertas">
+                <IconButton
+                  onClick={() => router.push(RoutesEnum.ALERTA_DETALHAMENTO)}
+                  sx={{ color: "inherit" }}
+                >
+                  {unreadCount > 0 ? (
+                    <Badge
+                      badgeContent={unreadCount}
+                      color="error"
+                      sx={{
+                        "& .MuiBadge-badge": {
+                          bgcolor: "#EF4444",
+                          color: "white",
+                          fontSize: "0.7rem",
+                          minWidth: 18,
+                          height: 18,
+                        },
+                      }}
+                    >
+                      <NotificationsIcon />
+                    </Badge>
+                  ) : (
+                    <NotificationsIcon />
+                  )}
+                </IconButton>
+              </Tooltip>
               <Tooltip title="Configurações">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt={user.email} src="/static/images/avatar/2.jpg">
