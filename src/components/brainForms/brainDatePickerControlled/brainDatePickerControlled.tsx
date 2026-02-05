@@ -14,6 +14,7 @@ interface BrainDatePickerControlledProps<T extends FieldValues> {
   disableFuture?: boolean;
   disablePast?: boolean;
   format?: string;
+  views?: Array<"year" | "month" | "day">;
 }
 
 export function BrainDatePickerControlled<T extends FieldValues>({
@@ -28,6 +29,7 @@ export function BrainDatePickerControlled<T extends FieldValues>({
   disableFuture = false,
   disablePast = false,
   format = "dd/MM/yyyy",
+  views = ["year", "month", "day"],
 }: BrainDatePickerControlledProps<T>) {
   return (
     <Controller
@@ -50,6 +52,7 @@ export function BrainDatePickerControlled<T extends FieldValues>({
           disableFuture={disableFuture}
           disablePast={disablePast}
           format={format}
+          views={views}
         />
       )}
     />

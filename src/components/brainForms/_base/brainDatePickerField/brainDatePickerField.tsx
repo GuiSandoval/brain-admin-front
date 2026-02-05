@@ -20,6 +20,7 @@ interface IBrainDatePickerFieldProps {
   size?: "small" | "medium";
   required?: boolean;
   disabled?: boolean;
+  views?: Array<"year" | "month" | "day">;
 }
 
 function BrainDatePickerField({
@@ -36,6 +37,7 @@ function BrainDatePickerField({
   disableFuture = false,
   disablePast = false,
   format = "dd/MM/yyyy",
+  views = ["year", "month", "day"],
 }: IBrainDatePickerFieldProps) {
   return (
     <Box sx={{ width: "100%", minWidth: 0 }}>
@@ -50,6 +52,7 @@ function BrainDatePickerField({
           maxDate={maxDate}
           disableFuture={disableFuture}
           disablePast={disablePast}
+          views={views}
           sx={{ width: "100%" }}
           slotProps={{
             textField: {

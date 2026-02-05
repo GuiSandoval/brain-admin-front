@@ -2,14 +2,12 @@
 import { BrainDatePickerControlled } from "@/components/brainForms/brainDatePickerControlled";
 import { BrainDropdownControlled } from "@/components/brainForms/brainDropdownControlled";
 import BrainFormProvider from "@/components/brainForms/brainFormProvider/brainFormProvider";
-import { BrainMultiSelectControlled } from "@/components/brainForms/brainMultiSelectControlled";
-import { BrainTextFieldControlled } from "@/components/brainForms/brainTextFieldControlled";
 import PageTitle from "@/components/pageTitle/pageTitle";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { UserRoleEnum } from "@/enums";
 import { useBrainForm } from "@/hooks/useBrainForm";
 import { KeyValue } from "@/services/models/keyValue";
-import { Download, Print, ArrowUpward, ArrowDownward } from "@mui/icons-material";
+import { ArrowDownward, ArrowUpward, Download, Print } from "@mui/icons-material";
 import {
   Alert,
   Box,
@@ -17,31 +15,44 @@ import {
   CircularProgress,
   Container,
   Paper,
-  Typography,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import * as S from "./styles";
 
 // Mock data para os dropdowns
-const TURMAS_MOCK: KeyValue[] = [
-  { key: "1", value: "Turma A - 1º Ano" },
-  { key: "2", value: "Turma B - 2º Ano" },
-  { key: "3", value: "Turma C - 3º Ano" },
+const ESCOLAS_MOCK: KeyValue[] = [
+  { key: "1", value: "Unidade Centro" },
+  { key: "2", value: "Unidade Norte" },
+  { key: "3", value: "Unidade Sul" },
+  { key: "4", value: "Unidade Leste" },
 ];
 
-const PERIODOS_MOCK: KeyValue[] = [
-  { key: "1", value: "1º Bimestre" },
-  { key: "2", value: "2º Bimestre" },
-  { key: "3", value: "3º Bimestre" },
-  { key: "4", value: "4º Bimestre" },
-  { key: "anual", value: "Anual" },
+const SERIES_MOCK: KeyValue[] = [
+  { key: "1", value: "1º Ano" },
+  { key: "2", value: "2º Ano" },
+  { key: "3", value: "3º Ano" },
+  { key: "4", value: "4º Ano" },
+  { key: "5", value: "5º Ano" },
+  { key: "6", value: "6º Ano" },
+  { key: "7", value: "7º Ano" },
+  { key: "8", value: "8º Ano" },
+  { key: "9", value: "9º Ano" },
+];
+
+const TURMAS_MOCK: KeyValue[] = [
+  { key: "1", value: "Turma A" },
+  { key: "2", value: "Turma B" },
+  { key: "3", value: "Turma C" },
+  { key: "4", value: "Turma D" },
 ];
 
 const DISCIPLINAS_MOCK: KeyValue[] = [
@@ -52,47 +63,78 @@ const DISCIPLINAS_MOCK: KeyValue[] = [
   { key: "5", value: "Ciências" },
   { key: "6", value: "Inglês" },
   { key: "7", value: "Educação Física" },
+  { key: "8", value: "Artes" },
+];
+
+const TIPOS_RELATORIO_MOCK: KeyValue[] = [
+  { key: "comportamento", value: "Comportamento" },
+  { key: "rendimento", value: "Rendimento" },
+  { key: "frequencia", value: "Frequência" },
+  { key: "geral", value: "Geral" },
+];
+
+const PERIODOS_MOCK: KeyValue[] = [
+  { key: "1", value: "1º Bimestre" },
+  { key: "2", value: "2º Bimestre" },
+  { key: "3", value: "3º Bimestre" },
+  { key: "4", value: "4º Bimestre" },
+  { key: "anual", value: "Anual" },
+];
+
+const ALUNOS_MOCK: KeyValue[] = [
+  { key: "1", value: "Ana Costa" },
+  { key: "2", value: "Beatriz Lima" },
+  { key: "3", value: "Carlos Souza" },
+  { key: "4", value: "João Silva" },
+  { key: "5", value: "Juliana Martins" },
+  { key: "6", value: "Maria Santos" },
+  { key: "7", value: "Pedro Oliveira" },
+  { key: "8", value: "Rafael Alves" },
 ];
 
 // Schema de validação
 const relatorioSchema = z.object({
-  nomeAluno: z.string().optional(),
+  anoLetivo: z.date().nullable().optional(),
+  escola: z.string().optional(),
+  serie: z.string().optional(),
   turma: z.string().optional(),
+  disciplina: z.string().optional(),
+  tipoRelatorio: z.string().optional(),
   periodo: z.string().optional(),
-  dataInicio: z.string().optional(),
-  dataFim: z.string().optional(),
-  dataInicioCalendario: z.date().nullable().optional(),
-  dataFimCalendario: z.date().nullable().optional(),
-  disciplinas: z.array(z.string()).optional(),
+  aluno: z.string().optional(),
 });
 
 type RelatorioFormData = z.infer<typeof relatorioSchema>;
 
 type ResultadoItem = {
   id: number;
+  alunoId: string;
   aluno: string;
   turma: string;
   disciplina: string;
   data: string;
   comportamento: string;
   observacao: string;
+  faltas?: number;
+  registros?: number;
 };
 
 type SortField = keyof ResultadoItem | null;
 type SortDirection = "asc" | "desc";
 
 const defaultValues: RelatorioFormData = {
-  nomeAluno: "",
+  anoLetivo: new Date(2026, 0, 1), // Ano atual
+  escola: "",
+  serie: "",
   turma: "",
+  disciplina: "",
+  tipoRelatorio: "",
   periodo: "",
-  dataInicio: "",
-  dataFim: "",
-  dataInicioCalendario: null,
-  dataFimCalendario: null,
-  disciplinas: [],
+  aluno: "",
 };
 
 export default function RelatorioComportamentoPage() {
+  const router = useRouter();
   const { control, getValues, reset, methodsHookForm, onFormSubmit } =
     useBrainForm<RelatorioFormData>({
       schema: relatorioSchema,
@@ -111,6 +153,7 @@ export default function RelatorioComportamentoPage() {
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [searchAluno, setSearchAluno] = useState("");
   const observerRef = useRef<HTMLDivElement>(null);
   const ITEMS_PER_PAGE = 10;
 
@@ -123,7 +166,9 @@ export default function RelatorioComportamentoPage() {
     const sorted = [...todosResultados].sort((a, b) => {
       const aValue = a[field];
       const bValue = b[field];
-
+      if (!aValue && !bValue) return 0;
+      if (!aValue) return newDirection === "asc" ? -1 : 1;
+      if (!bValue) return newDirection === "asc" ? 1 : -1;
       if (aValue < bValue) return newDirection === "asc" ? -1 : 1;
       if (aValue > bValue) return newDirection === "asc" ? 1 : -1;
       return 0;
@@ -174,29 +219,31 @@ export default function RelatorioComportamentoPage() {
   // Função para validar filtros
   const validateFilters = () => {
     const values = getValues();
-    const { nomeAluno, turma, periodo, dataInicio, dataFim } = values;
+    const { anoLetivo, escola, serie, turma, tipoRelatorio } = values;
 
-    if (!turma && !nomeAluno && !periodo && !dataInicio && !dataFim) {
-      setError("Selecione pelo menos um filtro para gerar o relatório");
+    if (!anoLetivo) {
+      setError("Selecione o ano letivo");
       return false;
     }
 
-    if ((dataInicio && !dataFim) || (!dataInicio && dataFim)) {
-      setError("Preencha ambas as datas (início e fim)");
+    if (!escola) {
+      setError("Selecione a escola");
       return false;
     }
 
-    if (dataInicio && dataFim) {
-      // Converter formato dd/mm/yyyy para Date
-      const [diaInicio, mesInicio, anoInicio] = dataInicio.split("/");
-      const [diaFim, mesFim, anoFim] = dataFim.split("/");
-      const dateInicio = new Date(Number(anoInicio), Number(mesInicio) - 1, Number(diaInicio));
-      const dateFim = new Date(Number(anoFim), Number(mesFim) - 1, Number(diaFim));
+    if (!serie) {
+      setError("Selecione a série");
+      return false;
+    }
 
-      if (dateInicio > dateFim) {
-        setError("A data de início não pode ser maior que a data de fim");
-        return false;
-      }
+    if (!turma) {
+      setError("Selecione a turma");
+      return false;
+    }
+
+    if (!tipoRelatorio) {
+      setError("Selecione o tipo de relatório");
+      return false;
     }
 
     setError("");
@@ -266,6 +313,7 @@ export default function RelatorioComportamentoPage() {
       // Mock de dados retornados pela API (expandido para simular paginação)
       const mockResultados: ResultadoItem[] = Array.from({ length: 35 }, (_, index) => ({
         id: index + 1,
+        alunoId: `${(index % 8) + 1}`,
         aluno: [
           "João Silva",
           "Maria Santos",
@@ -295,6 +343,8 @@ export default function RelatorioComportamentoPage() {
           "Ótimo desempenho nas atividades",
           "Demonstra interesse pela matéria",
         ][index % 5],
+        faltas: Math.floor(Math.random() * 10),
+        registros: Math.floor(Math.random() * 20) + 1,
       }));
 
       setTodosResultados(mockResultados);
@@ -308,6 +358,16 @@ export default function RelatorioComportamentoPage() {
     }, 1500);
   };
 
+  // Função para filtrar resultados por busca de aluno
+  const resultadosFiltrados = searchAluno
+    ? resultados.filter((item) => item.aluno.toLowerCase().includes(searchAluno.toLowerCase()))
+    : resultados;
+
+  // Função para redirecionar para página do aluno
+  const handleAlunoClick = (alunoId: string) => {
+    router.push(`/aluno/${alunoId}`);
+  };
+
   // Função para limpar filtros
   const handleLimparFiltros = () => {
     reset();
@@ -319,6 +379,7 @@ export default function RelatorioComportamentoPage() {
     setSortDirection("asc");
     setPage(1);
     setHasMore(true);
+    setSearchAluno("");
   };
 
   return (
@@ -326,8 +387,8 @@ export default function RelatorioComportamentoPage() {
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Box sx={{ mb: 4 }}>
           <PageTitle
-            title="Relatório de Comportamento"
-            description="Gere relatórios detalhados sobre o comportamento dos alunos"
+            title="Relatório"
+            description="Gere relatórios detalhados com base em diversos filtros personalizáveis."
           />
         </Box>
 
@@ -339,7 +400,7 @@ export default function RelatorioComportamentoPage() {
             onClick={handleGerarPDF}
             disabled={loadingPDF || resultados.length === 0}
           >
-            {loadingPDF ? "Gerando..." : "Pré-visualizar PDF"}
+            {loadingPDF ? "Gerando..." : "Exportar PDF"}
           </Button>
           <Button
             variant="contained"
@@ -348,7 +409,7 @@ export default function RelatorioComportamentoPage() {
             onClick={handleGerarExcel}
             disabled={loadingExcel || resultados.length === 0}
           >
-            {loadingExcel ? "Gerando..." : "Gerar Relatório"}
+            {loadingExcel ? "Gerando..." : "Exportar Excel"}
           </Button>
         </Box>
 
@@ -360,19 +421,68 @@ export default function RelatorioComportamentoPage() {
 
           <BrainFormProvider onSubmit={onFormSubmit} methodsHookForm={methodsHookForm}>
             <S.Container>
-              <Box sx={{ display: "flex", gap: 1 }}>
+              <Box>
                 <BrainDatePickerControlled
-                  name="dataInicioCalendario"
+                  name="anoLetivo"
                   control={control}
-                  label="Data Início"
-                  format="dd/MM/yyyy"
+                  label="Ano Letivo *"
+                  format="yyyy"
+                  views={["year"]}
                 />
-                <BrainDatePickerControlled
-                  name="dataFimCalendario"
+              </Box>
+
+              <Box>
+                <BrainDropdownControlled
+                  name="escola"
                   control={control}
-                  label="Data Fim"
-                  format="dd/MM/yyyy"
-                  disablePast
+                  label="Escola"
+                  required
+                  options={ESCOLAS_MOCK}
+                  placeholder="Selecione a escola"
+                />
+              </Box>
+
+              <Box>
+                <BrainDropdownControlled
+                  name="serie"
+                  control={control}
+                  label="Série"
+                  required
+                  options={SERIES_MOCK}
+                  placeholder="Selecione a série"
+                />
+              </Box>
+
+              <Box>
+                <BrainDropdownControlled
+                  name="turma"
+                  control={control}
+                  label="Turma"
+                  required
+                  options={TURMAS_MOCK}
+                  placeholder="Selecione a turma"
+                />
+              </Box>
+
+              <Box>
+                <BrainDropdownControlled
+                  name="disciplina"
+                  control={control}
+                  label="Disciplina"
+                  required
+                  options={DISCIPLINAS_MOCK}
+                  placeholder="Selecione a disciplina"
+                />
+              </Box>
+
+              <Box>
+                <BrainDropdownControlled
+                  name="tipoRelatorio"
+                  control={control}
+                  label="Tipo de Relatório"
+                  required
+                  options={TIPOS_RELATORIO_MOCK}
+                  placeholder="Selecione o tipo de relatório"
                 />
               </Box>
 
@@ -380,37 +490,19 @@ export default function RelatorioComportamentoPage() {
                 <BrainDropdownControlled
                   name="periodo"
                   control={control}
-                  label="Período"
+                  label="Período (Opcional)"
                   options={PERIODOS_MOCK}
-                  placeholder="Selecione um período"
+                  placeholder="Selecione o período"
                 />
               </Box>
+
               <Box>
                 <BrainDropdownControlled
-                  name="turma"
+                  name="aluno"
                   control={control}
-                  label="Turma"
-                  options={TURMAS_MOCK}
-                  placeholder="Selecione uma turma"
-                />
-              </Box>
-
-              <Box>
-                <BrainTextFieldControlled
-                  name="nomeAluno"
-                  control={control}
-                  label="Nome do Aluno"
-                  placeholder="Digite o nome do aluno"
-                />
-              </Box>
-
-              <Box>
-                <BrainMultiSelectControlled
-                  name="disciplinas"
-                  control={control}
-                  label="Disciplinas"
-                  options={DISCIPLINAS_MOCK}
-                  placeholder="Selecione uma ou mais disciplinas"
+                  label="Aluno (Opcional)"
+                  options={ALUNOS_MOCK}
+                  placeholder="Selecione o aluno"
                 />
               </Box>
             </S.Container>
@@ -446,17 +538,75 @@ export default function RelatorioComportamentoPage() {
 
         {/* Grid de Resultados */}
         {resultados.length > 0 && (
-          <Paper sx={{ p: 3, boxShadow: 2 }}>
-            <TableContainer>
+          <Paper sx={{ boxShadow: 2 }}>
+            <TableContainer sx={{ overflowX: "initial" }}>
               <Table>
-                <TableHead>
+                <TableHead sx={{ position: "sticky", top: 65, zIndex: 1000 }}>
                   <TableRow>
+                    <TableCell
+                      sx={{
+                        fontWeight: 600,
+                        position: "sticky",
+                        top: 0,
+                        backgroundColor: "gray",
+                        color: "white",
+                        zIndex: 100,
+                        borderBottom: "2px solid",
+                        borderBottomColor: "divider",
+                      }}
+                    >
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 0.5,
+                            cursor: "pointer",
+                          }}
+                          onClick={() => handleSort("aluno")}
+                        >
+                          Aluno
+                          {sortField === "aluno" &&
+                            (sortDirection === "asc" ? (
+                              <ArrowUpward fontSize="small" />
+                            ) : (
+                              <ArrowDownward fontSize="small" />
+                            ))}
+                        </Box>
+                      </Box>
+                      {/* <TextField
+                        size="small"
+                        placeholder="Buscar aluno..."
+                        value={searchAluno}
+                        onChange={(e) => setSearchAluno(e.target.value)}
+                        onClick={(e) => e.stopPropagation()}
+                        sx={{
+                          mt: 1,
+                          "& .MuiInputBase-root": {
+                            backgroundColor: "white",
+                            borderRadius: 1,
+                          },
+                        }}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <Search fontSize="small" />
+                            </InputAdornment>
+                          ),
+                        }}
+                      /> */}
+                    </TableCell>
                     {[
-                      { field: "aluno" as keyof ResultadoItem, label: "Aluno" },
                       { field: "turma" as keyof ResultadoItem, label: "Turma" },
                       { field: "disciplina" as keyof ResultadoItem, label: "Disciplina" },
                       { field: "data" as keyof ResultadoItem, label: "Data" },
                       { field: "comportamento" as keyof ResultadoItem, label: "Comportamento" },
+                      ...(getValues("tipoRelatorio") === "comportamento"
+                        ? [
+                            { field: "faltas" as keyof ResultadoItem, label: "Faltas" },
+                            { field: "registros" as keyof ResultadoItem, label: "Registros" },
+                          ]
+                        : []),
                       { field: "observacao" as keyof ResultadoItem, label: "Observação" },
                     ].map(({ field, label }) => (
                       <TableCell
@@ -466,8 +616,15 @@ export default function RelatorioComportamentoPage() {
                           cursor: "pointer",
                           fontWeight: 600,
                           userSelect: "none",
+                          position: "sticky",
+                          top: 0,
+                          backgroundColor: "gray",
+                          color: "white",
+                          zIndex: 100,
+                          borderBottom: "2px solid",
+                          borderBottomColor: "divider",
                           "&:hover": {
-                            color: "primary.main",
+                            color: "ActiveBorder",
                           },
                         }}
                       >
@@ -485,13 +642,24 @@ export default function RelatorioComportamentoPage() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {resultados.map((item) => (
-                    <TableRow key={item.id} hover>
+                  {resultadosFiltrados.map((item) => (
+                    <TableRow
+                      key={item.id}
+                      hover
+                      onClick={() => handleAlunoClick(item.alunoId)}
+                      sx={{ cursor: "pointer" }}
+                    >
                       <TableCell>{item.aluno}</TableCell>
                       <TableCell>{item.turma}</TableCell>
                       <TableCell>{item.disciplina}</TableCell>
                       <TableCell>{item.data}</TableCell>
                       <TableCell>{item.comportamento}</TableCell>
+                      {getValues("tipoRelatorio") === "comportamento" && (
+                        <>
+                          <TableCell>{item.faltas}</TableCell>
+                          <TableCell>{item.registros}</TableCell>
+                        </>
+                      )}
                       <TableCell>{item.observacao}</TableCell>
                     </TableRow>
                   ))}
