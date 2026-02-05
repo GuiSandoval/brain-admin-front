@@ -339,12 +339,12 @@ export const ROUTES: RouteConfig[] = [
     roles: [UserRoleEnum.ADMIN],
   },
   {
-    text: RouteLabelsEnum.RELATORIO_COMPORTAMENTO,
+    text: RouteLabelsEnum.RELATORIOS,
     icon: <BarChartIcon fontSize="small" />,
-    router: RoutesEnum.RELATORIO_COMPORTAMENTO,
+    router: RoutesEnum.RELATORIOS,
     isShowMenu: true,
     roles: [UserRoleEnum.ADMIN, UserRoleEnum.PROFESSOR],
-    moduleMenu: RoutesModuleEnum.RELATORIOS,
+    // moduleMenu: RoutesModuleEnum.RELATORIOS,
   },
 ];
 

@@ -6,6 +6,11 @@ import PageTitle from "@/components/pageTitle/pageTitle";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { UserRoleEnum } from "@/enums";
 import { useBrainForm } from "@/hooks/useBrainForm";
+import { useUnidades } from "@/hooks/useUnidades";
+import { useSeries } from "@/hooks/useSeries";
+import { useTurmas } from "@/hooks/useTurmas";
+import { useDisciplinas } from "@/hooks/useDisciplinas";
+import { useAlunos } from "@/hooks/useAlunos";
 import { KeyValue } from "@/services/models/keyValue";
 import { ArrowDownward, ArrowUpward, Download, Print } from "@mui/icons-material";
 import {
@@ -24,72 +29,24 @@ import {
   Typography,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 import * as S from "./styles";
 
-// Mock data para os dropdowns
-const ESCOLAS_MOCK: KeyValue[] = [
-  { key: "1", value: "Unidade Centro" },
-  { key: "2", value: "Unidade Norte" },
-  { key: "3", value: "Unidade Sul" },
-  { key: "4", value: "Unidade Leste" },
-];
-
-const SERIES_MOCK: KeyValue[] = [
-  { key: "1", value: "1º Ano" },
-  { key: "2", value: "2º Ano" },
-  { key: "3", value: "3º Ano" },
-  { key: "4", value: "4º Ano" },
-  { key: "5", value: "5º Ano" },
-  { key: "6", value: "6º Ano" },
-  { key: "7", value: "7º Ano" },
-  { key: "8", value: "8º Ano" },
-  { key: "9", value: "9º Ano" },
-];
-
-const TURMAS_MOCK: KeyValue[] = [
-  { key: "1", value: "Turma A" },
-  { key: "2", value: "Turma B" },
-  { key: "3", value: "Turma C" },
-  { key: "4", value: "Turma D" },
-];
-
-const DISCIPLINAS_MOCK: KeyValue[] = [
-  { key: "1", value: "Matemática" },
-  { key: "2", value: "Português" },
-  { key: "3", value: "História" },
-  { key: "4", value: "Geografia" },
-  { key: "5", value: "Ciências" },
-  { key: "6", value: "Inglês" },
-  { key: "7", value: "Educação Física" },
-  { key: "8", value: "Artes" },
-];
-
-const TIPOS_RELATORIO_MOCK: KeyValue[] = [
+// Constantes para tipos de relatório e períodos
+const TIPOS_RELATORIO: KeyValue[] = [
   { key: "comportamento", value: "Comportamento" },
   { key: "rendimento", value: "Rendimento" },
   { key: "frequencia", value: "Frequência" },
   { key: "geral", value: "Geral" },
 ];
 
-const PERIODOS_MOCK: KeyValue[] = [
+const PERIODOS: KeyValue[] = [
   { key: "1", value: "1º Bimestre" },
   { key: "2", value: "2º Bimestre" },
   { key: "3", value: "3º Bimestre" },
   { key: "4", value: "4º Bimestre" },
   { key: "anual", value: "Anual" },
-];
-
-const ALUNOS_MOCK: KeyValue[] = [
-  { key: "1", value: "Ana Costa" },
-  { key: "2", value: "Beatriz Lima" },
-  { key: "3", value: "Carlos Souza" },
-  { key: "4", value: "João Silva" },
-  { key: "5", value: "Juliana Martins" },
-  { key: "6", value: "Maria Santos" },
-  { key: "7", value: "Pedro Oliveira" },
-  { key: "8", value: "Rafael Alves" },
 ];
 
 // Schema de validação
@@ -140,6 +97,13 @@ export default function RelatorioComportamentoPage() {
       schema: relatorioSchema,
       defaultValues,
     });
+
+  // Hooks para buscar dados das APIs
+  const { unidades } = useUnidades();
+  const { series } = useSeries();
+  const { turmas } = useTurmas();
+  const { disciplinas } = useDisciplinas();
+  const { alunos } = useAlunos();
 
   // Estados para controlar carregamento
   const [loadingPDF, setLoadingPDF] = useState(false);
@@ -381,6 +345,32 @@ export default function RelatorioComportamentoPage() {
     setHasMore(true);
     setSearchAluno("");
   };
+  // Converter dados das APIs para formato KeyValue
+  const OPTIONS_UNIDADES: KeyValue[] = useMemo(
+    () => unidades.map((unidade) => ({ key: unidade.id.toString(), value: unidade.nome })),
+    [unidades],
+  );
+
+  const OPTIONS_SERIES: KeyValue[] = useMemo(
+    () => series.map((serie) => ({ key: serie.id.toString(), value: serie.nome })),
+    [series],
+  );
+
+  const OPTIONS_TURMAS: KeyValue[] = useMemo(
+    () => turmas.map((turma) => ({ key: turma.id.toString(), value: turma.nome })),
+    [turmas],
+  );
+
+  const OPTIONS_DISCIPLINAS: KeyValue[] = useMemo(
+    () =>
+      disciplinas.map((disciplina) => ({ key: disciplina.id.toString(), value: disciplina.nome })),
+    [disciplinas],
+  );
+
+  const OPTIONS_ALUNOS: KeyValue[] = useMemo(
+    () => alunos.map((aluno) => ({ key: aluno.id.toString(), value: aluno.nome })),
+    [alunos],
+  );
 
   return (
     <ProtectedRoute allowedRoles={[UserRoleEnum.ADMIN, UserRoleEnum.PROFESSOR]}>
@@ -435,10 +425,10 @@ export default function RelatorioComportamentoPage() {
                 <BrainDropdownControlled
                   name="escola"
                   control={control}
-                  label="Escola"
+                  label="Unidade"
                   required
-                  options={ESCOLAS_MOCK}
-                  placeholder="Selecione a escola"
+                  options={OPTIONS_UNIDADES}
+                  placeholder="Selecione a unidade"
                 />
               </Box>
 
@@ -448,7 +438,7 @@ export default function RelatorioComportamentoPage() {
                   control={control}
                   label="Série"
                   required
-                  options={SERIES_MOCK}
+                  options={OPTIONS_SERIES}
                   placeholder="Selecione a série"
                 />
               </Box>
@@ -459,7 +449,7 @@ export default function RelatorioComportamentoPage() {
                   control={control}
                   label="Turma"
                   required
-                  options={TURMAS_MOCK}
+                  options={OPTIONS_TURMAS}
                   placeholder="Selecione a turma"
                 />
               </Box>
@@ -470,7 +460,7 @@ export default function RelatorioComportamentoPage() {
                   control={control}
                   label="Disciplina"
                   required
-                  options={DISCIPLINAS_MOCK}
+                  options={OPTIONS_DISCIPLINAS}
                   placeholder="Selecione a disciplina"
                 />
               </Box>
@@ -481,7 +471,7 @@ export default function RelatorioComportamentoPage() {
                   control={control}
                   label="Tipo de Relatório"
                   required
-                  options={TIPOS_RELATORIO_MOCK}
+                  options={TIPOS_RELATORIO}
                   placeholder="Selecione o tipo de relatório"
                 />
               </Box>
@@ -491,7 +481,7 @@ export default function RelatorioComportamentoPage() {
                   name="periodo"
                   control={control}
                   label="Período (Opcional)"
-                  options={PERIODOS_MOCK}
+                  options={PERIODOS}
                   placeholder="Selecione o período"
                 />
               </Box>
@@ -501,7 +491,7 @@ export default function RelatorioComportamentoPage() {
                   name="aluno"
                   control={control}
                   label="Aluno (Opcional)"
-                  options={ALUNOS_MOCK}
+                  options={OPTIONS_ALUNOS}
                   placeholder="Selecione o aluno"
                 />
               </Box>
@@ -597,18 +587,26 @@ export default function RelatorioComportamentoPage() {
                       /> */}
                     </TableCell>
                     {[
-                      { field: "turma" as keyof ResultadoItem, label: "Turma" },
-                      { field: "disciplina" as keyof ResultadoItem, label: "Disciplina" },
-                      { field: "data" as keyof ResultadoItem, label: "Data" },
-                      { field: "comportamento" as keyof ResultadoItem, label: "Comportamento" },
+                      // { field: "turma" as keyof ResultadoItem, label: "Turma" },
+                      // { field: "disciplina" as keyof ResultadoItem, label: "Disciplina" },
+                      // { field: "data" as keyof ResultadoItem, label: "Data" },
+                      // { field: "comportamento" as keyof ResultadoItem, label: "Comportamento" },
                       ...(getValues("tipoRelatorio") === "comportamento"
                         ? [
-                            { field: "faltas" as keyof ResultadoItem, label: "Faltas" },
-                            { field: "registros" as keyof ResultadoItem, label: "Registros" },
+                            {
+                              field: "faltas" as keyof ResultadoItem,
+                              label: "Faltas",
+                              align: "center",
+                            },
+                            {
+                              field: "registros" as keyof ResultadoItem,
+                              label: "Registros",
+                              align: "center",
+                            },
                           ]
                         : []),
-                      { field: "observacao" as keyof ResultadoItem, label: "Observação" },
-                    ].map(({ field, label }) => (
+                      // { field: "observacao" as keyof ResultadoItem, label: "Observação" },
+                    ].map(({ field, align, label }) => (
                       <TableCell
                         key={field}
                         onClick={() => handleSort(field)}
@@ -628,7 +626,14 @@ export default function RelatorioComportamentoPage() {
                           },
                         }}
                       >
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: align || "flex-start",
+                            gap: 0.5,
+                          }}
+                        >
                           {label}
                           {sortField === field &&
                             (sortDirection === "asc" ? (
@@ -649,18 +654,20 @@ export default function RelatorioComportamentoPage() {
                       onClick={() => handleAlunoClick(item.alunoId)}
                       sx={{ cursor: "pointer" }}
                     >
-                      <TableCell>{item.aluno}</TableCell>
-                      <TableCell>{item.turma}</TableCell>
-                      <TableCell>{item.disciplina}</TableCell>
+                      <TableCell>
+                        <S.CollumnAluno>{item.aluno}</S.CollumnAluno>
+                      </TableCell>
+                      {/* <TableCell>{item.turma}</TableCell> */}
+                      {/* <TableCell>{item.disciplina}</TableCell>
                       <TableCell>{item.data}</TableCell>
-                      <TableCell>{item.comportamento}</TableCell>
+                      <TableCell>{item.comportamento}</TableCell> */}
                       {getValues("tipoRelatorio") === "comportamento" && (
                         <>
-                          <TableCell>{item.faltas}</TableCell>
-                          <TableCell>{item.registros}</TableCell>
+                          <TableCell align="center">{item.faltas}</TableCell>
+                          <TableCell align="center">{item.registros}</TableCell>
                         </>
                       )}
-                      <TableCell>{item.observacao}</TableCell>
+                      {/* <TableCell>{item.observacao}</TableCell> */}
                     </TableRow>
                   ))}
                 </TableBody>

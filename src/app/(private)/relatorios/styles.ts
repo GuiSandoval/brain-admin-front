@@ -15,3 +15,11 @@ export const Container = styled.div`
     flex-direction: column;
   }
 `;
+
+export const CollumnAluno = styled.div`
+  &:hover {
+    cursor: pointer;
+    color: #1976d2;
+    text-decoration: underline;
+  }
+`;
