@@ -28,7 +28,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 import * as S from "./styles";
@@ -36,9 +36,8 @@ import * as S from "./styles";
 // Constantes para tipos de relatório e períodos
 const TIPOS_RELATORIO: KeyValue[] = [
   { key: "comportamento", value: "Comportamento" },
-  { key: "rendimento", value: "Rendimento" },
-  { key: "frequencia", value: "Frequência" },
-  { key: "geral", value: "Geral" },
+  { key: "atividades_nao_realizadas", value: "Atividades nao realizadas" },
+  { key: "notas", value: "Notas" },
 ];
 
 const PERIODOS: KeyValue[] = [
@@ -92,7 +91,9 @@ const defaultValues: RelatorioFormData = {
 
 export default function RelatorioComportamentoPage() {
   const router = useRouter();
-  const { control, getValues, reset, methodsHookForm, onFormSubmit } =
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const { control, getValues, reset, methodsHookForm, onFormSubmit, setValue } =
     useBrainForm<RelatorioFormData>({
       schema: relatorioSchema,
       defaultValues,
@@ -118,8 +119,70 @@ export default function RelatorioComportamentoPage() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [searchAluno, setSearchAluno] = useState("");
+  const [isInitialized, setIsInitialized] = useState(false);
   const observerRef = useRef<HTMLDivElement>(null);
   const ITEMS_PER_PAGE = 10;
+
+  // Função para atualizar URL com os filtros aplicados
+  const updateURLParams = useCallback(
+    (filters: RelatorioFormData) => {
+      const params = new URLSearchParams();
+
+      if (filters.anoLetivo) {
+        params.set("anoLetivo", filters.anoLetivo.getFullYear().toString());
+      }
+      if (filters.escola) params.set("escola", filters.escola);
+      if (filters.serie) params.set("serie", filters.serie);
+      if (filters.turma) params.set("turma", filters.turma);
+      if (filters.disciplina) params.set("disciplina", filters.disciplina);
+      if (filters.tipoRelatorio) params.set("tipoRelatorio", filters.tipoRelatorio);
+      if (filters.periodo) params.set("periodo", filters.periodo);
+      if (filters.aluno) params.set("aluno", filters.aluno);
+
+      const queryString = params.toString();
+      const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
+      router.replace(newUrl, { scroll: false });
+    },
+    [pathname, router],
+  );
+
+  // Função para carregar filtros da URL
+  const loadFiltersFromURL = useCallback(() => {
+    const anoLetivoParam = searchParams.get("anoLetivo");
+    const escolaParam = searchParams.get("escola");
+    const serieParam = searchParams.get("serie");
+    const turmaParam = searchParams.get("turma");
+    const disciplinaParam = searchParams.get("disciplina");
+    const tipoRelatorioParam = searchParams.get("tipoRelatorio");
+    const periodoParam = searchParams.get("periodo");
+    const alunoParam = searchParams.get("aluno");
+
+    const hasFilters =
+      anoLetivoParam ||
+      escolaParam ||
+      serieParam ||
+      turmaParam ||
+      disciplinaParam ||
+      tipoRelatorioParam ||
+      periodoParam ||
+      alunoParam;
+
+    if (hasFilters) {
+      if (anoLetivoParam) {
+        setValue("anoLetivo", new Date(parseInt(anoLetivoParam), 0, 1));
+      }
+      if (escolaParam) setValue("escola", escolaParam);
+      if (serieParam) setValue("serie", serieParam);
+      if (turmaParam) setValue("turma", turmaParam);
+      if (disciplinaParam) setValue("disciplina", disciplinaParam);
+      if (tipoRelatorioParam) setValue("tipoRelatorio", tipoRelatorioParam);
+      if (periodoParam) setValue("periodo", periodoParam);
+      if (alunoParam) setValue("aluno", alunoParam);
+
+      return true;
+    }
+    return false;
+  }, [searchParams, setValue]);
 
   // Função para ordenar resultados
   const handleSort = (field: keyof ResultadoItem) => {
@@ -264,8 +327,12 @@ export default function RelatorioComportamentoPage() {
   };
 
   // Função para buscar relatórios
-  const handleBuscar = async () => {
+  const handleBuscar = useCallback(async () => {
     if (!validateFilters()) return;
+
+    // Atualizar URL com os filtros aplicados
+    const filters = getValues();
+    updateURLParams(filters);
 
     setLoadingBuscar(true);
     setError("");
@@ -320,7 +387,7 @@ export default function RelatorioComportamentoPage() {
       setSuccess("Busca realizada com sucesso!");
       setTimeout(() => setSuccess(""), 3000);
     }, 1500);
-  };
+  }, [getValues, updateURLParams]);
 
   // Função para filtrar resultados por busca de aluno
   const resultadosFiltrados = searchAluno
@@ -344,6 +411,9 @@ export default function RelatorioComportamentoPage() {
     setPage(1);
     setHasMore(true);
     setSearchAluno("");
+
+    // Limpar URL
+    router.replace(pathname, { scroll: false });
   };
   // Converter dados das APIs para formato KeyValue
   const OPTIONS_UNIDADES: KeyValue[] = useMemo(
@@ -371,6 +441,22 @@ export default function RelatorioComportamentoPage() {
     () => alunos.map((aluno) => ({ key: aluno.id.toString(), value: aluno.nome })),
     [alunos],
   );
+
+  // Carregar filtros da URL na inicialização e fazer busca automática
+  useEffect(() => {
+    if (!isInitialized && unidades.length > 0) {
+      const hasFiltersInURL = loadFiltersFromURL();
+      setIsInitialized(true);
+
+      // Se houver filtros na URL, fazer busca automaticamente
+      if (hasFiltersInURL) {
+        // Pequeno delay para garantir que os valores foram setados
+        setTimeout(() => {
+          handleBuscar();
+        }, 100);
+      }
+    }
+  }, [isInitialized, unidades, loadFiltersFromURL, handleBuscar]);
 
   return (
     <ProtectedRoute allowedRoles={[UserRoleEnum.ADMIN, UserRoleEnum.PROFESSOR]}>
