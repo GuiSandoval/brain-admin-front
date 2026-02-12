@@ -9,6 +9,7 @@ import * as S from "./styles";
 import BrainResultNotFound from "../resultNotFound/resultNotFound";
 import LoadingComponent from "../loadingComponent/loadingComponent";
 import { formatDateForAPI } from "@/utils/utilsDate";
+import { RoutesEnum } from "@/enums";
 
 export default function SectionMinhasAulas() {
   const [selectedDate, setSelectedDate] = useState<Date>(() => new Date());
@@ -18,8 +19,9 @@ export default function SectionMinhasAulas() {
     data: formatDateForAPI(selectedDate),
   });
 
-  const handleAulaClick = (aulaId: number) => {
-    router.push(`/aulas/aula/${aulaId}`);
+  const handleAulaClick = (id: number) => {
+    const route = `${RoutesEnum.AULA}?id=${id}`;
+    router.push(route);
   };
 
   const handleDateChange = (date: Date) => {
@@ -82,7 +84,7 @@ export default function SectionMinhasAulas() {
           classroom={`${aula.sala} ${aula.turma}`}
           campus={aula.unidade}
           quantityStudents={aula.quantidadeAlunos}
-          onClick={() => handleAulaClick(aula.aulaId)}
+          onClick={() => handleAulaClick(aula.id)}
         />
       ))}
     </S.Container>

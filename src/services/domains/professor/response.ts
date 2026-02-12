@@ -1,5 +1,5 @@
 export interface ProfessorAulaResponse {
-  aulaId: number;
+  id: number;
   disciplina: string;
   serie: string;
   turma: string;
