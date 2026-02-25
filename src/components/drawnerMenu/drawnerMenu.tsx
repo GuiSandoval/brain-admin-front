@@ -17,7 +17,11 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import InfoIcon from "@mui/icons-material/Info";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useRouter, usePathname } from "next/navigation";
+import type { AlertaResponse } from "@/services/domains/alerta";
 
 import {
   AppBar,
@@ -34,6 +38,7 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  Paper,
   Toolbar,
   Tooltip,
   Typography,
@@ -54,6 +59,53 @@ const settings = [
   },
 ];
 
+type DateGroupKey = "hoje" | "ontem" | "antes";
+
+function groupAlertasByDate(alertas: AlertaResponse[]): Record<DateGroupKey, AlertaResponse[]> {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  const groups: Record<DateGroupKey, AlertaResponse[]> = {
+    hoje: [],
+    ontem: [],
+    antes: [],
+  };
+
+  alertas.forEach((alerta) => {
+    const [year, month, day] = alerta.data;
+    const alertaDate = new Date(year, month - 1, day);
+    alertaDate.setHours(0, 0, 0, 0);
+
+    if (alertaDate.getTime() === today.getTime()) {
+      groups.hoje.push(alerta);
+    } else if (alertaDate.getTime() === yesterday.getTime()) {
+      groups.ontem.push(alerta);
+    } else {
+      groups.antes.push(alerta);
+    }
+  });
+
+  return groups;
+}
+
+function formatGroupTimeLabel(alerta: AlertaResponse): string {
+  const [year, month, day] = alerta.data;
+  const alertaDate = new Date(year, month - 1, day);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  alertaDate.setHours(0, 0, 0, 0);
+
+  if (alertaDate.getTime() === today.getTime()) return "Hoje";
+  if (alertaDate.getTime() === yesterday.getTime()) return "Ontem";
+  const d = String(alertaDate.getDate()).padStart(2, "0");
+  const m = String(alertaDate.getMonth() + 1).padStart(2, "0");
+  return `${d}/${m}`;
+}
+
 export default function DrawnerMenu() {
   const router = useRouter();
   const pathname = usePathname();
@@ -61,11 +113,12 @@ export default function DrawnerMenu() {
   const { drawerOpen, setDrawerOpen } = useDrawer();
   const { alertas } = useAlertas();
 
-  // Calcular notificações não lidas (por enquanto todas são não lidas, já que não temos backend para isso)
-  const unreadCount = alertas?.length || 0;
+  const [readNotificationIds, setReadNotificationIds] = React.useState<Set<string>>(() => new Set());
+  const unreadCount = alertas?.filter((a) => !readNotificationIds.has(a.id.toString())).length ?? 0;
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [anchorElNotificacoes, setAnchorElNotificacoes] = React.useState<null | HTMLElement>(null);
   const [expandedModules, setExpandedModules] = React.useState<
     Partial<Record<RoutesModuleEnum, boolean>>
   >({});
@@ -93,6 +146,33 @@ export default function DrawnerMenu() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const handleOpenNotificacoes = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElNotificacoes(event.currentTarget);
+  };
+
+  const handleCloseNotificacoes = () => {
+    setAnchorElNotificacoes(null);
+  };
+
+  const handleMarkAllNotificationsRead = () => {
+    setReadNotificationIds((prev) => {
+      const next = new Set(prev);
+      alertas?.forEach((a) => next.add(a.id.toString()));
+      return next;
+    });
+  };
+
+  const handleNotificationClick = (id: string) => {
+    setReadNotificationIds((prev) => new Set(prev).add(id));
+    handleCloseNotificacoes();
+    router.push(RoutesEnum.ALERTA_DETALHAMENTO);
+  };
+
+  const groupedAlertas = React.useMemo(
+    () => (alertas?.length ? groupAlertasByDate(alertas) : null),
+    [alertas],
+  );
 
   const handleLogout = () => {
     signOut();
@@ -480,10 +560,13 @@ export default function DrawnerMenu() {
             </Box>
 
             <Box sx={{ flexGrow: 0, display: "flex", alignItems: "center", gap: 1 }}>
-              <Tooltip title="Alertas">
+              <Tooltip title="Notificações">
                 <IconButton
-                  onClick={() => router.push(RoutesEnum.ALERTA_DETALHAMENTO)}
+                  onClick={handleOpenNotificacoes}
                   sx={{ color: "inherit" }}
+                  aria-controls={anchorElNotificacoes ? "menu-notificacoes" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={anchorElNotificacoes ? "true" : undefined}
                 >
                   {unreadCount > 0 ? (
                     <Badge
@@ -506,6 +589,152 @@ export default function DrawnerMenu() {
                   )}
                 </IconButton>
               </Tooltip>
+              <Menu
+                id="menu-notificacoes"
+                anchorEl={anchorElNotificacoes}
+                open={Boolean(anchorElNotificacoes)}
+                onClose={handleCloseNotificacoes}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
+                slotProps={{
+                  paper: {
+                    sx: {
+                      mt: 1.5,
+                      minWidth: 360,
+                      maxWidth: 360,
+                      maxHeight: 440,
+                      boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
+                      borderRadius: 2,
+                    },
+                  },
+                }}
+                MenuListProps={{ sx: { py: 0 }, disablePadding: true }}
+              >
+                <Paper elevation={0} sx={{ overflow: "hidden" }}>
+                  <Box
+                    sx={{
+                      px: 2,
+                      py: 1.5,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      borderBottom: 1,
+                      borderColor: "divider",
+                    }}
+                  >
+                    <Typography variant="subtitle1" fontWeight={700}>
+                      Notificações
+                    </Typography>
+                    <Typography
+                      component="button"
+                      variant="caption"
+                      onClick={handleMarkAllNotificationsRead}
+                      sx={{
+                        color: "primary.main",
+                        cursor: "pointer",
+                        border: "none",
+                        background: "none",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 0.5,
+                        fontWeight: 600,
+                      }}
+                    >
+                      <CheckCircleIcon sx={{ fontSize: 16 }} />
+                      MARCAR TUDO COMO LIDO
+                    </Typography>
+                  </Box>
+                  <Box sx={{ maxHeight: 360, overflow: "auto" }}>
+                    {alertas?.length ? (
+                      <>
+                        {(["hoje", "ontem", "antes"] as const).map((groupKey) => {
+                          const items = groupedAlertas?.[groupKey] ?? [];
+                          if (!items.length) return null;
+                          const groupLabel =
+                            groupKey === "hoje"
+                              ? "Hoje"
+                              : groupKey === "ontem"
+                                ? "Ontem"
+                                : "Anterior";
+                          return (
+                            <Box key={groupKey}>
+                              <Typography
+                                variant="caption"
+                                color="text.secondary"
+                                sx={{ px: 2, py: 1, display: "block" }}
+                              >
+                                {groupLabel}
+                              </Typography>
+                              {items.map((alerta) => {
+                                const isUnread = !readNotificationIds.has(alerta.id.toString());
+                                return (
+                                  <ListItemButton
+                                    key={alerta.id}
+                                    onClick={() => handleNotificationClick(alerta.id.toString())}
+                                    sx={{
+                                      py: 1.5,
+                                      px: 2,
+                                      bgcolor: isUnread ? "rgba(255, 152, 0, 0.08)" : "transparent",
+                                      borderLeft: isUnread ? "3px solid" : "3px solid transparent",
+                                      borderLeftColor: isUnread ? "#FF9800" : "transparent",
+                                      "&:hover": {
+                                        bgcolor: isUnread
+                                          ? "rgba(255, 152, 0, 0.12)"
+                                          : "action.hover",
+                                      },
+                                    }}
+                                  >
+                                    <ListItemIcon sx={{ minWidth: 40 }}>
+                                      {isUnread ? (
+                                        <WarningAmberIcon
+                                          sx={{ color: "#FF9800", fontSize: 22 }}
+                                        />
+                                      ) : (
+                                        <InfoIcon sx={{ color: "info.main", fontSize: 22 }} />
+                                      )}
+                                    </ListItemIcon>
+                                    <ListItemText
+                                      primary={alerta.titulo || "{Title}"}
+                                      primaryTypographyProps={{
+                                        variant: "body2",
+                                        fontWeight: isUnread ? 600 : 400,
+                                        noWrap: true,
+                                      }}
+                                      secondary={formatGroupTimeLabel(alerta)}
+                                      secondaryTypographyProps={{
+                                        variant: "caption",
+                                        color: "text.secondary",
+                                      }}
+                                    />
+                                    {isUnread && (
+                                      <Box
+                                        sx={{
+                                          width: 8,
+                                          height: 8,
+                                          borderRadius: "50%",
+                                          bgcolor: "#FF9800",
+                                          flexShrink: 0,
+                                          ml: 0.5,
+                                        }}
+                                      />
+                                    )}
+                                  </ListItemButton>
+                                );
+                              })}
+                            </Box>
+                          );
+                        })}
+                      </>
+                    ) : (
+                      <Box sx={{ py: 4, textAlign: "center" }}>
+                        <Typography variant="body2" color="text.secondary">
+                          Nenhuma notificação
+                        </Typography>
+                      </Box>
+                    )}
+                  </Box>
+                </Paper>
+              </Menu>
               <Tooltip title="Configurações">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt={user.email} src="/static/images/avatar/2.jpg">
