@@ -1,5 +1,6 @@
 "use client";
-import DrawnerMenu from "@/components/drawnerMenu/drawnerMenu";
+// import DrawnerMenu from "@/components/drawnerMenu/drawnerMenu";
+import AppBar from "@/components/appBar/appBar";
 import { DrawerProvider, useDrawer } from "@/contexts/DrawerContext";
 import { Toolbar } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -13,7 +14,8 @@ function PrivateLayoutContent({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <DrawnerMenu />
+      {/* <DrawnerMenu /> */}
+      <AppBar />
       <Box
         component="main"
         sx={{

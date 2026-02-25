@@ -17,25 +17,21 @@ import {
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import InfoIcon from "@mui/icons-material/Info";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CheckIcon from "@mui/icons-material/Check";
 import { RoutesEnum } from "@/enums";
 import { useAlertas } from "@/hooks/useAlertas";
-import {
-  groupAlertasByDate,
-  formatGroupTimeLabel,
-  GROUP_LABELS,
-  type DateGroupKey,
-} from "./utils";
+import { groupAlertasByDate, formatGroupTimeLabel, GROUP_LABELS, type DateGroupKey } from "./utils";
 
 export function NotificationMenu() {
   const router = useRouter();
   const { alertas } = useAlertas();
 
-  const [readNotificationIds, setReadNotificationIds] = React.useState<Set<string>>(() => new Set());
+  const [readNotificationIds, setReadNotificationIds] = React.useState<Set<string>>(
+    () => new Set(),
+  );
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-  const unreadCount =
-    alertas?.filter((a) => !readNotificationIds.has(a.id.toString())).length ?? 0;
+  const unreadCount = alertas?.filter((a) => !readNotificationIds.has(a.id.toString())).length ?? 0;
 
   const groupedAlertas = React.useMemo(
     () => (alertas?.length ? groupAlertasByDate(alertas) : null),
@@ -113,8 +109,11 @@ export function NotificationMenu() {
               borderRadius: 2,
             },
           },
+          list: {
+            disablePadding: true,
+            sx: { py: 0 },
+          },
         }}
-        MenuListProps={{ sx: { py: 0 }, disablePadding: true }}
       >
         <Paper elevation={0} sx={{ overflow: "hidden" }}>
           <Box
@@ -146,7 +145,7 @@ export function NotificationMenu() {
                 fontWeight: 600,
               }}
             >
-              <CheckCircleIcon sx={{ fontSize: 16 }} />
+              <CheckIcon sx={{ fontSize: 16 }} />
               MARCAR TUDO COMO LIDO
             </Typography>
           </Box>
@@ -178,33 +177,32 @@ export function NotificationMenu() {
                               borderLeft: isUnread ? "3px solid" : "3px solid transparent",
                               borderLeftColor: isUnread ? "#FF9800" : "transparent",
                               "&:hover": {
-                                bgcolor: isUnread
-                                  ? "rgba(255, 152, 0, 0.12)"
-                                  : "action.hover",
+                                bgcolor: isUnread ? "rgba(255, 152, 0, 0.12)" : "action.hover",
                               },
                             }}
                           >
                             <ListItemIcon sx={{ minWidth: 40 }}>
                               {isUnread ? (
-                                <WarningAmberIcon
-                                  sx={{ color: "#FF9800", fontSize: 22 }}
-                                />
+                                <WarningAmberIcon sx={{ color: "#FF9800", fontSize: 22 }} />
                               ) : (
                                 <InfoIcon sx={{ color: "info.main", fontSize: 22 }} />
                               )}
                             </ListItemIcon>
                             <ListItemText
-                              primary={alerta.titulo || "{Title}"}
-                              primaryTypographyProps={{
-                                variant: "body2",
-                                fontWeight: isUnread ? 600 : 400,
-                                noWrap: true,
-                              }}
-                              secondary={formatGroupTimeLabel(alerta)}
-                              secondaryTypographyProps={{
-                                variant: "caption",
-                                color: "text.secondary",
-                              }}
+                              primary={
+                                <Typography
+                                  variant="body2"
+                                  fontWeight={isUnread ? 600 : 400}
+                                  noWrap
+                                >
+                                  {alerta.titulo || "{Title}"}
+                                </Typography>
+                              }
+                              secondary={
+                                <Typography variant="caption" color="text.secondary">
+                                  {formatGroupTimeLabel(alerta)}
+                                </Typography>
+                              }
                             />
                             {isUnread && (
                               <Box

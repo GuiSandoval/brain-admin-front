@@ -9,7 +9,7 @@ import {
 import { RoutesModuleEnum } from "@/enums";
 import { useAuth } from "@/hooks/useAuth";
 import { useDrawer } from "@/contexts/DrawerContext";
-import { NotificationMenu } from "@/components/notificationMenu";
+import { NotificationMenu } from "@/components/appBar/notificationMenu";
 import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";

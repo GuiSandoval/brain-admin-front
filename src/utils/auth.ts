@@ -8,12 +8,14 @@ export interface JWTPayload {
   iss: string;
   sub: string;
   id: number;
+  name: string;
   role: string;
   exp: number;
 }
 
 export interface UserData {
   id: number;
+  name: string;
   email: string;
   role: UserRoleEnum;
   exp: number;
@@ -41,6 +43,7 @@ export function decodeToken(token: string): UserData | null {
 
     return {
       id: payload.id,
+      name: payload.name,
       email: payload.sub,
       role,
       exp: payload.exp,
