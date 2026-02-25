@@ -20,7 +20,8 @@ export default function SectionMinhasAulas() {
   });
 
   const handleAulaClick = (id: number) => {
-    const route = `${RoutesEnum.AULA}?id=${id}`;
+    // const route = `${RoutesEnum.AULA}?id=${id}`;
+    const route = `${RoutesEnum.AULAS_DETALHE}/${id}`;
     router.push(route);
   };
 

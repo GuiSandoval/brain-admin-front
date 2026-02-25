@@ -28,6 +28,7 @@ export enum RoutesEnum {
   AULA_LISTA = "/aula/lista",
   AULA = "/aula",
   AULAS = "/aulas",
+  AULAS_DETALHE = "/aulas/aula",
 
   // Horario routes
   HORARIO_LISTA = "/horario/lista",
