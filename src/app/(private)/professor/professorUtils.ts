@@ -4,6 +4,31 @@ import { ProfessorDetalheResponse } from "@/services/domains/professor/response"
 import { convertDateStringToISO } from "../../../utils/utilsDate";
 import { unmaskCEP, unmaskCPF, unmaskPhone, unmaskRG } from "../../../utils/utils";
 
+function buildDadosBancarios(formData: ProfessorFormData) {
+  if (!formData.nomeBanco && !formData.tipoConta && !formData.agencia && !formData.conta && !formData.chavePix) {
+    return undefined;
+  }
+  return {
+    nomeBanco: formData.nomeBanco || "",
+    tipoConta: formData.tipoConta || "",
+    agencia: formData.agencia || "",
+    conta: formData.conta || "",
+    chavePix: formData.chavePix || "",
+  };
+}
+
+function buildDependentes(formData: ProfessorFormData) {
+  if (!formData.dependentes || formData.dependentes.length === 0) {
+    return undefined;
+  }
+  return formData.dependentes.map((dep) => ({
+    nomeCompleto: dep.nomeCompleto,
+    cpf: unmaskCPF(dep.cpf),
+    dataDeNascimento: convertDateStringToISO(dep.dataNascimento),
+    parentesco: dep.parentesco,
+  }));
+}
+
 export function mapFormDataToProfessorPostRequest(
   formData: ProfessorFormData,
 ): ProfessorPostRequest {
@@ -28,6 +53,9 @@ export function mapFormDataToProfessorPostRequest(
     corRaca: formData.corRaca,
     cidadeNaturalidade: formData.cidadeNaturalidade,
     carteiraDeTrabalho: formData.carteiraTrabalho,
+    disciplinaIds: formData.disciplinaIds,
+    dadosBancarios: buildDadosBancarios(formData),
+    dependentes: buildDependentes(formData),
   };
 }
 
@@ -57,6 +85,9 @@ export function mapFormDataToProfessorPutRequest(
     cidadeNaturalidade: formData.cidadeNaturalidade,
     carteiraDeTrabalho: formData.carteiraTrabalho,
     telefones: formData.telefone ? [unmaskPhone(formData.telefone)] : [],
+    disciplinaIds: formData.disciplinaIds,
+    dadosBancarios: buildDadosBancarios(formData),
+    dependentes: buildDependentes(formData),
   };
 }
 
@@ -129,5 +160,20 @@ export function mapProfessorResponseToFormData(
       professor.telefones && professor.telefones.length > 0
         ? formatPhone(professor.telefones[0])
         : "",
+    disciplinaIds: professor.disciplinas?.map((d) => d.id) || [],
+    nomeBanco: professor.dadosBancarios?.nomeBanco || "",
+    tipoConta: professor.dadosBancarios?.tipoConta || "",
+    agencia: professor.dadosBancarios?.agencia || "",
+    conta: professor.dadosBancarios?.conta || "",
+    chavePix: professor.dadosBancarios?.chavePix || "",
+    dependentes:
+      professor.dependentes?.map((dep) => ({
+        nomeCompleto: dep.nomeCompleto || "",
+        cpf: dep.cpf ? formatCPF(dep.cpf) : "",
+        dataNascimento: dep.dataDeNascimento
+          ? convertISOToDateString(dep.dataDeNascimento)
+          : "",
+        parentesco: dep.parentesco || "",
+      })) || [],
   };
 }

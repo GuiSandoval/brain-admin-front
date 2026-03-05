@@ -10,6 +10,19 @@ interface ProfessorEnderecoRequest {
   complemento: string;
   numero: string;
 }
+export interface ProfessorDadosBancariosRequest {
+  nomeBanco: string;
+  tipoConta: string;
+  agencia: string;
+  conta: string;
+  chavePix: string;
+}
+export interface ProfessorDependenteRequest {
+  nomeCompleto: string;
+  cpf: string;
+  dataDeNascimento: string;
+  parentesco: string;
+}
 export interface ProfessorPostRequest {
   cpf: string;
   rg: string;
@@ -23,6 +36,9 @@ export interface ProfessorPostRequest {
   cidadeNaturalidade: string;
   carteiraDeTrabalho: string;
   telefones: string[];
+  disciplinaIds?: number[];
+  dadosBancarios?: ProfessorDadosBancariosRequest;
+  dependentes?: ProfessorDependenteRequest[];
 }
 export interface ProfessorPutRequest extends ProfessorPostRequest {
   id: string;

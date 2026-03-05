@@ -1,5 +1,31 @@
 import { z } from "zod";
 
+const dependenteSchema = z.object({
+  nomeCompleto: z
+    .string()
+    .min(2, "Nome completo deve ter pelo menos 2 caracteres")
+    .max(100, "Nome muito longo")
+    .regex(/^[A-Za-zÀ-ÿ\s]+$/, "Nome deve conter apenas letras"),
+  cpf: z
+    .string()
+    .min(1, "CPF é obrigatório")
+    .regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF deve estar no formato 000.000.000-00"),
+  dataNascimento: z
+    .string()
+    .min(1, "Data de nascimento é obrigatória")
+    .regex(/^\d{2}\/\d{2}\/\d{4}$/, "Data deve estar no formato dd/mm/aaaa"),
+  parentesco: z.string().min(1, "Parentesco é obrigatório"),
+});
+
+export type DependenteFormData = z.infer<typeof dependenteSchema>;
+
+export const dependenteDefaultValues: DependenteFormData = {
+  nomeCompleto: "",
+  cpf: "",
+  dataNascimento: "",
+  parentesco: "",
+};
+
 export const professorSchema = z.object({
   nomeCompleto: z
     .string()
@@ -50,6 +76,16 @@ export const professorSchema = z.object({
     .string()
     .min(1, "Telefone é obrigatório")
     .regex(/^\(\d{2}\) \d{4,5}-\d{4}$/, "Telefone deve estar no formato (00) 00000-0000"),
+  // Disciplinas
+  disciplinaIds: z.array(z.number()).optional(),
+  // Dados Bancários
+  nomeBanco: z.string().optional(),
+  tipoConta: z.string().optional(),
+  agencia: z.string().optional(),
+  conta: z.string().optional(),
+  chavePix: z.string().optional(),
+  // Dependentes
+  dependentes: z.array(dependenteSchema).optional(),
 });
 
 export type ProfessorFormData = z.infer<typeof professorSchema>;
@@ -72,4 +108,11 @@ export const professorDefaultValues: ProfessorFormData = {
   cidade: "",
   uf: "",
   telefone: "",
+  disciplinaIds: [],
+  nomeBanco: "",
+  tipoConta: "",
+  agencia: "",
+  conta: "",
+  chavePix: "",
+  dependentes: [],
 };

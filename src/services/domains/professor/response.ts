@@ -27,6 +27,27 @@ interface ProfessorEnderecoResponse {
   uf: string;
   cidade?: string;
 }
+
+export interface ProfessorDadosBancariosResponse {
+  nomeBanco: string;
+  tipoConta: string;
+  agencia: string;
+  conta: string;
+  chavePix: string;
+}
+
+export interface ProfessorDependenteResponse {
+  nomeCompleto: string;
+  cpf: string;
+  dataDeNascimento: string;
+  parentesco: string;
+}
+
+export interface ProfessorDisciplinaResponse {
+  id: number;
+  nome: string;
+}
+
 export interface ProfessorListaResponse {
   id: number;
   cpf: string;
@@ -56,4 +77,7 @@ export interface ProfessorDetalheResponse {
   corRaca?: string;
   cidadeNaturalidade?: string;
   telefones?: string[];
+  disciplinas?: ProfessorDisciplinaResponse[];
+  dadosBancarios?: ProfessorDadosBancariosResponse;
+  dependentes?: ProfessorDependenteResponse[];
 }

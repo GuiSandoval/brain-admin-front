@@ -5,12 +5,12 @@ import {
   mapProfessorResponseToFormData,
 } from "@/app/(private)/professor/professorUtils";
 import { useProfessorMutations } from "@/app/(private)/professor/useProfessorMutations";
-import { UserRoleEnum } from "@/enums";
 import BrainButtonPrimary from "@/components/brainButtons/brainButtonPrimary/brainButtonPrimary";
 import BrainButtonSecondary from "@/components/brainButtons/brainButtonSecondary/brainButtonSecondary";
 import { BrainDateTextControlled } from "@/components/brainForms/brainDateTextControlled";
 import { BrainDropdownControlled } from "@/components/brainForms/brainDropdownControlled";
 import BrainFormProvider from "@/components/brainForms/brainFormProvider/brainFormProvider";
+import { BrainMultiSelectControlled } from "@/components/brainForms/brainMultiSelectControlled";
 import { BrainTextCEPControlled } from "@/components/brainForms/brainTextCEPControlled";
 import { BrainTextCPFControlled } from "@/components/brainForms/brainTextCPFControlled";
 import { BrainTextFieldControlled } from "@/components/brainForms/brainTextFieldControlled";
@@ -19,16 +19,21 @@ import { BrainTextRGControlled } from "@/components/brainForms/brainTextRGContro
 import ContainerSection from "@/components/containerSection/containerSection";
 import PageTitle from "@/components/pageTitle/pageTitle";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
+import { UserRoleEnum } from "@/enums";
 import { useBrainForm } from "@/hooks/useBrainForm";
+import { useBrainSearchParams } from "@/hooks/useBrainSearchParams";
+import { useDisciplinas } from "@/hooks/useDisciplinas";
 import { useProfessor } from "@/hooks/useProfessor";
 import { buscarCep } from "@/services/cep";
 import { KeyValue } from "@/services/models/keyValue";
-import { Alert, Box, CircularProgress, Container } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Alert, Box, Button, CircularProgress, Container, IconButton } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { useBrainSearchParams } from "@/hooks/useBrainSearchParams";
 import { Suspense, useCallback, useEffect, useState } from "react";
+import { useFieldArray } from "react-hook-form";
 import { toast } from "react-toastify";
-import { professorDefaultValues, ProfessorFormData, professorSchema } from "./schema";
+import { dependenteDefaultValues, professorDefaultValues, ProfessorFormData, professorSchema } from "./schema";
 
 function ProfessorPageContent() {
   const router = useRouter();
@@ -36,6 +41,7 @@ function ProfessorPageContent() {
 
   const { professor, loading: loadingProfessor, error: errorProfessor } = useProfessor(professorId);
   const { createProfessor, updateProfessor } = useProfessorMutations();
+  const { disciplinas } = useDisciplinas();
 
   const isEditMode = !!professorId;
 
@@ -54,6 +60,17 @@ function ProfessorPageContent() {
     onSubmit: onSubmit,
     mode: "all",
   });
+
+  const { fields: dependentesFields, append: appendDependente, remove: removeDependente } =
+    useFieldArray({
+      control,
+      name: "dependentes",
+    });
+
+  const disciplinasOptions: KeyValue[] = disciplinas.map((d) => ({
+    key: String(d.id),
+    value: d.nome,
+  }));
 
   const [buscandoCep, setBuscandoCep] = useState(false);
   const watcherCepValue = watch("cep");
@@ -155,6 +172,18 @@ function ProfessorPageContent() {
     { key: "parda", value: "Parda" },
     { key: "amarela", value: "Amarela" },
     { key: "indigena", value: "Indígena" },
+    { key: "outro", value: "Outro" },
+  ];
+  const OPTIONS_TIPO_CONTA: KeyValue[] = [
+    { key: "conta_corrente", value: "Conta Corrente" },
+    { key: "conta_poupanca", value: "Conta Poupança" },
+    { key: "conta_salario", value: "Conta Salário" },
+  ];
+  const OPTIONS_PARENTESCO: KeyValue[] = [
+    { key: "filho", value: "Filho(a)" },
+    { key: "conjugue", value: "Cônjuge" },
+    { key: "pai", value: "Pai" },
+    { key: "mae", value: "Mãe" },
     { key: "outro", value: "Outro" },
   ];
   const QUANTITY_COLLUMNS_DEFAULT = 3;
@@ -341,6 +370,130 @@ function ProfessorPageContent() {
                   options={OPTIONS_UF}
                   placeholder="UF"
                 />
+              </ContainerSection>
+
+              {/* Seção Disciplinas */}
+              <ContainerSection
+                title="Disciplinas"
+                description="Selecione as disciplinas que o professor leciona"
+                numberOfCollumns={1}
+              >
+                <BrainMultiSelectControlled
+                  name="disciplinaIds"
+                  control={control}
+                  label="Disciplinas"
+                  options={disciplinasOptions}
+                  placeholder="Selecione as disciplinas"
+                />
+              </ContainerSection>
+
+              {/* Seção Dados Bancários */}
+              <ContainerSection
+                title="Dados Bancários"
+                description="Informações bancárias do professor"
+                numberOfCollumns={QUANTITY_COLLUMNS_DEFAULT}
+              >
+                <BrainTextFieldControlled
+                  name="nomeBanco"
+                  control={control}
+                  label="Nome do Banco"
+                  placeholder="Digite o nome do banco"
+                />
+
+                <BrainDropdownControlled
+                  name="tipoConta"
+                  control={control}
+                  label="Tipo de Conta"
+                  options={OPTIONS_TIPO_CONTA}
+                  placeholder="Selecione o tipo de conta"
+                />
+
+                <BrainTextFieldControlled
+                  name="agencia"
+                  control={control}
+                  label="Agência"
+                  placeholder="Digite a agência"
+                />
+
+                <BrainTextFieldControlled
+                  name="conta"
+                  control={control}
+                  label="Conta"
+                  placeholder="Digite a conta"
+                />
+
+                <BrainTextFieldControlled
+                  name="chavePix"
+                  control={control}
+                  label="Chave PIX"
+                  placeholder="Digite a chave PIX"
+                />
+              </ContainerSection>
+
+              {/* Seção Dependentes */}
+              <ContainerSection
+                title="Dependentes"
+                description="Adicione os dependentes do professor"
+                numberOfCollumns={1}
+              >
+                {dependentesFields.map((field, index) => (
+                  <Box
+                    key={field.id}
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr 1fr 1fr auto",
+                      gap: 2,
+                      alignItems: "start",
+                      width: "100%",
+                      mb: 2,
+                    }}
+                  >
+                    <BrainTextFieldControlled
+                      name={`dependentes.${index}.nomeCompleto`}
+                      control={control}
+                      label="Nome Completo"
+                      placeholder="Digite o nome completo"
+                    />
+
+                    <BrainTextCPFControlled
+                      name={`dependentes.${index}.cpf`}
+                      control={control}
+                      label="CPF"
+                    />
+
+                    <BrainDateTextControlled
+                      name={`dependentes.${index}.dataNascimento`}
+                      control={control}
+                      label="Data de Nascimento"
+                    />
+
+                    <BrainDropdownControlled
+                      name={`dependentes.${index}.parentesco`}
+                      control={control}
+                      label="Parentesco"
+                      options={OPTIONS_PARENTESCO}
+                      placeholder="Selecione"
+                    />
+
+                    <IconButton
+                      onClick={() => removeDependente(index)}
+                      color="error"
+                      sx={{ mt: 1 }}
+                      aria-label="Remover dependente"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
+                ))}
+
+                <Button
+                  variant="outlined"
+                  startIcon={<AddIcon />}
+                  onClick={() => appendDependente(dependenteDefaultValues)}
+                  sx={{ alignSelf: "flex-start" }}
+                >
+                  Adicionar Dependente
+                </Button>
               </ContainerSection>
 
               <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
