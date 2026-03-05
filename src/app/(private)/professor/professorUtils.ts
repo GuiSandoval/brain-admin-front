@@ -2,7 +2,7 @@ import { ProfessorFormData } from "@/app/(private)/professor/schema";
 import { ProfessorPostRequest, ProfessorPutRequest } from "@/services/domains/professor/request";
 import { ProfessorDetalheResponse } from "@/services/domains/professor/response";
 import { convertDateStringToISO } from "../../../utils/utilsDate";
-import { unmaskCEP, unmaskCPF, unmaskRG } from "../../../utils/utils";
+import { unmaskCEP, unmaskCPF, unmaskPhone, unmaskRG } from "../../../utils/utils";
 
 export function mapFormDataToProfessorPostRequest(
   formData: ProfessorFormData,
@@ -23,6 +23,7 @@ export function mapFormDataToProfessorPostRequest(
       complemento: formData.complemento || "",
       numero: formData.numero,
     },
+    telefones: formData.telefone ? [unmaskPhone(formData.telefone)] : [],
     genero: formData.genero,
     corRaca: formData.corRaca,
     cidadeNaturalidade: formData.cidadeNaturalidade,
@@ -55,6 +56,7 @@ export function mapFormDataToProfessorPutRequest(
     corRaca: formData.corRaca,
     cidadeNaturalidade: formData.cidadeNaturalidade,
     carteiraDeTrabalho: formData.carteiraTrabalho,
+    telefones: formData.telefone ? [unmaskPhone(formData.telefone)] : [],
   };
 }
 
@@ -72,6 +74,18 @@ function formatCPF(cpf: string): string {
 function formatCEP(cep: string): string {
   const cleaned = cep.replace(/\D/g, "");
   return cleaned.replace(/(\d{5})(\d{3})/, "$1-$2");
+}
+
+/**
+ * Formata o telefone para o padrão (00) 00000-0000 ou (00) 0000-0000
+ */
+function formatPhone(phone: string): string {
+  const cleaned = phone.replace(/\D/g, "");
+  if (cleaned.length <= 10) {
+    return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
+  } else {
+    return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+  }
 }
 
 /**
@@ -111,5 +125,9 @@ export function mapProfessorResponseToFormData(
     bairro: professor.endereco?.bairro || "",
     cidade: professor.endereco?.cidade || "",
     uf: professor.endereco?.uf || "",
+    telefone:
+      professor.telefones && professor.telefones.length > 0
+        ? formatPhone(professor.telefones[0])
+        : "",
   };
 }

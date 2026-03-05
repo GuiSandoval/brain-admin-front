@@ -14,6 +14,7 @@ import BrainFormProvider from "@/components/brainForms/brainFormProvider/brainFo
 import { BrainTextCEPControlled } from "@/components/brainForms/brainTextCEPControlled";
 import { BrainTextCPFControlled } from "@/components/brainForms/brainTextCPFControlled";
 import { BrainTextFieldControlled } from "@/components/brainForms/brainTextFieldControlled";
+import { BrainTextPhoneControlled } from "@/components/brainForms/brainTextPhoneControlled";
 import { BrainTextRGControlled } from "@/components/brainForms/brainTextRGControlled";
 import ContainerSection from "@/components/containerSection/containerSection";
 import PageTitle from "@/components/pageTitle/pageTitle";
@@ -238,6 +239,14 @@ function ProfessorPageContent() {
                   control={control}
                   label="Cidade de Naturalidade"
                   placeholder="Digite a cidade de nascimento"
+                  required
+                />
+
+                <BrainTextPhoneControlled
+                  name="telefone"
+                  control={control}
+                  label="Telefone"
+                  placeholder="(00) 00000-0000"
                   required
                 />
               </ContainerSection>

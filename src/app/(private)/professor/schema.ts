@@ -46,6 +46,10 @@ export const professorSchema = z.object({
     .min(1, "Cidade é obrigatória")
     .regex(/^[A-Za-zÀ-ÿ\s]+$/, "Cidade deve conter apenas letras"),
   uf: z.string().min(1, "UF é obrigatório").length(2, "UF deve ter exatamente 2 caracteres"),
+  telefone: z
+    .string()
+    .min(1, "Telefone é obrigatório")
+    .regex(/^\(\d{2}\) \d{4,5}-\d{4}$/, "Telefone deve estar no formato (00) 00000-0000"),
 });
 
 export type ProfessorFormData = z.infer<typeof professorSchema>;
@@ -67,4 +71,5 @@ export const professorDefaultValues: ProfessorFormData = {
   bairro: "",
   cidade: "",
   uf: "",
+  telefone: "",
 };

@@ -55,4 +55,5 @@ export interface ProfessorDetalheResponse {
   genero?: string;
   corRaca?: string;
   cidadeNaturalidade?: string;
+  telefones?: string[];
 }

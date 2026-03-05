@@ -22,6 +22,7 @@ export interface ProfessorPostRequest {
   corRaca: string;
   cidadeNaturalidade: string;
   carteiraDeTrabalho: string;
+  telefones: string[];
 }
 export interface ProfessorPutRequest extends ProfessorPostRequest {
   id: string;
