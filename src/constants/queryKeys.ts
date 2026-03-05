@@ -90,5 +90,11 @@ export const QUERY_KEYS = {
     details: () => [...QUERY_KEYS.horarios.all, "detail"] as const,
     detail: (id: string | number) => [...QUERY_KEYS.horarios.details(), id] as const,
   },
+  gradesCurriculares: {
+    all: ["gradesCurriculares"] as const,
+    lists: () => [...QUERY_KEYS.gradesCurriculares.all, "list"] as const,
+    details: () => [...QUERY_KEYS.gradesCurriculares.all, "detail"] as const,
+    detail: (id: string | number) => [...QUERY_KEYS.gradesCurriculares.details(), id] as const,
+  },
   // Outros recursos podem ser adicionados aqui futuramente
 } as const;

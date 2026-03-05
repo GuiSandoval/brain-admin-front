@@ -9,9 +9,8 @@ export interface DisciplinaListaResponse {
 
 export interface DisciplinaDetalheResponse {
   id: number;
-  unidadeId: number;
   serieId: number;
   nome: string;
-  cargaHoraria: string;
+  cargaHoraria: number;
   grupoId: number;
 }

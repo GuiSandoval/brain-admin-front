@@ -11,6 +11,12 @@ export enum RouteLabelsEnum {
   // Turma labels
   TURMAS = "Turmas",
   TURMA = "Turma",
+  TURMA_VINCULAR_ALUNOS = "Vincular Alunos",
+  TURMA_DEFINIR_HORARIOS = "Definir Horários",
+
+  // Grade Curricular labels
+  GRADES_CURRICULARES = "Grades Curriculares",
+  GRADE_CURRICULAR = "Grade Curricular",
 
   // Grupo Disciplina labels
   GRUPOS_DISCIPLINA = "Grupos de disciplina",

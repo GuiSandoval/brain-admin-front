@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const disciplinaSchema = z.object({
-  unidadeId: z.string().min(1, "Unidade é obrigatória"),
   serieId: z.string().min(1, "Série é obrigatória"),
   nome: z
     .string()
@@ -20,7 +19,6 @@ export const disciplinaSchema = z.object({
 export type DisciplinaFormData = z.infer<typeof disciplinaSchema>;
 
 export const disciplinaDefaultValues: DisciplinaFormData = {
-  unidadeId: "",
   serieId: "",
   nome: "",
   cargaHoraria: "",

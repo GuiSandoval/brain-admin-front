@@ -6,10 +6,9 @@ export function mapFormDataToDisciplinaPostRequest(
   formData: DisciplinaFormData,
 ): DisciplinaPostRequest {
   return {
-    unidadeId: Number(formData.unidadeId),
     serieId: Number(formData.serieId),
     nome: formData.nome,
-    cargaHoraria: formData.cargaHoraria,
+    cargaHoraria: Number(formData.cargaHoraria),
     grupoId: Number(formData.grupoId),
   };
 }
@@ -20,10 +19,9 @@ export function mapFormDataToDisciplinaPutRequest(
 ): DisciplinaPutRequest {
   return {
     id,
-    unidadeId: Number(formData.unidadeId),
     serieId: Number(formData.serieId),
     nome: formData.nome,
-    cargaHoraria: formData.cargaHoraria,
+    cargaHoraria: Number(formData.cargaHoraria),
     grupoId: Number(formData.grupoId),
   };
 }
@@ -35,10 +33,9 @@ export function mapDisciplinaResponseToFormData(
   disciplina: DisciplinaDetalheResponse,
 ): DisciplinaFormData {
   return {
-    unidadeId: disciplina.unidadeId?.toString() || "",
     serieId: disciplina.serieId?.toString() || "",
     nome: disciplina.nome || "",
-    cargaHoraria: disciplina.cargaHoraria || "",
+    cargaHoraria: disciplina.cargaHoraria?.toString() || "",
     grupoId: disciplina.grupoId?.toString() || "",
   };
 }

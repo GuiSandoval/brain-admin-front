@@ -16,7 +16,6 @@ import PageTitle from "@/components/pageTitle/pageTitle";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { useBrainForm } from "@/hooks/useBrainForm";
 import { useDisciplina } from "@/hooks/useDisciplina";
-import { useUnidades } from "@/hooks/useUnidades";
 import { useSeries } from "@/hooks/useSeries";
 import { useGruposDisciplina } from "@/hooks/useGruposDisciplina";
 import { KeyValue } from "@/services/models/keyValue";
@@ -37,8 +36,7 @@ function DisciplinaPageContent() {
   } = useDisciplina(disciplinaId);
   const { createDisciplina, updateDisciplina } = useDisciplinaMutations();
 
-  // Buscar unidades, séries e grupos de disciplina das APIs
-  const { unidades, loading: loadingUnidades } = useUnidades();
+  // Buscar séries e grupos de disciplina das APIs
   const { series, loading: loadingSeries } = useSeries();
   const { gruposDisciplina, loading: loadingGrupos } = useGruposDisciplina();
 
@@ -81,12 +79,6 @@ function DisciplinaPageContent() {
 
   const QUANTITY_COLLUMNS_DEFAULT = 3;
 
-  // Converter unidades para formato KeyValue
-  const OPTIONS_UNIDADES: KeyValue[] = useMemo(
-    () => unidades.map((unidade) => ({ key: unidade.id.toString(), value: unidade.nome })),
-    [unidades],
-  );
-
   // Converter séries para formato KeyValue
   const OPTIONS_SERIES: KeyValue[] = useMemo(
     () => series.map((serie) => ({ key: serie.id.toString(), value: serie.nome })),
@@ -106,7 +98,7 @@ function DisciplinaPageContent() {
   return (
     <ProtectedRoute allowedRoles={[UserRoleEnum.PROFESSOR]}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        {(loadingDisciplina && isEditMode) || loadingUnidades || loadingSeries || loadingGrupos ? (
+        {(loadingDisciplina && isEditMode) || loadingSeries || loadingGrupos ? (
           <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
             <CircularProgress />
           </Box>
@@ -130,15 +122,6 @@ function DisciplinaPageContent() {
                 description="Dados principais da disciplina"
                 numberOfCollumns={QUANTITY_COLLUMNS_DEFAULT}
               >
-                <BrainDropdownControlled
-                  name="unidadeId"
-                  control={control}
-                  label="Unidade"
-                  required
-                  options={OPTIONS_UNIDADES}
-                  placeholder="Selecione a unidade"
-                />
-
                 <BrainDropdownControlled
                   name="serieId"
                   control={control}

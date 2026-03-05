@@ -1,7 +1,18 @@
 import { IBrainResult } from "@/services/commoResponse";
 import { httpClient } from "@/services/http";
-import { TurmaPostRequest, TurmaPutRequest } from "./request";
-import { TurmaDetalheResponse, TurmaListaResponse, TurmaResponse } from "./response";
+import {
+  TurmaPostRequest,
+  TurmaPutRequest,
+  TurmaVincularAlunosRequest,
+  TurmaDefinirHorarioRequest,
+} from "./request";
+import {
+  TurmaAlunoResponse,
+  TurmaDetalheResponse,
+  TurmaHorarioItemResponse,
+  TurmaListaResponse,
+  TurmaResponse,
+} from "./response";
 
 const BASE_ROUTE = "turma";
 
@@ -28,5 +39,31 @@ export class TurmaApi {
 
   deleteTurma(id: string): Promise<IBrainResult<void>> {
     return httpClient.delete(`${BASE_ROUTE}/${id}`);
+  }
+
+  // Vincular Alunos
+  getAlunosDaTurma(turmaId: string): Promise<TurmaAlunoResponse[]> {
+    return httpClient.get(`${BASE_ROUTE}/${turmaId}/alunos`);
+  }
+
+  vincularAlunos(request: TurmaVincularAlunosRequest): Promise<IBrainResult<void>> {
+    return httpClient.post(`${BASE_ROUTE}/${request.turmaId}/alunos`, {
+      alunoIds: request.alunoIds,
+    });
+  }
+
+  desvincularAluno(turmaId: string, alunoId: string): Promise<IBrainResult<void>> {
+    return httpClient.delete(`${BASE_ROUTE}/${turmaId}/alunos/${alunoId}`);
+  }
+
+  // Horários da Turma
+  getHorariosDaTurma(turmaId: string): Promise<TurmaHorarioItemResponse[]> {
+    return httpClient.get(`${BASE_ROUTE}/${turmaId}/horarios`);
+  }
+
+  definirHorarios(request: TurmaDefinirHorarioRequest): Promise<IBrainResult<void>> {
+    return httpClient.post(`${BASE_ROUTE}/${request.turmaId}/horarios`, {
+      horarios: request.horarios,
+    });
   }
 }

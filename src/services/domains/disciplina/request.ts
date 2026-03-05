@@ -1,8 +1,7 @@
 export interface DisciplinaPostRequest {
-  unidadeId: number;
   serieId: number;
   nome: string;
-  cargaHoraria: string;
+  cargaHoraria: number;
   grupoId: number;
 }
 

@@ -11,6 +11,12 @@ export enum RoutesEnum {
   // Turma routes
   TURMA_LISTA = "/turma/lista",
   TURMA = "/turma",
+  TURMA_VINCULAR_ALUNOS = "/turma/vincular-alunos",
+  TURMA_DEFINIR_HORARIOS = "/turma/definir-horarios",
+
+  // Grade Curricular routes
+  GRADE_CURRICULAR_LISTA = "/grade-curricular/lista",
+  GRADE_CURRICULAR = "/grade-curricular",
 
   // Grupo Disciplina routes
   GRUPO_DISCIPLINA_LISTA = "/grupo-disciplina/lista",
