@@ -27,7 +27,14 @@ import {
   CircularProgress,
   Button,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   InputAdornment,
+  List,
+  ListItemButton,
+  ListItemText,
   TextField,
   Typography,
 } from "@mui/material";
@@ -39,7 +46,10 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 import { useRouter } from "next/navigation";
 import { useBrainSearchParams } from "@/hooks/useBrainSearchParams";
+import { useTurmas } from "@/hooks/useTurmas";
+import { turmaApi } from "@/services/api";
 import { Suspense, useEffect, useMemo, useState } from "react";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { Controller } from "react-hook-form";
 import { turmaDefaultValues, TurmaFormData, turmaSchema } from "./schema";
 import * as S from "./styles";
@@ -65,6 +75,23 @@ function TurmaPageContent() {
     });
 
   const [gradeSearch, setGradeSearch] = useState("");
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [importLoading, setImportLoading] = useState(false);
+  const { turmas } = useTurmas();
+
+  async function handleImportarModelo(turmaOrigemId: number) {
+    try {
+      setImportLoading(true);
+      const turmaOrigem = await turmaApi.getTurmaById(String(turmaOrigemId));
+      const formData = mapTurmaResponseToFormData(turmaOrigem);
+      reset({ ...formData, nome: "" });
+      setImportDialogOpen(false);
+    } catch (error) {
+      console.error("Erro ao importar turma:", error);
+    } finally {
+      setImportLoading(false);
+    }
+  }
 
   const watchNome = watch("nome");
   const watchAnoLetivo = watch("anoLetivo");
@@ -93,9 +120,8 @@ function TurmaPageContent() {
       } else {
         const turmaData = mapFormDataToTurmaPostRequest(data);
         await createTurma.mutateAsync(turmaData);
-        // Após salvar, redireciona para definir horários
-        // Usa o ID retornado ou volta para lista se não disponível
-        router.push("/turma/lista");
+        // Não redireciona após salvar nova turma, mantém formulário preenchido
+        // para facilitar criação de outra turma similar
       }
     } catch (error) {
       console.error("Erro ao salvar turma:", error);
@@ -157,9 +183,9 @@ function TurmaPageContent() {
   ];
 
   const TURNO_OPTIONS = [
-    { key: "manha", label: "Manhã" },
-    { key: "tarde", label: "Tarde" },
-    { key: "noite", label: "Noite" },
+    { key: "manha", label: "Matutino" },
+    { key: "tarde", label: "Vespertino" },
+    { key: "noite", label: "Noturno" },
     { key: "integral", label: "Integral" },
   ];
 
@@ -187,10 +213,62 @@ function TurmaPageContent() {
           </Alert>
         ) : (
           <>
-            <PageTitle
-              title={isEditMode ? "Editar Turma" : "Cadastro de Turma"}
-              description="Registro uma nova turma vinculando-a a uma grade curricular e suas regras acadêmicas."
-            />
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2 }}>
+              <PageTitle
+                title={isEditMode ? "Editar Turma" : "Cadastro de Turma"}
+                description="Registro uma nova turma vinculando-a a uma grade curricular e suas regras acadêmicas."
+              />
+              {!isEditMode && (
+                <Button
+                  variant="outlined"
+                  startIcon={<ContentCopyIcon />}
+                  onClick={() => setImportDialogOpen(true)}
+                  sx={{ mt: 1, whiteSpace: "nowrap" }}
+                >
+                  Importar Modelo
+                </Button>
+              )}
+            </Box>
+
+            {/* Dialog Importar Modelo */}
+            <Dialog open={importDialogOpen} onClose={() => setImportDialogOpen(false)} maxWidth="sm" fullWidth>
+              <DialogTitle>Importar Modelo de Turma</DialogTitle>
+              <DialogContent dividers>
+                <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+                  Selecione uma turma para importar as configurações (sem alunos). O nome será apagado para você definir um novo.
+                </Typography>
+                {turmas.length === 0 ? (
+                  <Typography variant="body2" color="textSecondary" sx={{ textAlign: "center", py: 2 }}>
+                    Nenhuma turma disponível para importar.
+                  </Typography>
+                ) : (
+                  <List disablePadding>
+                    {turmas.map((t) => (
+                      <ListItemButton
+                        key={t.id}
+                        onClick={() => handleImportarModelo(t.id)}
+                        disabled={importLoading}
+                        divider
+                      >
+                        <ListItemText
+                          primary={t.nome}
+                          secondary={`${t.serie} · ${t.turno} · ${t.anoLetivo}`}
+                        />
+                      </ListItemButton>
+                    ))}
+                  </List>
+                )}
+                {importLoading && (
+                  <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
+                    <CircularProgress size={24} />
+                  </Box>
+                )}
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => setImportDialogOpen(false)}>Cancelar</Button>
+              </DialogActions>
+            </Dialog>
+
             <BrainFormProvider
               methodsHookForm={methodsHookForm}
               onSubmit={handleSubmit(onFormSubmit)}
@@ -391,7 +469,7 @@ function TurmaPageContent() {
                                           verticalAlign: "text-bottom",
                                         }}
                                       />
-                                      {grade.cargaHorariaTotal}h semanais
+                                      {grade.cargaHorariaTotal} hora/aula semanais
                                       {"  ·  "}
                                       {grade.quantidadeDisciplinas} disciplinas
                                     </span>
@@ -482,7 +560,7 @@ function TurmaPageContent() {
                         <S.ResumoItem key={disc.id}>
                           <span className="resumo-label">{disc.nome}</span>
                           <span className="resumo-value">
-                            {disc.cargaHorariaSemanal}h
+                            {disc.cargaHorariaSemanal} hora/aula
                           </span>
                         </S.ResumoItem>
                       ))}
