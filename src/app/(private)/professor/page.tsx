@@ -28,10 +28,27 @@ import { buscarCep } from "@/services/cep";
 import { KeyValue } from "@/services/models/keyValue";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Alert, Box, Button, CircularProgress, Container, IconButton } from "@mui/material";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import {
+  Alert,
+  Box,
+  Button,
+  Checkbox,
+  CircularProgress,
+  Container,
+  FormControlLabel,
+  FormHelperText,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  Switch,
+  Typography,
+} from "@mui/material";
 import { useRouter } from "next/navigation";
-import { Suspense, useCallback, useEffect, useState } from "react";
-import { useFieldArray } from "react-hook-form";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { Controller, useFieldArray } from "react-hook-form";
 import { toast } from "react-toastify";
 import { dependenteDefaultValues, professorDefaultValues, ProfessorFormData, professorSchema } from "./schema";
 
@@ -74,6 +91,10 @@ function ProfessorPageContent() {
 
   const [buscandoCep, setBuscandoCep] = useState(false);
   const watcherCepValue = watch("cep");
+  const watcherGenero = watch("genero");
+  const watcherExameAdmissional = watch("exameAdmissional");
+  const arquivosExame = watch("arquivoExameAdmissional") || [];
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (professor && isEditMode) {

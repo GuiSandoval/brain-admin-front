@@ -26,6 +26,21 @@ export const dependenteDefaultValues: DependenteFormData = {
   parentesco: "",
 };
 
+// Schema para registro de férias
+const registroFeriasSchema = z.object({
+  dataInicio: z.string().optional(),
+  dataFim: z.string().optional(),
+  observacoes: z.string().optional(),
+});
+
+export type RegistroFeriasFormData = z.infer<typeof registroFeriasSchema>;
+
+export const registroFeriasDefaultValues: RegistroFeriasFormData = {
+  dataInicio: "",
+  dataFim: "",
+  observacoes: "",
+};
+
 export const professorSchema = z.object({
   nomeCompleto: z
     .string()
@@ -53,6 +68,9 @@ export const professorSchema = z.object({
     .string()
     .min(1, "Carteira de trabalho é obrigatória")
     .min(7, "Carteira de trabalho deve ter pelo menos 7 dígitos"),
+  tituloEleitor: z.string().optional(),
+  pisPasep: z.string().optional(),
+  reservista: z.string().optional(),
   cep: z
     .string()
     .min(1, "CEP é obrigatório")
@@ -86,6 +104,16 @@ export const professorSchema = z.object({
   chavePix: z.string().optional(),
   // Dependentes
   dependentes: z.array(dependenteSchema).optional(),
+  // Informações Profissionais
+  escolaridade: z.string().optional(),
+  enquadramentoHoraAula: z.string().optional(),
+  exameAdmissional: z.boolean().optional(),
+  arquivoExameAdmissional: z.array(z.instanceof(File)).optional(),
+  registroFerias: registroFeriasSchema.optional(),
+  // Consentimento LGPD
+  consentimentoLgpd: z.boolean().refine((val) => val === true, {
+    message: "Você deve aceitar o termo de consentimento LGPD",
+  }),
 });
 
 export type ProfessorFormData = z.infer<typeof professorSchema>;
@@ -100,6 +128,9 @@ export const professorDefaultValues: ProfessorFormData = {
   cpf: "",
   rg: "",
   carteiraTrabalho: "",
+  tituloEleitor: "",
+  pisPasep: "",
+  reservista: "",
   cep: "",
   logradouro: "",
   numero: "",
@@ -115,4 +146,10 @@ export const professorDefaultValues: ProfessorFormData = {
   conta: "",
   chavePix: "",
   dependentes: [],
+  escolaridade: "",
+  enquadramentoHoraAula: "",
+  exameAdmissional: false,
+  arquivoExameAdmissional: [],
+  registroFerias: registroFeriasDefaultValues,
+  consentimentoLgpd: false,
 };
