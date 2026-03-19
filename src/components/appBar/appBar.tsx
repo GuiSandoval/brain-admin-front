@@ -6,29 +6,16 @@ import { usePathname } from "next/navigation";
 import { AppBar as MuiAppBar, Container, IconButton, Toolbar, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import MenuIcon from "@mui/icons-material/Menu";
-import MenuBookIcon from "@mui/icons-material/MenuBook";
-import SchoolIcon from "@mui/icons-material/School";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
-import MessageIcon from "@mui/icons-material/Message";
-import { RoutesEnum } from "@/enums";
 import { useAuth } from "@/hooks/useAuth";
 import { useDrawer } from "@/contexts/DrawerContext";
 import { NotificationMenu } from "@/components/appBar/notificationMenu";
 import { useTheme } from "next-themes";
 import { UserMenu } from "@/components/appBar/userMenu";
-import { CadastrosMenu } from "@/components/appBar/cadastros";
+import { DynamicModuleMenu } from "@/components/appBar/dynamicModuleMenu/DynamicModuleMenu";
+import { getMenuModules, getRoutesWithoutModule } from "@/constants/routesConfig";
 
 const DRAWER_WIDTH = 240;
 const DRAWER_WIDTH_CLOSED = 60;
-
-const APP_BAR_NAV_LINKS: Array<{ label: string; path: string; Icon: React.ElementType }> = [
-  { label: "Minhas turmas", path: RoutesEnum.TURMA_LISTA, Icon: MenuBookIcon },
-  { label: "Avaliações e tarefas", path: RoutesEnum.TAREFA_LISTA, Icon: SchoolIcon },
-  { label: "Calendário", path: RoutesEnum.CALENDARIO, Icon: CalendarTodayIcon },
-  { label: "Financeiro", path: "/financeiro", Icon: ReceiptLongIcon },
-  { label: "Comunicados", path: RoutesEnum.COMUNICADOS, Icon: MessageIcon },
-];
 
 interface AppBarProps {
   onMobileMenuClick?: () => void;
@@ -43,6 +30,16 @@ export default function AppBar({ onMobileMenuClick, enableDrawerOffset = false }
   const { resolvedTheme } = useTheme();
 
   const isDarkMode = resolvedTheme === "dark";
+
+  const directRoutes = React.useMemo(
+    () => (user ? getRoutesWithoutModule(user.role) : []),
+    [user],
+  );
+
+  const moduleMenus = React.useMemo(
+    () => (user ? getMenuModules(user.role) : []),
+    [user],
+  );
 
   if (!user) {
     return null;
@@ -95,21 +92,11 @@ export default function AppBar({ onMobileMenuClick, enableDrawerOffset = false }
             <MenuIcon />
           </IconButton>
 
-          <Link
-            href="/"
-            style={{
-              textDecoration: "none",
-              color: "inherit",
-            }}
-          >
+          <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
             <Typography
               variant="h5"
               noWrap
-              sx={{
-                fontWeight: 700,
-                color: "inherit",
-                textDecoration: "none",
-              }}
+              sx={{ fontWeight: 700, color: "inherit", textDecoration: "none" }}
             >
               Brain
             </Typography>
@@ -124,10 +111,11 @@ export default function AppBar({ onMobileMenuClick, enableDrawerOffset = false }
               ml: 3,
             }}
           >
-            {APP_BAR_NAV_LINKS.map(({ label, path, Icon }) => {
-              const isActive = pathname === path;
+            {/* Rotas diretas (sem módulo) */}
+            {directRoutes.map((route) => {
+              const isActive = pathname === route.router;
               return (
-                <Link key={path} href={path} style={{ textDecoration: "none" }}>
+                <Link key={route.router} href={route.router} style={{ textDecoration: "none" }}>
                   <Box
                     sx={{
                       display: "flex",
@@ -137,29 +125,33 @@ export default function AppBar({ onMobileMenuClick, enableDrawerOffset = false }
                       "&:hover": { color: appBarText },
                     }}
                   >
-                    <Icon sx={{ fontSize: 20, color: "inherit" }} />
+                    {React.cloneElement(route.icon, { sx: { fontSize: 20, color: "inherit" } })}
                     <Typography
                       variant="caption"
-                      sx={{
-                        fontWeight: isActive ? 600 : 400,
-                        color: "inherit",
-                        fontSize: "14px",
-                      }}
+                      sx={{ fontWeight: isActive ? 600 : 400, color: "inherit", fontSize: "14px" }}
                     >
-                      {label}
+                      {route.text}
                     </Typography>
                   </Box>
                 </Link>
               );
             })}
-            <CadastrosMenu
-              role={user.role}
-              menuBg={menuBg}
-              menuHoverBg={menuHoverBg}
-              textColor={appBarText}
-              mutedTextColor={appBarTextMuted}
-              borderColor={appBarBorder}
-            />
+
+            {/* Menus de módulos (dropdown) */}
+            {moduleMenus.map((mod) => (
+              <DynamicModuleMenu
+                key={mod.id}
+                role={user.role}
+                moduleId={mod.id}
+                moduleText={mod.text}
+                moduleIcon={mod.icon}
+                menuBg={menuBg}
+                menuHoverBg={menuHoverBg}
+                textColor={appBarText}
+                mutedTextColor={appBarTextMuted}
+                borderColor={appBarBorder}
+              />
+            ))}
           </Box>
 
           <Box sx={{ flexGrow: 1 }} />
