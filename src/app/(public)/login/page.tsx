@@ -1,14 +1,14 @@
 "use client";
-import { Button, TextField, Typography, Paper, Divider } from "@mui/material";
-import * as S from "./styles";
-import { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
-import Cookies from "js-cookie";
-import { loginApi } from "@/services/api";
-import { toast } from "react-toastify";
-import { setAccessToken } from "@/utils/auth";
-import { useGoogleLogin } from "@/hooks/useGoogleLogin";
 import { GoogleIcon } from "@/components/GoogleIcon";
+import { useGoogleLogin } from "@/hooks/useGoogleLogin";
+import { loginApi } from "@/services/api";
+import { setAccessToken } from "@/utils/auth";
+import { Button, Divider, Paper, TextField, Typography } from "@mui/material";
+import Cookies from "js-cookie";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import * as S from "./styles";
 
 export default function LoginPage() {
   const { setTheme } = useTheme();
@@ -69,14 +69,20 @@ export default function LoginPage() {
 
         window.location.href = redirectPath;
       } catch (decodeError) {
-        console.error("Erro ao decodificar token:", decodeError);
+        console.log("Erro ao decodificar token:", decodeError);
         toast.success("Login realizado com sucesso!");
         window.location.href = "/";
       }
     } catch (error) {
-      console.error("Erro ao realizar login:", error);
+
+      if (error instanceof Error) {
+        console.log("message", error.message);
+        toast.error(error.message);
+        return;
+      }
+
+      console.log("Erro ao realizar login:", error);
       const messageError = "Credenciais inválidas";
-      // const messageError = error instanceof Error ? error.message : "Erro desconhecido";
       toast.error(messageError);
     } finally {
       setIsLoading(false);
