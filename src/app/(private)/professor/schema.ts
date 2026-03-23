@@ -27,6 +27,7 @@ export const dependenteDefaultValues: DependenteFormData = {
 };
 
 export const professorSchema = z.object({
+  // Dados Pessoais
   nomeCompleto: z
     .string()
     .min(2, "Nome completo deve ter pelo menos 2 caracteres")
@@ -44,6 +45,7 @@ export const professorSchema = z.object({
     .string()
     .min(2, "Cidade de naturalidade é obrigatória")
     .regex(/^[A-Za-zÀ-ÿ\s]+$/, "Cidade deve conter apenas letras"),
+  // Documentos (agrupados em Dados Pessoais)
   cpf: z
     .string()
     .min(1, "CPF é obrigatório")
@@ -53,6 +55,9 @@ export const professorSchema = z.object({
     .string()
     .min(1, "Carteira de trabalho é obrigatória")
     .min(7, "Carteira de trabalho deve ter pelo menos 7 dígitos"),
+  tituloEleitor: z.string().min(1, "Título de Eleitor é obrigatório"),
+  pisPasep: z.string().min(1, "PIS/PASEP é obrigatório"),
+  // Endereço
   cep: z
     .string()
     .min(1, "CEP é obrigatório")
@@ -72,13 +77,14 @@ export const professorSchema = z.object({
     .min(1, "Cidade é obrigatória")
     .regex(/^[A-Za-zÀ-ÿ\s]+$/, "Cidade deve conter apenas letras"),
   uf: z.string().min(1, "UF é obrigatório").length(2, "UF deve ter exatamente 2 caracteres"),
+  // Contato
   telefone: z
     .string()
     .min(1, "Telefone é obrigatório")
     .regex(/^\(\d{2}\) \d{4,5}-\d{4}$/, "Telefone deve estar no formato (00) 00000-0000"),
   // Disciplinas
   disciplinaIds: z.array(z.number()).optional(),
-  // Dados Bancários
+  // Dados Bancários (opcional)
   nomeBanco: z.string().optional(),
   tipoConta: z.string().optional(),
   agencia: z.string().optional(),
@@ -86,9 +92,35 @@ export const professorSchema = z.object({
   chavePix: z.string().optional(),
   // Dependentes
   dependentes: z.array(dependenteSchema).optional(),
+  // Informações Profissionais
+  escolaridade: z.string().min(1, "Escolaridade é obrigatória"),
+  enquadramentoHoraAula: z.string().min(1, "Enquadramento de hora aula é obrigatório"),
+  exameAdmissionalRealizado: z.boolean().default(false),
+  dataInicioFerias: z
+    .string()
+    .optional()
+    .refine(
+      (val) => !val || /^\d{2}\/\d{2}\/\d{4}$/.test(val),
+      "Data deve estar no formato dd/mm/aaaa",
+    ),
+  dataFimFerias: z
+    .string()
+    .optional()
+    .refine(
+      (val) => !val || /^\d{2}\/\d{2}\/\d{4}$/.test(val),
+      "Data deve estar no formato dd/mm/aaaa",
+    ),
+  observacoesFerias: z.string().optional(),
+  // LGPD
+  aceitoLgpd: z
+    .boolean()
+    .refine((val) => val === true, {
+      message: "Você deve aceitar o termo de consentimento LGPD para continuar",
+    }),
 });
 
 export type ProfessorFormData = z.infer<typeof professorSchema>;
+
 export const professorDefaultValues: ProfessorFormData = {
   nomeCompleto: "",
   nomeSocial: "",
@@ -100,6 +132,8 @@ export const professorDefaultValues: ProfessorFormData = {
   cpf: "",
   rg: "",
   carteiraTrabalho: "",
+  tituloEleitor: "",
+  pisPasep: "",
   cep: "",
   logradouro: "",
   numero: "",
@@ -115,4 +149,11 @@ export const professorDefaultValues: ProfessorFormData = {
   conta: "",
   chavePix: "",
   dependentes: [],
+  escolaridade: "",
+  enquadramentoHoraAula: "",
+  exameAdmissionalRealizado: false,
+  dataInicioFerias: "",
+  dataFimFerias: "",
+  observacoesFerias: "",
+  aceitoLgpd: false,
 };

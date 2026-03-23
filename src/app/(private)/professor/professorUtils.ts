@@ -29,6 +29,21 @@ function buildDependentes(formData: ProfessorFormData) {
   }));
 }
 
+function buildInformacoesProfissionais(formData: ProfessorFormData) {
+  return {
+    escolaridade: formData.escolaridade || undefined,
+    enquadramentoHoraAula: formData.enquadramentoHoraAula || undefined,
+    exameAdmissionalRealizado: formData.exameAdmissionalRealizado,
+    dataInicioFerias: formData.dataInicioFerias
+      ? convertDateStringToISO(formData.dataInicioFerias)
+      : undefined,
+    dataFimFerias: formData.dataFimFerias
+      ? convertDateStringToISO(formData.dataFimFerias)
+      : undefined,
+    observacoesFerias: formData.observacoesFerias || undefined,
+  };
+}
+
 export function mapFormDataToProfessorPostRequest(
   formData: ProfessorFormData,
 ): ProfessorPostRequest {
@@ -53,9 +68,12 @@ export function mapFormDataToProfessorPostRequest(
     corRaca: formData.corRaca,
     cidadeNaturalidade: formData.cidadeNaturalidade,
     carteiraDeTrabalho: formData.carteiraTrabalho,
+    tituloEleitor: formData.tituloEleitor || undefined,
+    pisPasep: formData.pisPasep || undefined,
     disciplinaIds: formData.disciplinaIds,
     dadosBancarios: buildDadosBancarios(formData),
     dependentes: buildDependentes(formData),
+    ...buildInformacoesProfissionais(formData),
   };
 }
 
@@ -84,32 +102,26 @@ export function mapFormDataToProfessorPutRequest(
     corRaca: formData.corRaca,
     cidadeNaturalidade: formData.cidadeNaturalidade,
     carteiraDeTrabalho: formData.carteiraTrabalho,
+    tituloEleitor: formData.tituloEleitor || undefined,
+    pisPasep: formData.pisPasep || undefined,
     telefones: formData.telefone ? [unmaskPhone(formData.telefone)] : [],
     disciplinaIds: formData.disciplinaIds,
     dadosBancarios: buildDadosBancarios(formData),
     dependentes: buildDependentes(formData),
+    ...buildInformacoesProfissionais(formData),
   };
 }
 
-/**
- * Formata o CPF para o padrão 000.000.000-00
- */
 function formatCPF(cpf: string): string {
   const cleaned = cpf.replace(/\D/g, "");
   return cleaned.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
 }
 
-/**
- * Formata o CEP para o padrão 00000-000
- */
 function formatCEP(cep: string): string {
   const cleaned = cep.replace(/\D/g, "");
   return cleaned.replace(/(\d{5})(\d{3})/, "$1-$2");
 }
 
-/**
- * Formata o telefone para o padrão (00) 00000-0000 ou (00) 0000-0000
- */
 function formatPhone(phone: string): string {
   const cleaned = phone.replace(/\D/g, "");
   if (cleaned.length <= 10) {
@@ -119,9 +131,6 @@ function formatPhone(phone: string): string {
   }
 }
 
-/**
- * Converte uma data ISO para o formato dd/mm/yyyy
- */
 function convertISOToDateString(isoDate: string): string {
   const date = new Date(isoDate);
   const day = String(date.getDate()).padStart(2, "0");
@@ -130,9 +139,6 @@ function convertISOToDateString(isoDate: string): string {
   return `${day}/${month}/${year}`;
 }
 
-/**
- * Mapeia os dados do professor da API para o formato do formulário
- */
 export function mapProfessorResponseToFormData(
   professor: ProfessorDetalheResponse,
 ): ProfessorFormData {
@@ -149,6 +155,8 @@ export function mapProfessorResponseToFormData(
     cpf: professor.cpf ? formatCPF(professor.cpf) : "",
     rg: professor.rg || "",
     carteiraTrabalho: professor.carteiraDeTrabalho || "",
+    tituloEleitor: professor.tituloEleitor || "",
+    pisPasep: professor.pisPasep || "",
     cep: professor.endereco?.cep ? formatCEP(professor.endereco.cep) : "",
     logradouro: professor.endereco?.logradouro || "",
     numero: professor.endereco?.numero || "",
@@ -175,5 +183,16 @@ export function mapProfessorResponseToFormData(
           : "",
         parentesco: dep.parentesco || "",
       })) || [],
+    escolaridade: professor.escolaridade || "",
+    enquadramentoHoraAula: professor.enquadramentoHoraAula || "",
+    exameAdmissionalRealizado: professor.exameAdmissionalRealizado ?? false,
+    dataInicioFerias: professor.dataInicioFerias
+      ? convertISOToDateString(professor.dataInicioFerias)
+      : "",
+    dataFimFerias: professor.dataFimFerias
+      ? convertISOToDateString(professor.dataFimFerias)
+      : "",
+    observacoesFerias: professor.observacoesFerias || "",
+    aceitoLgpd: false,
   };
 }

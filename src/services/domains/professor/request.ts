@@ -35,10 +35,18 @@ export interface ProfessorPostRequest {
   corRaca: string;
   cidadeNaturalidade: string;
   carteiraDeTrabalho: string;
+  tituloEleitor?: string;
+  pisPasep?: string;
   telefones: string[];
   disciplinaIds?: number[];
   dadosBancarios?: ProfessorDadosBancariosRequest;
   dependentes?: ProfessorDependenteRequest[];
+  escolaridade?: string;
+  enquadramentoHoraAula?: string;
+  exameAdmissionalRealizado?: boolean;
+  dataInicioFerias?: string;
+  dataFimFerias?: string;
+  observacoesFerias?: string;
 }
 export interface ProfessorPutRequest extends ProfessorPostRequest {
   id: string;

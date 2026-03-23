@@ -72,6 +72,8 @@ export interface ProfessorDetalheResponse {
   endereco: ProfessorEnderecoResponse;
   rg: string;
   carteiraDeTrabalho: string;
+  tituloEleitor?: string;
+  pisPasep?: string;
   dataDeNascimento?: string;
   genero?: string;
   corRaca?: string;
@@ -80,4 +82,10 @@ export interface ProfessorDetalheResponse {
   disciplinas?: ProfessorDisciplinaResponse[];
   dadosBancarios?: ProfessorDadosBancariosResponse;
   dependentes?: ProfessorDependenteResponse[];
+  escolaridade?: string;
+  enquadramentoHoraAula?: string;
+  exameAdmissionalRealizado?: boolean;
+  dataInicioFerias?: string;
+  dataFimFerias?: string;
+  observacoesFerias?: string;
 }
