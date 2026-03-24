@@ -72,6 +72,11 @@ export const QUERY_KEYS = {
     details: () => [...QUERY_KEYS.avaliacoes.all, "detail"] as const,
     detail: (id: string | number) => [...QUERY_KEYS.avaliacoes.details(), id] as const,
   },
+  avaliacaoDetalhe: {
+    all: ["avaliacaoDetalhe"] as const,
+    details: () => [...QUERY_KEYS.avaliacaoDetalhe.all, "detail"] as const,
+    detail: (id: string | number) => [...QUERY_KEYS.avaliacaoDetalhe.details(), id] as const,
+  },
   notas: {
     all: ["notas"] as const,
     lists: () => [...QUERY_KEYS.notas.all, "list"] as const,

@@ -16,3 +16,22 @@ export interface AvaliacaoDetalheResponse {
   conteudo: string;
   notaExtra: boolean;
 }
+
+export interface AvaliacaoAlunoResponse {
+  alunoId: number;
+  nomeAluno: string;
+  nota: number | null;
+  falta: boolean;
+}
+
+export interface AvaliacaoDetalhePageResponse {
+  id: number;
+  nomeAvaliacao: string;
+  disciplina: string;
+  turma: string;
+  abertura: string;
+  prazo: string;
+  totalAlunos: number;
+  notasLancadas: number;
+  alunos: AvaliacaoAlunoResponse[];
+}
