@@ -90,5 +90,10 @@ export const QUERY_KEYS = {
     details: () => [...QUERY_KEYS.horarios.all, "detail"] as const,
     detail: (id: string | number) => [...QUERY_KEYS.horarios.details(), id] as const,
   },
+  relatorios: {
+    all: ["relatorios"] as const,
+    anos: () => [...QUERY_KEYS.relatorios.all, "anos"] as const,
+    filtrosPorAno: (ano: number) => [...QUERY_KEYS.relatorios.all, "ano", ano] as const,
+  },
   // Outros recursos podem ser adicionados aqui futuramente
 } as const;

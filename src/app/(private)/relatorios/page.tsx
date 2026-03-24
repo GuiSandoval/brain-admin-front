@@ -1,16 +1,11 @@
 "use client";
-import { BrainDatePickerControlled } from "@/components/brainForms/brainDatePickerControlled";
 import { BrainDropdownControlled } from "@/components/brainForms/brainDropdownControlled";
 import BrainFormProvider from "@/components/brainForms/brainFormProvider/brainFormProvider";
 import PageTitle from "@/components/pageTitle/pageTitle";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import { UserRoleEnum } from "@/enums";
 import { useBrainForm } from "@/hooks/useBrainForm";
-import { useUnidades } from "@/hooks/useUnidades";
-import { useSeries } from "@/hooks/useSeries";
-import { useTurmas } from "@/hooks/useTurmas";
-import { useDisciplinas } from "@/hooks/useDisciplinas";
-import { useAlunos } from "@/hooks/useAlunos";
+import { useRelatorioAnos, useRelatorioFiltrosPorAno } from "@/hooks/useRelatorio";
 import { KeyValue } from "@/services/models/keyValue";
 import { ArrowDownward, ArrowUpward, Download, Print } from "@mui/icons-material";
 import {
@@ -50,7 +45,7 @@ const PERIODOS: KeyValue[] = [
 
 // Schema de validação
 const relatorioSchema = z.object({
-  anoLetivo: z.date().nullable().optional(),
+  anoLetivo: z.string().optional(),
   escola: z.string().optional(),
   serie: z.string().optional(),
   turma: z.string().optional(),
@@ -79,7 +74,7 @@ type SortField = keyof ResultadoItem | null;
 type SortDirection = "asc" | "desc";
 
 const defaultValues: RelatorioFormData = {
-  anoLetivo: new Date(2026, 0, 1), // Ano atual
+  anoLetivo: "",
   escola: "",
   serie: "",
   turma: "",
@@ -93,18 +88,21 @@ export default function RelatorioComportamentoPage() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { control, getValues, reset, methodsHookForm, onFormSubmit, setValue } =
+  const { control, getValues, reset, methodsHookForm, onFormSubmit, setValue, watch } =
     useBrainForm<RelatorioFormData>({
       schema: relatorioSchema,
       defaultValues,
     });
 
-  // Hooks para buscar dados das APIs
-  const { unidades } = useUnidades();
-  const { series } = useSeries();
-  const { turmas } = useTurmas();
-  const { disciplinas } = useDisciplinas();
-  const { alunos } = useAlunos();
+  // Hooks para buscar dados das APIs de relatório
+  const { anos } = useRelatorioAnos();
+  const anoSelecionado = watch("anoLetivo");
+  const escolaSelecionada = watch("escola");
+  const serieSelecionada = watch("serie");
+  const disciplinaSelecionada = watch("disciplina");
+  const { dados: filtrosRelatorio } = useRelatorioFiltrosPorAno(
+    anoSelecionado ? parseInt(anoSelecionado) : null,
+  );
 
   // Estados para controlar carregamento
   const [loadingPDF, setLoadingPDF] = useState(false);
@@ -129,7 +127,7 @@ export default function RelatorioComportamentoPage() {
       const params = new URLSearchParams();
 
       if (filters.anoLetivo) {
-        params.set("anoLetivo", filters.anoLetivo.getFullYear().toString());
+        params.set("anoLetivo", filters.anoLetivo);
       }
       if (filters.escola) params.set("escola", filters.escola);
       if (filters.serie) params.set("serie", filters.serie);
@@ -169,7 +167,7 @@ export default function RelatorioComportamentoPage() {
 
     if (hasFilters) {
       if (anoLetivoParam) {
-        setValue("anoLetivo", new Date(parseInt(anoLetivoParam), 0, 1));
+        setValue("anoLetivo", anoLetivoParam);
       }
       if (escolaParam) setValue("escola", escolaParam);
       if (serieParam) setValue("serie", serieParam);
@@ -244,7 +242,7 @@ export default function RelatorioComportamentoPage() {
   }, [loadMoreItems, hasMore]);
 
   // Função para validar filtros
-  const validateFilters = () => {
+  const validateFilters = useCallback(() => {
     const values = getValues();
     const { anoLetivo, escola, serie, turma, tipoRelatorio } = values;
 
@@ -275,7 +273,7 @@ export default function RelatorioComportamentoPage() {
 
     setError("");
     return true;
-  };
+  }, [getValues]);
 
   // Função para gerar relatório em PDF (abre página de impressão)
   const handleGerarPDF = () => {
@@ -387,7 +385,7 @@ export default function RelatorioComportamentoPage() {
       setSuccess("Busca realizada com sucesso!");
       setTimeout(() => setSuccess(""), 3000);
     }, 1500);
-  }, [getValues, updateURLParams]);
+  }, [getValues, updateURLParams, validateFilters]);
 
   // Função para filtrar resultados por busca de aluno
   const resultadosFiltrados = searchAluno
@@ -415,36 +413,101 @@ export default function RelatorioComportamentoPage() {
     // Limpar URL
     router.replace(pathname, { scroll: false });
   };
+  // Extrair dados do primeiro item da resposta do ano
+  const filtrosRelatorioItem = filtrosRelatorio.length > 0 ? filtrosRelatorio[0] : null;
+
   // Converter dados das APIs para formato KeyValue
+  const OPTIONS_ANOS: KeyValue[] = useMemo(
+    () => anos.map((ano) => ({ key: ano.toString(), value: ano.toString() })),
+    [anos],
+  );
+
   const OPTIONS_UNIDADES: KeyValue[] = useMemo(
-    () => unidades.map((unidade) => ({ key: unidade.id.toString(), value: unidade.nome })),
-    [unidades],
+    () =>
+      (filtrosRelatorioItem?.unidades ?? []).map((unidade) => ({
+        key: unidade.id.toString(),
+        value: unidade.nome,
+      })),
+    [filtrosRelatorioItem?.unidades],
   );
 
   const OPTIONS_SERIES: KeyValue[] = useMemo(
-    () => series.map((serie) => ({ key: serie.id.toString(), value: serie.nome })),
-    [series],
-  );
-
-  const OPTIONS_TURMAS: KeyValue[] = useMemo(
-    () => turmas.map((turma) => ({ key: turma.id.toString(), value: turma.nome })),
-    [turmas],
+    () =>
+      (filtrosRelatorioItem?.series ?? [])
+        .filter((serie) =>
+          escolaSelecionada ? serie.unidadeId.toString() === escolaSelecionada : true,
+        )
+        .map((serie) => ({ key: serie.id.toString(), value: serie.nome })),
+    [filtrosRelatorioItem?.series, escolaSelecionada],
   );
 
   const OPTIONS_DISCIPLINAS: KeyValue[] = useMemo(
     () =>
-      disciplinas.map((disciplina) => ({ key: disciplina.id.toString(), value: disciplina.nome })),
-    [disciplinas],
+      (filtrosRelatorioItem?.disciplinas ?? [])
+        .filter((disciplina) => {
+          const matchUnidade = escolaSelecionada
+            ? disciplina.unidadeId.toString() === escolaSelecionada
+            : true;
+          const matchSerie = serieSelecionada
+            ? disciplina.serieId.toString() === serieSelecionada
+            : true;
+          return matchUnidade && matchSerie;
+        })
+        .map((disciplina) => ({ key: disciplina.id.toString(), value: disciplina.nome })),
+    [filtrosRelatorioItem?.disciplinas, escolaSelecionada, serieSelecionada],
   );
 
-  const OPTIONS_ALUNOS: KeyValue[] = useMemo(
-    () => alunos.map((aluno) => ({ key: aluno.id.toString(), value: aluno.nome })),
-    [alunos],
+  const OPTIONS_TURMAS: KeyValue[] = useMemo(
+    () =>
+      (filtrosRelatorioItem?.turmas ?? [])
+        .filter((turma) =>
+          disciplinaSelecionada ? turma.disciplinaId.toString() === disciplinaSelecionada : true,
+        )
+        .map((turma) => ({ key: turma.id.toString(), value: turma.nome })),
+    [filtrosRelatorioItem?.turmas, disciplinaSelecionada],
   );
 
   // Carregar filtros da URL na inicialização e fazer busca automática
+  // Limpar campos dependentes quando o ano muda
   useEffect(() => {
-    if (!isInitialized && unidades.length > 0) {
+    if (isInitialized) {
+      setValue("escola", "");
+      setValue("serie", "");
+      setValue("turma", "");
+      setValue("disciplina", "");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [anoSelecionado]);
+
+  // Limpar série, disciplina e turma quando escola muda
+  useEffect(() => {
+    if (isInitialized) {
+      setValue("serie", "");
+      setValue("disciplina", "");
+      setValue("turma", "");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [escolaSelecionada]);
+
+  // Limpar disciplina e turma quando série muda
+  useEffect(() => {
+    if (isInitialized) {
+      setValue("disciplina", "");
+      setValue("turma", "");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [serieSelecionada]);
+
+  // Limpar turma quando disciplina muda
+  useEffect(() => {
+    if (isInitialized) {
+      setValue("turma", "");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [disciplinaSelecionada]);
+
+  useEffect(() => {
+    if (!isInitialized && anos.length > 0) {
       const hasFiltersInURL = loadFiltersFromURL();
       setIsInitialized(true);
 
@@ -456,7 +519,7 @@ export default function RelatorioComportamentoPage() {
         }, 100);
       }
     }
-  }, [isInitialized, unidades, loadFiltersFromURL, handleBuscar]);
+  }, [isInitialized, anos, loadFiltersFromURL, handleBuscar]);
 
   return (
     <ProtectedRoute allowedRoles={[UserRoleEnum.ADMIN, UserRoleEnum.PROFESSOR]}>
@@ -498,12 +561,13 @@ export default function RelatorioComportamentoPage() {
           <BrainFormProvider onSubmit={onFormSubmit} methodsHookForm={methodsHookForm}>
             <S.Container>
               <Box>
-                <BrainDatePickerControlled
+                <BrainDropdownControlled
                   name="anoLetivo"
                   control={control}
-                  label="Ano Letivo *"
-                  format="yyyy"
-                  views={["year"]}
+                  label="Ano Letivo"
+                  required
+                  options={OPTIONS_ANOS}
+                  placeholder="Selecione o ano"
                 />
               </Box>
 
@@ -569,16 +633,6 @@ export default function RelatorioComportamentoPage() {
                   label="Período (Opcional)"
                   options={PERIODOS}
                   placeholder="Selecione o período"
-                />
-              </Box>
-
-              <Box>
-                <BrainDropdownControlled
-                  name="aluno"
-                  control={control}
-                  label="Aluno (Opcional)"
-                  options={OPTIONS_ALUNOS}
-                  placeholder="Selecione o aluno"
                 />
               </Box>
             </S.Container>
