@@ -3,19 +3,23 @@ import { GoogleIcon } from "@/components/GoogleIcon";
 import { useGoogleLogin } from "@/hooks/useGoogleLogin";
 import { loginApi } from "@/services/api";
 import { setAccessToken } from "@/utils/auth";
-import { Button, Divider, Paper, TextField, Typography } from "@mui/material";
+import { Button, CircularProgress, Divider, Paper, TextField, Typography } from "@mui/material";
 import Cookies from "js-cookie";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import * as S from "./styles";
 
-export default function LoginPage() {
+function LoginContent() {
   const { setTheme } = useTheme();
+  const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { loginWithGoogle, isLoading: googleLoading } = useGoogleLogin();
+
+  const codigoEscola = searchParams.get("codigoEscola") || "sigma";
 
   useEffect(() => {
     setTheme("light");
@@ -27,6 +31,7 @@ export default function LoginPage() {
       const response = await loginApi.login({
         email,
         senha: password,
+        codigoEscola,
       });
 
       if (!response || !response.tokenAcesso || !response.refreshToken) {
@@ -74,7 +79,6 @@ export default function LoginPage() {
         window.location.href = "/";
       }
     } catch (error) {
-
       if (error instanceof Error) {
         console.log("message", error.message);
         toast.error(error.message);
@@ -160,5 +164,23 @@ export default function LoginPage() {
         </S.FormBox>
       </Paper>
     </S.LoginWrapper>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <S.LoginWrapper>
+          <Paper elevation={6}>
+            <S.FormBox>
+              <CircularProgress />
+            </S.FormBox>
+          </Paper>
+        </S.LoginWrapper>
+      }
+    >
+      <LoginContent />
+    </Suspense>
   );
 }
