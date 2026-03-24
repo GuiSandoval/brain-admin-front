@@ -69,7 +69,7 @@ export enum RoutesEnum {
   MINHAS_AULAS = "/minhas-aulas",
   CALENDARIO = "/calendario",
   BOLETIM = "/boletim",
-  AVALIACOES = "/avaliacoes-old",
+  AVALIACOES = "/avaliacoes",
   COMUNICADOS = "/comunicados",
   PERFIL = "/perfil",
 
