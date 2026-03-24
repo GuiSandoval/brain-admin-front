@@ -24,7 +24,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 import * as S from "./styles";
 
@@ -84,7 +84,7 @@ const defaultValues: RelatorioFormData = {
   aluno: "",
 };
 
-export default function RelatorioComportamentoPage() {
+function RelatorioComportamentoContent() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -522,189 +522,188 @@ export default function RelatorioComportamentoPage() {
   }, [isInitialized, anos, loadFiltersFromURL, handleBuscar]);
 
   return (
-    <ProtectedRoute allowedRoles={[UserRoleEnum.ADMIN, UserRoleEnum.PROFESSOR]}>
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Box sx={{ mb: 4 }}>
-          <PageTitle
-            title="Relatório"
-            description="Gere relatórios detalhados com base em diversos filtros personalizáveis."
-          />
-        </Box>
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Box sx={{ mb: 4 }}>
+        <PageTitle
+          title="Relatório"
+          description="Gere relatórios detalhados com base em diversos filtros personalizáveis."
+        />
+      </Box>
 
-        {/* Botões de Ação - Geração de Relatórios */}
-        <Box sx={{ mb: 2, display: "flex", justifyContent: "flex-end", gap: 2 }}>
-          <Button
-            variant="contained"
-            startIcon={loadingPDF ? <CircularProgress size={20} color="inherit" /> : <Print />}
-            onClick={handleGerarPDF}
-            disabled={loadingPDF || resultados.length === 0}
-          >
-            {loadingPDF ? "Gerando..." : "Exportar PDF"}
-          </Button>
-          <Button
-            variant="contained"
-            color="success"
-            startIcon={loadingExcel ? <CircularProgress size={20} color="inherit" /> : <Download />}
-            onClick={handleGerarExcel}
-            disabled={loadingExcel || resultados.length === 0}
-          >
-            {loadingExcel ? "Gerando..." : "Exportar Excel"}
-          </Button>
-        </Box>
+      {/* Botões de Ação - Geração de Relatórios */}
+      <Box sx={{ mb: 2, display: "flex", justifyContent: "flex-end", gap: 2 }}>
+        <Button
+          variant="contained"
+          startIcon={loadingPDF ? <CircularProgress size={20} color="inherit" /> : <Print />}
+          onClick={handleGerarPDF}
+          disabled={loadingPDF || resultados.length === 0}
+        >
+          {loadingPDF ? "Gerando..." : "Exportar PDF"}
+        </Button>
+        <Button
+          variant="contained"
+          color="success"
+          startIcon={loadingExcel ? <CircularProgress size={20} color="inherit" /> : <Download />}
+          onClick={handleGerarExcel}
+          disabled={loadingExcel || resultados.length === 0}
+        >
+          {loadingExcel ? "Gerando..." : "Exportar Excel"}
+        </Button>
+      </Box>
 
-        {/* Box de Filtros */}
-        <Paper sx={{ p: 3, mb: 3, boxShadow: 2 }}>
-          <Typography variant="h6" gutterBottom sx={{ mb: 3, fontWeight: 600 }}>
-            Filtros
-          </Typography>
+      {/* Box de Filtros */}
+      <Paper sx={{ p: 3, mb: 3, boxShadow: 2 }}>
+        <Typography variant="h6" gutterBottom sx={{ mb: 3, fontWeight: 600 }}>
+          Filtros
+        </Typography>
 
-          <BrainFormProvider onSubmit={onFormSubmit} methodsHookForm={methodsHookForm}>
-            <S.Container>
-              <Box>
-                <BrainDropdownControlled
-                  name="anoLetivo"
-                  control={control}
-                  label="Ano Letivo"
-                  required
-                  options={OPTIONS_ANOS}
-                  placeholder="Selecione o ano"
-                />
-              </Box>
-
-              <Box>
-                <BrainDropdownControlled
-                  name="escola"
-                  control={control}
-                  label="Unidade"
-                  required
-                  options={OPTIONS_UNIDADES}
-                  placeholder="Selecione a unidade"
-                />
-              </Box>
-
-              <Box>
-                <BrainDropdownControlled
-                  name="serie"
-                  control={control}
-                  label="Série"
-                  required
-                  options={OPTIONS_SERIES}
-                  placeholder="Selecione a série"
-                />
-              </Box>
-
-              <Box>
-                <BrainDropdownControlled
-                  name="turma"
-                  control={control}
-                  label="Turma"
-                  required
-                  options={OPTIONS_TURMAS}
-                  placeholder="Selecione a turma"
-                />
-              </Box>
-
-              <Box>
-                <BrainDropdownControlled
-                  name="disciplina"
-                  control={control}
-                  label="Disciplina"
-                  required
-                  options={OPTIONS_DISCIPLINAS}
-                  placeholder="Selecione a disciplina"
-                />
-              </Box>
-
-              <Box>
-                <BrainDropdownControlled
-                  name="tipoRelatorio"
-                  control={control}
-                  label="Tipo de Relatório"
-                  required
-                  options={TIPOS_RELATORIO}
-                  placeholder="Selecione o tipo de relatório"
-                />
-              </Box>
-
-              <Box>
-                <BrainDropdownControlled
-                  name="periodo"
-                  control={control}
-                  label="Período (Opcional)"
-                  options={PERIODOS}
-                  placeholder="Selecione o período"
-                />
-              </Box>
-            </S.Container>
-            {/* Botões de Filtro */}
-            <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end", gap: 2 }}>
-              <Button variant="outlined" onClick={handleLimparFiltros}>
-                Limpar Filtros
-              </Button>
-              <Button
-                variant="contained"
-                onClick={handleBuscar}
-                disabled={loadingBuscar}
-                startIcon={loadingBuscar ? <CircularProgress size={20} color="inherit" /> : null}
-              >
-                {loadingBuscar ? "Buscando..." : "Buscar"}
-              </Button>
+        <BrainFormProvider onSubmit={onFormSubmit} methodsHookForm={methodsHookForm}>
+          <S.Container>
+            <Box>
+              <BrainDropdownControlled
+                name="anoLetivo"
+                control={control}
+                label="Ano Letivo"
+                required
+                options={OPTIONS_ANOS}
+                placeholder="Selecione o ano"
+              />
             </Box>
-          </BrainFormProvider>
-        </Paper>
 
-        {/* Mensagens de Feedback */}
-        {error && (
-          <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError("")}>
-            {error}
-          </Alert>
-        )}
+            <Box>
+              <BrainDropdownControlled
+                name="escola"
+                control={control}
+                label="Unidade"
+                required
+                options={OPTIONS_UNIDADES}
+                placeholder="Selecione a unidade"
+              />
+            </Box>
 
-        {success && (
-          <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess("")}>
-            {success}
-          </Alert>
-        )}
+            <Box>
+              <BrainDropdownControlled
+                name="serie"
+                control={control}
+                label="Série"
+                required
+                options={OPTIONS_SERIES}
+                placeholder="Selecione a série"
+              />
+            </Box>
 
-        {/* Grid de Resultados */}
-        {resultados.length > 0 && (
-          <Paper sx={{ boxShadow: 2 }}>
-            <TableContainer sx={{ overflowX: "initial" }}>
-              <Table>
-                <TableHead sx={{ position: "sticky", top: 65, zIndex: 1000 }}>
-                  <TableRow>
-                    <TableCell
-                      sx={{
-                        fontWeight: 600,
-                        position: "sticky",
-                        top: 0,
-                        backgroundColor: "gray",
-                        color: "white",
-                        zIndex: 100,
-                        borderBottom: "2px solid",
-                        borderBottomColor: "divider",
-                      }}
-                    >
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 0.5,
-                            cursor: "pointer",
-                          }}
-                          onClick={() => handleSort("aluno")}
-                        >
-                          Aluno
-                          {sortField === "aluno" &&
-                            (sortDirection === "asc" ? (
-                              <ArrowUpward fontSize="small" />
-                            ) : (
-                              <ArrowDownward fontSize="small" />
-                            ))}
-                        </Box>
+            <Box>
+              <BrainDropdownControlled
+                name="turma"
+                control={control}
+                label="Turma"
+                required
+                options={OPTIONS_TURMAS}
+                placeholder="Selecione a turma"
+              />
+            </Box>
+
+            <Box>
+              <BrainDropdownControlled
+                name="disciplina"
+                control={control}
+                label="Disciplina"
+                required
+                options={OPTIONS_DISCIPLINAS}
+                placeholder="Selecione a disciplina"
+              />
+            </Box>
+
+            <Box>
+              <BrainDropdownControlled
+                name="tipoRelatorio"
+                control={control}
+                label="Tipo de Relatório"
+                required
+                options={TIPOS_RELATORIO}
+                placeholder="Selecione o tipo de relatório"
+              />
+            </Box>
+
+            <Box>
+              <BrainDropdownControlled
+                name="periodo"
+                control={control}
+                label="Período (Opcional)"
+                options={PERIODOS}
+                placeholder="Selecione o período"
+              />
+            </Box>
+          </S.Container>
+          {/* Botões de Filtro */}
+          <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end", gap: 2 }}>
+            <Button variant="outlined" onClick={handleLimparFiltros}>
+              Limpar Filtros
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleBuscar}
+              disabled={loadingBuscar}
+              startIcon={loadingBuscar ? <CircularProgress size={20} color="inherit" /> : null}
+            >
+              {loadingBuscar ? "Buscando..." : "Buscar"}
+            </Button>
+          </Box>
+        </BrainFormProvider>
+      </Paper>
+
+      {/* Mensagens de Feedback */}
+      {error && (
+        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError("")}>
+          {error}
+        </Alert>
+      )}
+
+      {success && (
+        <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess("")}>
+          {success}
+        </Alert>
+      )}
+
+      {/* Grid de Resultados */}
+      {resultados.length > 0 && (
+        <Paper sx={{ boxShadow: 2 }}>
+          <TableContainer sx={{ overflowX: "initial" }}>
+            <Table>
+              <TableHead sx={{ position: "sticky", top: 65, zIndex: 1000 }}>
+                <TableRow>
+                  <TableCell
+                    sx={{
+                      fontWeight: 600,
+                      position: "sticky",
+                      top: 0,
+                      backgroundColor: "gray",
+                      color: "white",
+                      zIndex: 100,
+                      borderBottom: "2px solid",
+                      borderBottomColor: "divider",
+                    }}
+                  >
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 0.5,
+                          cursor: "pointer",
+                        }}
+                        onClick={() => handleSort("aluno")}
+                      >
+                        Aluno
+                        {sortField === "aluno" &&
+                          (sortDirection === "asc" ? (
+                            <ArrowUpward fontSize="small" />
+                          ) : (
+                            <ArrowDownward fontSize="small" />
+                          ))}
                       </Box>
-                      {/* <TextField
+                    </Box>
+                    {/* <TextField
                         size="small"
                         placeholder="Buscar aluno..."
                         value={searchAluno}
@@ -725,111 +724,135 @@ export default function RelatorioComportamentoPage() {
                           ),
                         }}
                       /> */}
-                    </TableCell>
-                    {[
-                      // { field: "turma" as keyof ResultadoItem, label: "Turma" },
-                      // { field: "disciplina" as keyof ResultadoItem, label: "Disciplina" },
-                      // { field: "data" as keyof ResultadoItem, label: "Data" },
-                      // { field: "comportamento" as keyof ResultadoItem, label: "Comportamento" },
-                      ...(getValues("tipoRelatorio") === "comportamento"
-                        ? [
-                            {
-                              field: "faltas" as keyof ResultadoItem,
-                              label: "Faltas",
-                              align: "center",
-                            },
-                            {
-                              field: "registros" as keyof ResultadoItem,
-                              label: "Registros",
-                              align: "center",
-                            },
-                          ]
-                        : []),
-                      // { field: "observacao" as keyof ResultadoItem, label: "Observação" },
-                    ].map(({ field, align, label }) => (
-                      <TableCell
-                        key={field}
-                        onClick={() => handleSort(field)}
-                        sx={{
-                          cursor: "pointer",
-                          fontWeight: 600,
-                          userSelect: "none",
-                          position: "sticky",
-                          top: 0,
-                          backgroundColor: "gray",
-                          color: "white",
-                          zIndex: 100,
-                          borderBottom: "2px solid",
-                          borderBottomColor: "divider",
-                          "&:hover": {
-                            color: "ActiveBorder",
+                  </TableCell>
+                  {[
+                    // { field: "turma" as keyof ResultadoItem, label: "Turma" },
+                    // { field: "disciplina" as keyof ResultadoItem, label: "Disciplina" },
+                    // { field: "data" as keyof ResultadoItem, label: "Data" },
+                    // { field: "comportamento" as keyof ResultadoItem, label: "Comportamento" },
+                    ...(getValues("tipoRelatorio") === "comportamento"
+                      ? [
+                          {
+                            field: "faltas" as keyof ResultadoItem,
+                            label: "Faltas",
+                            align: "center",
                           },
+                          {
+                            field: "registros" as keyof ResultadoItem,
+                            label: "Registros",
+                            align: "center",
+                          },
+                        ]
+                      : []),
+                    // { field: "observacao" as keyof ResultadoItem, label: "Observação" },
+                  ].map(({ field, align, label }) => (
+                    <TableCell
+                      key={field}
+                      onClick={() => handleSort(field)}
+                      sx={{
+                        cursor: "pointer",
+                        fontWeight: 600,
+                        userSelect: "none",
+                        position: "sticky",
+                        top: 0,
+                        backgroundColor: "gray",
+                        color: "white",
+                        zIndex: 100,
+                        borderBottom: "2px solid",
+                        borderBottomColor: "divider",
+                        "&:hover": {
+                          color: "ActiveBorder",
+                        },
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: align || "flex-start",
+                          gap: 0.5,
                         }}
                       >
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: align || "flex-start",
-                            gap: 0.5,
-                          }}
-                        >
-                          {label}
-                          {sortField === field &&
-                            (sortDirection === "asc" ? (
-                              <ArrowUpward fontSize="small" />
-                            ) : (
-                              <ArrowDownward fontSize="small" />
-                            ))}
-                        </Box>
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {resultadosFiltrados.map((item) => (
-                    <TableRow
-                      key={item.id}
-                      hover
-                      onClick={() => handleAlunoClick(item.alunoId)}
-                      sx={{ cursor: "pointer" }}
-                    >
-                      <TableCell>
-                        <S.CollumnAluno>{item.aluno}</S.CollumnAluno>
-                      </TableCell>
-                      {/* <TableCell>{item.turma}</TableCell> */}
-                      {/* <TableCell>{item.disciplina}</TableCell>
+                        {label}
+                        {sortField === field &&
+                          (sortDirection === "asc" ? (
+                            <ArrowUpward fontSize="small" />
+                          ) : (
+                            <ArrowDownward fontSize="small" />
+                          ))}
+                      </Box>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {resultadosFiltrados.map((item) => (
+                  <TableRow
+                    key={item.id}
+                    hover
+                    onClick={() => handleAlunoClick(item.alunoId)}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    <TableCell>
+                      <S.CollumnAluno>{item.aluno}</S.CollumnAluno>
+                    </TableCell>
+                    {/* <TableCell>{item.turma}</TableCell> */}
+                    {/* <TableCell>{item.disciplina}</TableCell>
                       <TableCell>{item.data}</TableCell>
                       <TableCell>{item.comportamento}</TableCell> */}
-                      {getValues("tipoRelatorio") === "comportamento" && (
-                        <>
-                          <TableCell align="center">{item.faltas}</TableCell>
-                          <TableCell align="center">{item.registros}</TableCell>
-                        </>
-                      )}
-                      {/* <TableCell>{item.observacao}</TableCell> */}
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                    {getValues("tipoRelatorio") === "comportamento" && (
+                      <>
+                        <TableCell align="center">{item.faltas}</TableCell>
+                        <TableCell align="center">{item.registros}</TableCell>
+                      </>
+                    )}
+                    {/* <TableCell>{item.observacao}</TableCell> */}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
 
-            {/* Observer para scroll infinito - fora do container com scroll horizontal */}
+          {/* Observer para scroll infinito - fora do container com scroll horizontal */}
+          <Box
+            ref={observerRef}
+            sx={{
+              height: "20px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              mt: 2,
+            }}
+          >
+            {hasMore && <CircularProgress size={24} />}
+          </Box>
+        </Paper>
+      )}
+    </Container>
+  );
+}
+
+export default function RelatorioComportamentoPage() {
+  return (
+    <ProtectedRoute allowedRoles={[UserRoleEnum.ADMIN, UserRoleEnum.PROFESSOR]}>
+      <Suspense
+        fallback={
+          <Container maxWidth="lg" sx={{ py: 4 }}>
             <Box
-              ref={observerRef}
               sx={{
-                height: "20px",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                mt: 2,
+                minHeight: "50vh",
               }}
             >
-              {hasMore && <CircularProgress size={24} />}
+              <CircularProgress />
             </Box>
-          </Paper>
-        )}
-      </Container>
+          </Container>
+        }
+      >
+        <RelatorioComportamentoContent />
+      </Suspense>
     </ProtectedRoute>
   );
 }
