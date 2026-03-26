@@ -51,3 +51,19 @@ export interface ProfessorPostRequest {
 export interface ProfessorPutRequest extends ProfessorPostRequest {
   id: string;
 }
+
+export interface ProfessorDisponibilidadeHorarioRequest {
+  diaSemana: string;
+  horarioInicio: string;
+  horarioFim: string;
+}
+
+export interface ProfessorCadastroDisponibilidadeRequest {
+  disponibilidades: ProfessorDisponibilidadeHorarioRequest[];
+}
+
+export interface ProfessorAtualizacaoDisponibilidadeRequest {
+  diaSemana: string;
+  horarioInicio: string;
+  horarioFim: string;
+}

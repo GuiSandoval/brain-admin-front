@@ -31,3 +31,11 @@ export interface AulaAlunoResponse {
   registros: number;
   faltas: number;
 }
+
+export interface AulaAnotacaoResponse {
+  id: number;
+  alunoId: number;
+  alunoNome: string;
+  data: string;
+  descricao: string;
+}

@@ -23,7 +23,7 @@ export class HorarioApi {
   }
 
   atualizarHorario(request: HorarioPutRequest): Promise<IBrainResult<void>> {
-    return httpClient.put(`${BASE_ROUTE}`, request);
+    return httpClient.put(`${BASE_ROUTE}/${request.id}`, request);
   }
 
   deleteHorario(id: string): Promise<IBrainResult<void>> {

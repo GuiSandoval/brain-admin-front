@@ -1,11 +1,19 @@
 import { IBrainResult } from "@/services/commoResponse";
 import { httpClient } from "@/services/http";
-import { ProfessorAulaRequest, ProfessorPostRequest, ProfessorPutRequest } from "./request";
+import {
+  ProfessorAulaRequest,
+  ProfessorPostRequest,
+  ProfessorPutRequest,
+  ProfessorCadastroDisponibilidadeRequest,
+  ProfessorAtualizacaoDisponibilidadeRequest,
+} from "./request";
 import {
   ProfessorAulaResponse,
   ProfessorDetalheResponse,
   ProfessorListaResponse,
   ProfessorPlanejamentoResponse,
+  ProfessorDisponibilidadeResponse,
+  ProfessorMultipleUrisResponse,
 } from "./response";
 
 const BASE_ROUTE = "professor";
@@ -31,5 +39,33 @@ export class ProfessorApi {
   }
   deleteProfessor(id: string): Promise<IBrainResult<void>> {
     return httpClient.delete(`${BASE_ROUTE}/${id}`);
+  }
+
+  reativarProfessor(id: string): Promise<ProfessorDetalheResponse> {
+    return httpClient.get(`${BASE_ROUTE}/reativar/${id}`);
+  }
+
+  cadastrarDisponibilidade(
+    professorId: string,
+    dados: ProfessorCadastroDisponibilidadeRequest,
+  ): Promise<ProfessorMultipleUrisResponse[]> {
+    return httpClient.post(`${BASE_ROUTE}/${professorId}/disponibilidade`, dados);
+  }
+
+  listarDisponibilidade(
+    professorId: string,
+  ): Promise<IBrainResult<ProfessorDisponibilidadeResponse>> {
+    return httpClient.get(`${BASE_ROUTE}/${professorId}/disponibilidade`);
+  }
+
+  atualizarDisponibilidade(
+    id: string,
+    dados: ProfessorAtualizacaoDisponibilidadeRequest,
+  ): Promise<ProfessorDisponibilidadeResponse> {
+    return httpClient.put(`${BASE_ROUTE}/disponibilidade/${id}`, dados);
+  }
+
+  excluirDisponibilidade(id: string): Promise<void> {
+    return httpClient.delete(`${BASE_ROUTE}/disponibilidade/${id}`);
   }
 }

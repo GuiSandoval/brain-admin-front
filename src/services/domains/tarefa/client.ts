@@ -25,4 +25,8 @@ export class TarefaApi {
   buscarTarefa(id: string): Promise<TarefaResponse> {
     return httpClient.get(`${BASE_ROUTE}/${id}`);
   }
+
+  getTarefasProfessor(): Promise<IBrainResult<TarefaResponse>> {
+    return httpClient.get(`${BASE_ROUTE}/professor`);
+  }
 }

@@ -36,3 +36,9 @@ export interface AlunoPostRequest {
 export interface AlunoPutRequest extends AlunoPostRequest {
   id: string;
 }
+
+export interface AlunoVincularSerieRequest {
+  serieId: number;
+  unidadeId: number;
+  turmaId: number;
+}

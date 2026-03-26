@@ -89,3 +89,16 @@ export interface ProfessorDetalheResponse {
   dataFimFerias?: string;
   observacoesFerias?: string;
 }
+
+export interface ProfessorDisponibilidadeResponse {
+  id: number;
+  professorId: number;
+  diaSemana: string;
+  horarioInicio: string;
+  horarioFim: string;
+}
+
+export interface ProfessorMultipleUrisResponse {
+  id: number;
+  uri: string;
+}

@@ -1,7 +1,11 @@
 import { httpClient } from "@/services/http";
 import { AlunoDetalheResponse, AlunoListaResponse } from "./response";
 import { IBrainResult } from "@/services/commoResponse";
-import { AlunoPostRequest, AlunoPutRequest } from "./request";
+import {
+  AlunoPostRequest,
+  AlunoPutRequest,
+  AlunoVincularSerieRequest,
+} from "./request";
 
 const BASE_ROUTE = "aluno";
 
@@ -24,5 +28,24 @@ export class AlunoApi {
 
   deleteAluno(id: string): Promise<IBrainResult<void>> {
     return httpClient.delete(`${BASE_ROUTE}/${id}`);
+  }
+
+  getLeads(): Promise<IBrainResult<AlunoListaResponse>> {
+    return httpClient.get(`${BASE_ROUTE}/leads`);
+  }
+
+  matricularAluno(id: string): Promise<AlunoDetalheResponse> {
+    return httpClient.post(`${BASE_ROUTE}/matricular/${id}`, {});
+  }
+
+  vincularSerie(
+    id: string,
+    dados: AlunoVincularSerieRequest,
+  ): Promise<AlunoDetalheResponse> {
+    return httpClient.post(`${BASE_ROUTE}/vincular-serie/${id}`, dados);
+  }
+
+  desmatricularAluno(id: string): Promise<AlunoDetalheResponse> {
+    return httpClient.post(`${BASE_ROUTE}/desmatricular/${id}`, {});
   }
 }

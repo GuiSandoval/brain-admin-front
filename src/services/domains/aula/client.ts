@@ -4,6 +4,7 @@ import {
   AulaDetalheResponse,
   AulaListaResponse,
   AulaResponse,
+  AulaAnotacaoResponse,
 } from "./response";
 import { IBrainResult } from "@/services/commoResponse";
 import { AulaPostRequest, AulaPutRequest } from "./request";
@@ -28,7 +29,7 @@ export class AulaApi {
   }
 
   atualizarAula(request: AulaPutRequest): Promise<IBrainResult<void>> {
-    return httpClient.put(`${BASE_ROUTE}`, request);
+    return httpClient.put(`${BASE_ROUTE}/${request.id}`, request);
   }
 
   deleteAula(id: string): Promise<IBrainResult<void>> {
@@ -37,5 +38,9 @@ export class AulaApi {
 
   listaAlunosByIdAula(idAula: string): Promise<AulaAlunoResponse[]> {
     return httpClient.get(`${BASE_ROUTE}/${idAula}/alunos`);
+  }
+
+  recuperarAnotacoes(aulaId: string, data: string): Promise<AulaAnotacaoResponse[]> {
+    return httpClient.post(`${BASE_ROUTE}/${aulaId}/anotacoes`, { data });
   }
 }

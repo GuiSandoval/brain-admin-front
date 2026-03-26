@@ -1,6 +1,10 @@
 import { IBrainResult } from "@/services/commoResponse";
 import { httpClient } from "@/services/http";
-import { GradeCurricularPostRequest, GradeCurricularPutRequest } from "./request";
+import {
+  GradeCurricularPostRequest,
+  GradeCurricularPutRequest,
+  GradeCurricularAdicionarDisciplinasRequest,
+} from "./request";
 import {
   GradeCurricularDetalheResponse,
   GradeCurricularListaResponse,
@@ -27,5 +31,15 @@ export class GradeCurricularApi {
 
   deleteGradeCurricular(id: string): Promise<IBrainResult<void>> {
     return httpClient.delete(`${BASE_ROUTE}/${id}`);
+  }
+
+  desativarGradeCurricular(id: string): Promise<GradeCurricularDetalheResponse> {
+    return httpClient.get(`${BASE_ROUTE}/desativar/${id}`);
+  }
+
+  adicionarDisciplinas(
+    dados: GradeCurricularAdicionarDisciplinasRequest,
+  ): Promise<GradeCurricularDetalheResponse> {
+    return httpClient.post(`${BASE_ROUTE}/disciplinas`, dados);
   }
 }

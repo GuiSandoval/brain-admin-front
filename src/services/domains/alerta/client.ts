@@ -25,4 +25,8 @@ export class AlertaApi {
   buscarAlerta(id: string): Promise<AlertaResponse> {
     return httpClient.get(`${BASE_ROUTE}/${id}`);
   }
+
+  marcarComoLido(id: string): Promise<void> {
+    return httpClient.patch(`${BASE_ROUTE}/${id}/marcar-como-lido`, {});
+  }
 }

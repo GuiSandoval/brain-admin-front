@@ -7,3 +7,8 @@ export interface GradeCurricularPostRequest {
 export interface GradeCurricularPutRequest extends GradeCurricularPostRequest {
   id: string;
 }
+
+export interface GradeCurricularAdicionarDisciplinasRequest {
+  gradeCurricularId: number;
+  disciplinaIds: number[];
+}
